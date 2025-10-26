@@ -1,0 +1,17 @@
+.logo-text {
+  background: linear-gradient(90deg, #0E82FD 0%, #06AED4 70%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  font-size: 24px; /* adjust as needed */
+  display: inline-block;
+}
+
+.logo-badge {
+  background: linear-gradient(90deg, #0E82FD 0%, #06AED4 70%);
+  color: #fff;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: inline-block;
+}
