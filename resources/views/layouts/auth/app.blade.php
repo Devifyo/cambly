@@ -30,6 +30,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+        <link rel="stylesheet" href="{{asset('assets/css/newstyle.css')}}">
 
     @stack('styles')
 </head>
@@ -42,12 +43,13 @@
     <!-- /Main Wrapper -->
 
     <!-- Cursor -->
-    <div class="mouse-cursor cursor-outer"></div>
-    <div class="mouse-cursor cursor-inner"></div>
+    {{-- <div class="mouse-cursor cursor-outer"></div>
+    <div class="mouse-cursor cursor-inner"></div> --}}
     <!-- /Cursor -->
 
     <!-- JS Files -->
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js"></script>    
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/feather.min.js') }}"></script>
     <script src="{{ asset('assets/js/script.js') }}"></script>

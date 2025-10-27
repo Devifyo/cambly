@@ -15,3 +15,25 @@
   border-radius: 6px;
   display: inline-block;
 }
+
+/* Make sure error under input-group is below it neatly */
+.input-group + .error {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+/* Keep the eye icon visually aligned */
+.input-group .toggle-password {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    background: #fff;
+    border-left: 1px solid #ced4da;
+    cursor: pointer;
+}
