@@ -37,3 +37,7 @@
     border-left: 1px solid #ced4da;
     cursor: pointer;
 }
+
+.header .header-nav .main-nav > li.active > a{
+  color:#0E82FD !important;
+}

@@ -8,5 +8,7 @@ Route::get('/students', function () {
     return 'List of students';
 });
 
+Route::middleware(['auth.custom','isStudent'])->group(function () {
 // Controller route
-Route::get('/dashboard', [StudentDashboardController::class, 'index']);
+Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
+});

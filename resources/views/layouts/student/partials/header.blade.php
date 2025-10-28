@@ -21,7 +21,7 @@
                 </div>
 
                 <ul class="main-nav">
-                    <li><a href="#">Dashboard</a></li>
+                    <li class="active"><a href="#">Dashboard</a></li>
 
                     <li class="has-submenu active">
                         <a href="javascript:void(0);">Manage Meetings <i class="fas fa-chevron-down"></i></a>
