@@ -18,7 +18,7 @@
         <a class="dropdown-item" href="">Profile Settings</a>
         <a class="dropdown-item" href="">My Sessions</a>
         <a class="dropdown-item" href="">Payment History</a>
-        <form method="POST" action="">
+        <form method="POST" action="{{route('auth.logout')}}">
             @csrf
             <button type="submit" class="dropdown-item">Logout</button>
         </form>

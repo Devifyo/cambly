@@ -154,7 +154,10 @@
                             </div>
                             <a class="dropdown-item" href="#">Dashboard</a>
                             <a class="dropdown-item" href="#">Profile Settings</a>
-                            <a class="dropdown-item" href="#">Logout</a>
+                            <form method="POST" action="{{route('auth.logout')}}">
+                                @csrf
+                                <button type="submit" class="dropdown-item">Logout</button>
+                            </form>
                         </div>
                     </li>
                 </ul>

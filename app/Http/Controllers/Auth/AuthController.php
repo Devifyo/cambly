@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     /**
@@ -52,7 +54,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('status', 'You have been logged out successfully.');
+        return redirect()->route('auth.login')->with('status', 'You have been logged out successfully.');
     }
 
      /**
@@ -68,10 +70,12 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        // Validation
         $validator = Validator::make($request->all(), [
             'name'      => 'required|string|max:255',
             'email'     => 'required|string|email|max:255|unique:users',
             'password'  => 'required|string|min:8|confirmed',
+            'role'      => 'required|string|exists:roles,name', // ensure role exists in roles table
             'terms'     => 'accepted',
         ]);
 
@@ -86,9 +90,12 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Auto-login the user after registration
+        // Assign role using Spatie
+        $user->assignRole($request->role);
+
+        // Auto-login the user
         Auth::login($user);
 
-        return redirect()->route('home')->with('success', 'Registration successful! Welcome aboard 🎉');
+        return redirect()->route('auth.login')->with('success', 'Registration successful! Welcome aboard 🎉');
     }
 }
