@@ -21,12 +21,14 @@
                 </div>
 
                 <ul class="main-nav">
-                    <li class="active"><a href="#">Dashboard</a></li>
+                <li class="{{ request()->routeIs('student.dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('student.dashboard') }}">Dashboard</a>
+                </li>
 
-                    <li class="has-submenu active">
+                    <li class="has-submenu ">
                         <a href="javascript:void(0);">Manage Meetings <i class="fas fa-chevron-down"></i></a>
                         <ul class="submenu">
-                            <li class="active"><a href="#">Meetings</a></li>
+                            <li class=""><a href="#">Meetings</a></li>
                             <li class="has-submenu">
                                 <a href="javascript:void(0);">Your Meetings</a>
                                 <ul class="submenu inner-submenu">
