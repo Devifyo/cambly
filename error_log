@@ -3,3 +3,103 @@ Stack trace:
 #0 Command line code(1): ReflectionMethod->__construct()
 #1 {main}
   thrown in Command line code on line 1
+[29-Oct-2025 10:51:23 UTC] PHP Fatal error:  Trait "StripeTrait" not found in /home/deviytwg/projects/laravel/cambly/app/Services/StripeService.php on line 7
+[29-Oct-2025 10:52:42 UTC] PHP Fatal error:  Trait "Traits\StripeTrait" not found in /home/deviytwg/projects/laravel/cambly/app/Services/StripeService.php on line 8
+[29-Oct-2025 12:21:18 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-d65bb7343c1593c04a323211e6bd1f9a.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:19 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-1e7ea3cf42a2f9b84f3de09530e2c135.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:19 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-31b934f114eabc246b541addb8b458e3.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:19 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-f6c2bb05e77ee582c501379f6998f2c4.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:19 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:20 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6fd83ab5fb3f0a7e73c08ddae18f9934.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:20 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-79de9752f999b6e261cd05abba67a5ce.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:20 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-1e7ea3cf42a2f9b84f3de09530e2c135.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:20 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-77e9e6a2445455b87d4f4cd834e4e23d.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:20 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:21 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-79de9752f999b6e261cd05abba67a5ce.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:21 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-7563160ca998bde672640aa1e68dfd08.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:21 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-77e9e6a2445455b87d4f4cd834e4e23d.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[29-Oct-2025 12:21:21 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/deviytwg/projects/laravel/cambly/vendor/composer/../../app/Helpers/formatcommon_helper.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/deviytwg/projects/laravel/cambly/vendor/autoload.php(25): ComposerAutoloaderInit495645d611e9a64b91c961022a126c51::getLoader()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-f6c2bb05e77ee582c501379f6998f2c4.php(8): require_once('/home/deviytwg/...')
+#3 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41

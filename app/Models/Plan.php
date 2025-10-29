@@ -13,6 +13,23 @@ class Plan extends Model
         'credits_per_cycle',
         'price',
         'stripe_product_id',
-        'stripe_price_id'
+        'stripe_price_id',
+        'subtitle',
+        'description',
+        'features',
+        'is_popular',
+        'icon_path',
+        'slug',
+        'interval',
+        'status'
     ];
+
+    protected $casts = [
+        'features' => 'array',
+    ];
+
+        public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
 }

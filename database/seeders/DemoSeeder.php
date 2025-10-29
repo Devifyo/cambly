@@ -6,7 +6,6 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\TeacherProfile;
 use App\Models\StudentProfile;
 use App\Models\Availability;
-use App\Models\Plan;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -15,11 +14,8 @@ class DemoSeeder extends Seeder
 {
     public function run(): void
     {
-        // Plans
-        Plan::create(['name' => 'Basic', 'credits_per_cycle' => 4, 'price' => 4500]);
-        Plan::create(['name' => 'Standard', 'credits_per_cycle' => 8, 'price' => 8000]);
-        Plan::create(['name' => 'Premium', 'credits_per_cycle' => 12, 'price' => 9000]);
-
+ 
+  
         // Profiles
         $teachers = User::role('teacher')->get();
         foreach ($teachers as $t) {

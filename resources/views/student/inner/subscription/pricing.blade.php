@@ -3,22 +3,62 @@
 @section('title', 'Subscription')
 @push('styles')
 <style>
-        .user-note {
-            transition: all 0.3s ease;
-            cursor: default;
-        }
+    .user-note {
+        transition: all 0.3s ease;
+        cursor: default;
+    }
 
-        .user-note:hover {
-            background-color: var(--primary, #0E82FD) !important;
-        }
+    .user-note:hover {
+        background-color: var(--primary, #0E82FD) !important;
+    }
 
-        .user-note:hover .pricing-info,
-        .user-note:hover .user-note-text {
-            color: #fff !important;
-        }
+    .user-note:hover .pricing-info,
+    .user-note:hover .user-note-text {
+        color: #fff !important;
+    }
+
+    /* Trial button styling and placement */
+    .trial-link {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        line-height: 1;
+        text-decoration: none;
+        border: 1px solid rgba(14,130,253,0.14);
+        color: var(--primary, #0E82FD);
+        background: transparent;
+        transition: all 0.18s ease;
+    }
+
+    .trial-link:hover,
+    .trial-link:focus {
+        background: rgba(14,130,253,0.12);
+        color: #0E82FD;
+        text-decoration: none;
+    }
+
+    /* Keep CTA centered under cards */
+    .trial-cta-row {
+        margin-top: 18px;
+        margin-bottom: 6px;
+    }
+
+    /* Make sure the main plan button stays full width */
+    .pricing-btn {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    .pricing-btn .btn {
+        width: 100%;
+    }
 </style>
-
 @endpush
+
 @section('content')
 <section class="pricing-section">
     <div class="container">
@@ -32,9 +72,7 @@
                     </div>
 
                     <p style="margin-top:12px;">
-                        25-minute 1:1 English lessons via Discord.  
-                        Start with a $1 trial — one credit, one booking.  
-                        Prices shown exclude tax.
+                        Start with a $1 trial — one credit, one booking.
                     </p>
                 </div>
             </div>
@@ -42,131 +80,57 @@
 
         <!-- Plan cards -->
         <div class="row align-items-center justify-content-center" style="margin-top:18px;">
-            <div class="col-lg-4 col-md-6">
-                <div class="card pricing-card w-100">
-                    <div class="card-body">
-                        <div class="pricing-header">
-                            <div class="pricing-header-info">
-                                <div class="pricing-icon">
-                                    <span>
-                                        <img src="{{ asset('assets/img/icons/price-icon1.svg') }}" alt="icon">
-                                    </span>
+            @foreach ($monthlyPlans as $plan )
+                <div class="col-lg-4 col-md-6">
+                    <div class="card pricing-card {{ $plan->is_popular  ? 'active' : ''}} w-100">
+                        <div class="card-body">
+                            <div class="pricing-header">
+                                <div class="pricing-header-info">
+                                    <div class="pricing-icon">
+                                        <span>
+                                            <img src="{{ asset($plan->icon_path) }}" alt="icon">
+                                        </span>
+                                    </div>
+                                    <div class="pricing-title">
+                                        <p>{{ $plan->subtitle }}</p>
+                                        <h4>{{ $plan->name }}</h4>
+                                    </div>
                                 </div>
-                                <div class="pricing-title">
-                                    <p>For individuals</p>
-                                    <h4>Basic</h4>
+                                @if($plan->is_popular)
+                                    <div>
+                                        <span class="badge">Popular</span>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="pricing-info">
+                                <div class="pricing-amount">
+                                    <h2>{{ format_currency($plan->price) }} <span>/{{$plan->interval}}</span></h2>
+                                    <h6>What’s included</h6>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="pricing-info">
-                            <div class="pricing-amount">
-                                <h2>¥4,500 <span>/monthly</span></h2>
-                                <h6>What’s included</h6>
-                            </div>
-                            <div class="pricing-list">
-                                <ul>
-                                    <li>4 lessons per month (25 minutes each)</li>
-                                    <li>Book directly from teacher calendar</li>
-                                    <li>Email confirmations & reminders</li>
-                                    <li>Discord call with your teacher</li>
-                                </ul>
-                            </div>
-                            <div class="pricing-btn">
-                                <a href="#" class="btn btn-primary">Choose Plan</a>
-                            </div>
-                            <div style="margin-top:8px; text-align:center;">
-                                <a href="#" class="btn btn-rounded btn-outline-primary" >Start $1 trial</a>
+                                <div class="pricing-list">
+                                    <ul>
+                                        @foreach($plan->features as $feature)
+                                        <li>{{$feature}}</li>
+                                        @endforeach 
+                                    </ul>
+                                </div>
+                                <div class="pricing-btn">
+                                    <a href="#" class="btn btn-primary">Choose Plan</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endforeach
+        </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="card pricing-card active w-100">
-                    <div class="card-body">
-                        <div class="pricing-header">
-                            <div class="pricing-header-info">
-                                <div class="pricing-icon">
-                                    <span>
-                                        <img src="{{ asset('assets/img/icons/price-icon2.svg') }}" alt="icon">
-                                    </span>
-                                </div>
-                                <div class="pricing-title">
-                                    <p>For regular learners</p>
-                                    <h4>Premium</h4>
-                                </div>
-                            </div>
-                            <div>
-                                <span class="badge">Popular</span>
-                            </div>
-                        </div>
-                        <div class="pricing-info">
-                            <div class="pricing-amount">
-                                <h2>¥8,000 <span>/monthly</span></h2>
-                                <h6>What’s included</h6>
-                            </div>
-                            <div class="pricing-list">
-                                <ul>
-                                    <li>8 lessons per month</li>
-                                    <li>Priority booking</li>
-                                    <li>Lesson history & reminders</li>
-                                    <li>Priority support</li>
-                                </ul>
-                            </div>
-                            <div class="pricing-btn">
-                                <a href="#" class="btn btn-primary">Choose Plan</a>
-                            </div>
-                            <div style="margin-top:8px; text-align:center;">
-                                <a href="#" class="btn btn-rounded btn-outline-primary" >Start $1 trial</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6">
-                <div class="card pricing-card w-100">
-                    <div class="card-body">
-                        <div class="pricing-header">
-                            <div class="pricing-header-info">
-                                <div class="pricing-icon">
-                                    <span>
-                                        <img src="{{ asset('assets/img/icons/price-icon3.svg') }}" alt="icon">
-                                    </span>
-                                </div>
-                                <div class="pricing-title">
-                                    <p>For intensive learners</p>
-                                    <h4>Enterprise</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pricing-info">
-                            <div class="pricing-amount">
-                                <h2>¥9,000 <span>/monthly</span></h2>
-                                <h6>What’s included</h6>
-                            </div>
-                            <div class="pricing-list">
-                                <ul>
-                                    <li>12 lessons per month</li>
-                                    <li>Highest booking limits</li>
-                                    <li>Full lesson history</li>
-                                    <li>Dedicated support</li>
-                                </ul>
-                            </div>
-                            <div class="pricing-btn">
-                                <a href="#" class="btn btn-primary">Choose Plan</a>
-                            </div>
-                            <div style="margin-top:8px; text-align:center;">
-                                <a href="#" class="btn btn-rounded btn-outline-primary" >Start $1 trial</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Single, centered trial CTA under the cards -->
+        <div class="row trial-cta-row align-items-center justify-content-center">
+            <div class="col-lg-6 text-center">
+                <a href="#" class="trial-link"> <strong>{{ $trialPlan->name }}</strong> - {{ $trialPlan->subtitle }}</a>
             </div>
         </div>
 
-        <!-- Simple note for users -->
         <!-- Simple note for users -->
         <div class="row align-items-center justify-content-center" style="margin-top:18px;">
             <div class="col-lg-10">
