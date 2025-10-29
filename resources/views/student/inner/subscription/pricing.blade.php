@@ -72,7 +72,7 @@
                     </div>
 
                     <p style="margin-top:12px;">
-                        Start with a $1 trial — one credit, one booking.
+                      {{ $trialPlan->description }}
                     </p>
                 </div>
             </div>

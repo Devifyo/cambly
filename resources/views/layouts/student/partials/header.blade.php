@@ -41,7 +41,13 @@
                     </li>
 
                     <li><a href="#">Search Teacher</a></li>
-                    <li><a href="#">Profile Settings</a></li>
+                    <li class="has-submenu ">
+                        <a href="#">Account <i class="fas fa-chevron-down"></i> </a>
+                        <ul class="submenu">
+                            <li class=""><a href="{{ route('student.account.subscription') }}">Subscription</a></li>
+                            <li><a href="#">Profile settings</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
 
