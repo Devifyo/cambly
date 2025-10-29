@@ -277,7 +277,7 @@
                                     </div>
                                 </div>
                                 <span class="health-percentage d-block mb-2">You have enough credits for 3 more sessions</span>
-                                <a href="#" class="btn btn-dark w-100 rounded-pill">Manage Credits<i
+                                <a href="{{ route('student.account.subscription') }}" class="btn btn-dark w-100 rounded-pill">Manage Subscriptions<i
                                         class="fa-solid fa-chevron-right ms-2"></i></a>
                             </div>
                         </div>
