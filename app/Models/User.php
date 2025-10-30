@@ -82,15 +82,16 @@ class User extends Authenticatable
      */
     public function activeSubscription()
     {
-        return $this->hasOne(Subscription::class)
-                    ->where('status', 'active')
-                    ->where(function ($query) {
-                        $query->whereNull('ends_at')
-                              ->orWhere('ends_at', '>', now());
-                    })
-                    ->where('current_period_end', '>', now());
+        return $this->hasOne(\App\Models\Subscription::class)
+            ->where('status', 'active')
+            ->where(function ($query) {
+                $query->whereNull('ends_at')
+                    ->orWhere('ends_at', '>', now());
+            })
+            ->where('current_period_start', '<=', now()) // make sure period has started
+            ->where('current_period_end', '>=', now())   // and not expired yet
+            ->latest('created_at');
     }
-
     /**
      * Check if the user has an active and valid subscription.
      */

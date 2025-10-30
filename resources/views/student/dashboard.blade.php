@@ -277,11 +277,11 @@
                             <div class="chart-over-all-report text-center">
                                 <h6>Credits Left</h6>
                                 <div class="circle-bar circle-bar3 report-chart mb-2">
-                                    <div class="circle-graph3" data-percent="75">
-                                        <p>Credits Used<br>90 / 120</p>
+                                    <div class="circle-graph3" data-percent="{{ $currentCredits['consume_percentage'] }}">
+                                        <p>Credits Used<br>{{$currentCredits['available']}} / {{$currentCredits['issued']}} </p>
                                     </div>
                                 </div>
-                                <span class="health-percentage d-block mb-2">You have enough credits for 3 more sessions</span>
+                                <span class="health-percentage d-block mb-2">You have enough credits for {{$currentCredits['available']}} more sessions</span>
                                 <a href="{{ route('student.account.subscription') }}" class="btn btn-dark w-100 rounded-pill">Manage Subscriptions<i
                                         class="fa-solid fa-chevron-right ms-2"></i></a>
                             </div>
@@ -291,7 +291,7 @@
 
                     <!-- Subscription Info -->
                     <div class="report-gen-date mt-4">
-                        <p>Subscription valid till: <strong>31 Dec 2025</strong> <span><i class="fa-solid fa-copy"></i></span></p>
+                        <p>Subscription valid till: <strong>{{formatDate($activeSubscription['current_period_start'])}}</strong> <span><i class="fa-solid fa-copy"></i></span></p>
                     </div>
                 </div>
             </div>

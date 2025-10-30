@@ -105,3 +105,5 @@ Stack trace:
   thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
 [30-Oct-2025 06:49:33 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Student\StudentDashboardController as StudentDashboardController because the name is already in use in /home/deviytwg/projects/laravel/cambly/routes/student.php on line 4
 [30-Oct-2025 06:49:36 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\StudentDashboardController as StudentDashboardController because the name is already in use in /home/deviytwg/projects/laravel/cambly/routes/student.php on line 4
+[30-Oct-2025 12:23:31 UTC] PHP Parse error:  Unclosed '{' on line 13 in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 94
+[30-Oct-2025 12:23:37 UTC] PHP Parse error:  Unclosed '{' on line 13 in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 94
