@@ -1,0 +1,2 @@
+[30-Oct-2025 10:22:46 UTC] PHP Fatal error:  Cannot declare class App\Http\Controllers\StripeWebhookController, because the name is already in use in /home/deviytwg/projects/laravel/cambly/app/Models/CreditTransaction.php on line 19
+[30-Oct-2025 10:22:46 UTC] PHP Fatal error:  Cannot declare class App\Http\Controllers\StripeWebhookController, because the name is already in use in /home/deviytwg/projects/laravel/cambly/app/Models/CreditTransaction.php on line 19

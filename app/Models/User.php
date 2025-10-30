@@ -67,4 +67,43 @@ class User extends Authenticatable
     public function ticketLedgers() {
         return $this->hasMany(TicketLedger::class, 'student_id');
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * Get the active and valid subscription for the user.
+     * A subscription is considered active if:
+     * - Status is 'active'
+     * - Current period has not ended (current_period_end > now())
+     * - Not ended (ends_at is null or in the future)
+     */
+    public function activeSubscription()
+    {
+        return $this->hasOne(Subscription::class)
+                    ->where('status', 'active')
+                    ->where(function ($query) {
+                        $query->whereNull('ends_at')
+                              ->orWhere('ends_at', '>', now());
+                    })
+                    ->where('current_period_end', '>', now());
+    }
+
+    /**
+     * Check if the user has an active and valid subscription.
+     */
+    public function hasActiveSubscription(): bool
+    {
+        return $this->activeSubscription()->exists();
+    }
+
+    /**
+     * Get the active plan from the active subscription.
+     */
+    public function activePlan()
+    {
+        return $this->activeSubscription()->with('plan')->first()?->plan;
+    }
 }

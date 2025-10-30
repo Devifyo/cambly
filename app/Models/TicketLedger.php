@@ -13,7 +13,10 @@ class TicketLedger extends Model
         'cycle_number',
         'issued_credits',
         'used_credits',
-        'hold_credits'
+        'hold_credits',
+        'stripe_invoice_id',
+        'stripe_subscription_id'
+
     ];
 
     public function student()
