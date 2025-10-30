@@ -4,14 +4,14 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Plan;
-use App\Services\StripeServiceForSeeder;
+use App\Services\stripeService;
 use Illuminate\Support\Str;
 
 class PlanSeeder extends Seeder
 {
     public function run(): void
     {
-        $stripe = new StripeServiceForSeeder();
+        $stripe = new stripeService();
 
         $plans = [
             [
@@ -97,7 +97,7 @@ class PlanSeeder extends Seeder
             // Find existing local plan (if any) so we can reuse stripe ids when needed
             $existingPlan = Plan::where('slug', $slug)->first();
 
-            // Prepare payload for StripeServiceForSeeder::createPlan (array form)
+            // Prepare payload for stripeService::createPlan (array form)
             $payload = [
                 'name' => $nameWithInterval,
                 'description' => $plan['description'],

@@ -209,62 +209,67 @@
                                     <div class="card-view-link"><a href="#">View All</a></div>
                                 </div>
                                 <div class="dashboard-card-body pt-2">
-                                    <table class="table dashboard-table appoint-table mb-0">
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="patient-info-profile">
-                                                        <a href="#" class="table-avatar">
-                                                            <img src="{{ asset('assets/img/tutors/tutor-01.jpg') }}" alt="Tutor">
-                                                        </a>
-                                                        <div class="patient-name-info">
-                                                            <h5><a href="#">Mr. Smith</a></h5>
-                                                            <span>Math</span>
+                                    <div class="table-responsive">
+                                        <table class="table dashboard-table appoint-table mb-0">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="patient-info-profile">
+                                                            <a href="#" class="table-avatar">
+                                                                <img src="{{ asset('assets/img/tutors/tutor-01.jpg') }}" alt="Tutor">
+                                                            </a>
+                                                            <div class="patient-name-info">
+                                                                <h5><a href="#">Mr. Smith</a></h5>
+                                                                <span>Math</span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="appointment-date-created">
-                                                        <h6>26 Oct 2025 - 10:00 AM</h6>
-                                                        <span class="badge table-badge bg-success">Upcoming</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="apponiment-actions d-flex align-items-center">
-                                                        <a href="#" class="text-success-icon me-2"><i class="fa-solid fa-video"></i></a>
-                                                        <a href="#" class="text-danger-icon"><i class="fa-solid fa-xmark"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="patient-info-profile">
-                                                        <a href="#" class="table-avatar">
-                                                            <img src="{{ asset('assets/img/tutors/tutor-02.jpg') }}" alt="Tutor">
-                                                        </a>
-                                                        <div class="patient-name-info">
-                                                            <h5><a href="#">Ms. Johnson</a></h5>
-                                                            <span>English</span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="appointment-date-created">
+                                                            <h6>26 Oct 2025 - 10:00 AM</h6>
+                                                            <span class="badge table-badge bg-success">Upcoming</span>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="appointment-date-created">
-                                                        <h6>Tomorrow - 2:00 PM</h6>
-                                                        <span class="badge table-badge bg-info">Scheduled</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="apponiment-actions d-flex align-items-center">
-                                                        <a href="#" class="text-success-icon me-2"><i class="fa-solid fa-video"></i></a>
-                                                        <a href="#" class="text-danger-icon"><i class="fa-solid fa-xmark"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                    </td>
+                                                    <td>
+                                                        <div class="apponiment-actions d-flex align-items-center">
+                                                            <a href="#" class="text-success-icon me-2"><i class="fa-solid fa-video"></i></a>
+                                                            <a href="#" class="text-danger-icon"><i class="fa-solid fa-xmark"></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="patient-info-profile">
+                                                            <a href="#" class="table-avatar">
+                                                                <img src="{{ asset('assets/img/tutors/tutor-02.jpg') }}" alt="Tutor">
+                                                            </a>
+                                                            <div class="patient-name-info">
+                                                                <h5><a href="#">Ms. Johnson</a></h5>
+                                                                <span>English</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="appointment-date-created">
+                                                            <h6>Tomorrow - 2:00 PM</h6>
+                                                            <span class="badge table-badge bg-info">Scheduled</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="apponiment-actions d-flex align-items-center">
+                                                            <a href="#" class="text-success-icon me-2"><i class="fa-solid fa-video"></i></a>
+                                                            <a href="#" class="text-danger-icon"><i class="fa-solid fa-xmark"></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
+
+
+                            {{-- Upcoming meeting end --}}
                         </div>
 
                         <!-- Credits Left -->

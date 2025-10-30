@@ -103,3 +103,5 @@ Stack trace:
 #2 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-f6c2bb05e77ee582c501379f6998f2c4.php(8): require_once('/home/deviytwg/...')
 #3 {main}
   thrown in /home/deviytwg/projects/laravel/cambly/vendor/composer/autoload_real.php on line 41
+[30-Oct-2025 06:49:33 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Student\StudentDashboardController as StudentDashboardController because the name is already in use in /home/deviytwg/projects/laravel/cambly/routes/student.php on line 4
+[30-Oct-2025 06:49:36 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\StudentDashboardController as StudentDashboardController because the name is already in use in /home/deviytwg/projects/laravel/cambly/routes/student.php on line 4

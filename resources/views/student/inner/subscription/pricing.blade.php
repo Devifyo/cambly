@@ -2,61 +2,7 @@
 
 @section('title', 'Subscription')
 @push('styles')
-<style>
-    .user-note {
-        transition: all 0.3s ease;
-        cursor: default;
-    }
-
-    .user-note:hover {
-        background-color: var(--primary, #0E82FD) !important;
-    }
-
-    .user-note:hover .pricing-info,
-    .user-note:hover .user-note-text {
-        color: #fff !important;
-    }
-
-    /* Trial button styling and placement */
-    .trial-link {
-        display: inline-block;
-        margin-top: 10px;
-        padding: 8px 16px;
-        border-radius: 6px;
-        font-size: 0.95rem;
-        line-height: 1;
-        text-decoration: none;
-        border: 1px solid rgba(14,130,253,0.14);
-        color: var(--primary, #0E82FD);
-        background: transparent;
-        transition: all 0.18s ease;
-    }
-
-    .trial-link:hover,
-    .trial-link:focus {
-        background: rgba(14,130,253,0.12);
-        color: #0E82FD;
-        text-decoration: none;
-    }
-
-    /* Keep CTA centered under cards */
-    .trial-cta-row {
-        margin-top: 18px;
-        margin-bottom: 6px;
-    }
-
-    /* Make sure the main plan button stays full width */
-    .pricing-btn {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        align-items: stretch;
-    }
-
-    .pricing-btn .btn {
-        width: 100%;
-    }
-</style>
+    <link rel="stylesheet" href="{{asset('assets/css/pricing.css')}}">
 @endpush
 
 @section('content')
@@ -115,7 +61,7 @@
                                     </ul>
                                 </div>
                                 <div class="pricing-btn">
-                                    <a href="#" class="btn btn-primary">Choose Plan</a>
+                                    <a href="{{ route('student.subscription.checkout', $plan->slug) }}" class="btn btn-primary">Choose Plan</a>
                                 </div>
                             </div>
                         </div>
@@ -127,7 +73,7 @@
         <!-- Single, centered trial CTA under the cards -->
         <div class="row trial-cta-row align-items-center justify-content-center">
             <div class="col-lg-6 text-center">
-                <a href="#" class="trial-link"> <strong>{{ $trialPlan->name }}</strong> - {{ $trialPlan->subtitle }}</a>
+                <a href="{{ route('student.subscription.checkout', $trialPlan->slug) }}" class="trial-link"> <strong>{{ $trialPlan->name }}</strong> - {{ $trialPlan->subtitle }}</a>
             </div>
         </div>
 
@@ -149,3 +95,6 @@
 </div>
 </section>
 @endsection
+@push('scripts')
+    
+@endpush

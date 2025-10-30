@@ -8,7 +8,7 @@ use Stripe\Product;
 use Stripe\StripeClient;
 use App\Traits\StripeTrait;
 
-class StripeServiceForSeeder
+class stripeService
 {
     use StripeTrait;
 
