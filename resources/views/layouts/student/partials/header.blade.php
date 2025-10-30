@@ -5,15 +5,16 @@
                 <a id="mobile_btn" href="javascript:void(0);">
                     <span class="bar-icon"><span></span><span></span><span></span></span>
                 </a>
-                <a href="#" class="navbar-brand logo">
+                <a href="{{ route('student.dashboard') }}" class="navbar-brand logo">
                     <span class="logo-text">Cambly</span>
                 </a>
             </div>
 
             <div class="main-menu-wrapper">
                 <div class="menu-header">
-                    <a href="#" class="menu-logo">
-                        <img src="{{ asset('assets/img/logo.svg') }}" class="img-fluid" alt="Logo">
+                    <a href="{{ route('student.dashboard') }}" class="menu-logo">
+                        {{-- <img src="{{ asset('assets/img/logo.svg') }}" class="img-fluid" alt="Logo"> --}}
+                         <span class="logo-text">Cambly</span>
                     </a>
                     <a id="menu_close" class="menu-close" href="javascript:void(0);">
                         <i class="fas fa-times"></i>
