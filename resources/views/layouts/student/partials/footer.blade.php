@@ -104,7 +104,7 @@
         <div class="container">
             <div class="copyright">
                 <div class="copyright-text">
-                    <p class="mb-0">© 2025 <strong>Cambly</strong>. Learn. Connect. Grow.</p>
+                    <p class="mb-0">© 2025 <strong>{{config('app.name')}}</strong>. Learn. Connect. Grow.</p>
                 </div>
                 <div class="copyright-menu">
                     <ul class="policy-menu">

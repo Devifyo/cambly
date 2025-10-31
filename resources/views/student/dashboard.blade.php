@@ -171,7 +171,7 @@
                 <!-- Bonus Credits -->
                 <div class="dashboard-widget-box">
                     <div class="dashboard-content-info">
-                        <h6>Bonus Credits</h6>
+                        <h6>Bonus {{ trans_choice('app.credits',2) }}</h6>
                         <h4>20</h4>
                         <span class="text-warning"><i class="fa-solid fa-arrow-up"></i> +5% From Last Week</span>
                     </div>
@@ -187,7 +187,7 @@
             <div class="dashboard-card w-100">
                 <div class="dashboard-card-head border-0">
                     <div class="header-title">
-                        <h5>Account & Credits Overview</h5>
+                        <h5>Account & {{ trans_choice('app.credits',2) }} Overview</h5>
                     </div>
                 </div>
                 <div class="dashboard-card-body">
@@ -216,7 +216,7 @@
                                                     <td>
                                                         <div class="patient-info-profile">
                                                             <a href="#" class="table-avatar">
-                                                                <img src="{{ asset('assets/img/tutors/tutor-01.jpg') }}" alt="Tutor">
+                                                                <img src="{{ asset('assets/img/dashboard/profile-06.jpg') }}" alt="Tutor">
                                                             </a>
                                                             <div class="patient-name-info">
                                                                 <h5><a href="#">Mr. Smith</a></h5>
@@ -241,7 +241,7 @@
                                                     <td>
                                                         <div class="patient-info-profile">
                                                             <a href="#" class="table-avatar">
-                                                                <img src="{{ asset('assets/img/tutors/tutor-02.jpg') }}" alt="Tutor">
+                                                                <img src="{{ asset('assets/img/dashboard/profile-06.jpg') }}" alt="Tutor">
                                                             </a>
                                                             <div class="patient-name-info">
                                                                 <h5><a href="#">Ms. Johnson</a></h5>
@@ -275,13 +275,13 @@
                         <!-- Credits Left -->
                         <div class="col-sm-5">
                             <div class="chart-over-all-report text-center">
-                                <h6>Credits Left</h6>
+                                <h6>{{ trans_choice('app.credits',2) }} Left</h6>
                                 <div class="circle-bar circle-bar3 report-chart mb-2">
                                     <div class="circle-graph3" data-percent="{{ $currentCredits['consume_percentage'] }}">
-                                        <p>Credits Used<br>{{$currentCredits['available']}} / {{$currentCredits['issued']}} </p>
+                                        <p>{{ trans_choice('app.credits',2) }} Left<br>{{$currentCredits['available']}} / {{$currentCredits['issued']}} </p>
                                     </div>
                                 </div>
-                                <span class="health-percentage d-block mb-2">You have enough credits for {{$currentCredits['available']}} more sessions</span>
+                                <span class="health-percentage d-block mb-2">You have enough {{ trans_choice('app.credits_lower',2) }} for {{$currentCredits['available']}} more sessions</span>
                                 <a href="{{ route('student.account.subscription') }}" class="btn btn-dark w-100 rounded-pill">Manage Subscriptions<i
                                         class="fa-solid fa-chevron-right ms-2"></i></a>
                             </div>

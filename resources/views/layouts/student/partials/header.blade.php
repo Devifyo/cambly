@@ -6,7 +6,7 @@
                     <span class="bar-icon"><span></span><span></span><span></span></span>
                 </a>
                 <a href="{{ route('student.dashboard') }}" class="navbar-brand logo">
-                    <span class="logo-text">Cambly</span>
+                    <span class="logo-text">{{config('app.name')}}</span>
                 </a>
             </div>
 
@@ -14,7 +14,7 @@
                 <div class="menu-header">
                     <a href="{{ route('student.dashboard') }}" class="menu-logo">
                         {{-- <img src="{{ asset('assets/img/logo.svg') }}" class="img-fluid" alt="Logo"> --}}
-                         <span class="logo-text">Cambly</span>
+                         <span class="logo-text">{{config('app.name')}}</span>
                     </a>
                     <a id="menu_close" class="menu-close" href="javascript:void(0);">
                         <i class="fas fa-times"></i>
@@ -148,13 +148,13 @@
                     <li class="nav-item dropdown has-arrow logged-item">
                         <a href="#" class="nav-link ps-0" data-bs-toggle="dropdown">
                             <span class="user-img">
-                                <img class="rounded-circle" src="{{ asset('assets/img/doctors-dashboard/profile-06.jpg') }}" width="31" alt="User">
+                                <img class="rounded-circle" src="{{ asset('assets/img/dashboard/profile-06.jpg') }}" width="31" alt="User">
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
                             <div class="user-header">
                                 <div class="avatar avatar-sm">
-                                    <img src="{{ asset('assets/img/doctors-dashboard/profile-06.jpg') }}" alt="User Image" class="avatar-img rounded-circle">
+                                    <img src="{{ asset('assets/img/dashboard/profile-06.jpg') }}" alt="User Image" class="avatar-img rounded-circle">
                                 </div>
                                 <div class="user-text">
                                     <h6>Hendrita Hayes</h6>

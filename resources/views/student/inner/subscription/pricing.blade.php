@@ -84,7 +84,7 @@
                     <div class="card-body">
                         <div class="pricing-info">
                             <p class="user-note-text" style="margin-bottom:0;">
-                                You can cancel lessons up to 12 hours before the start time for a full credit return.  
+                                You can cancel lessons up to 12 hours before the start time for a full {{ trans_choice('app.credits_lower',2) }} return.  
                                 All calls happen on Discord — we’ll email your teacher’s Discord ID and meeting link before each session.
                             </p>
                         </div>
