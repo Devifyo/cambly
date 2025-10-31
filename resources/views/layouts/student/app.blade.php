@@ -23,19 +23,19 @@
     <link rel="stylesheet" href="{{asset('assets/css/iconsax.css')}}">
 
     <!-- Feathericon CSS -->
-    <link rel="stylesheet" href="{{asset('assets/css/feather.css')}}">
+    {{-- <link rel="stylesheet" href="{{asset('assets/css/feather.css')}}"> --}}
 
     <!-- Owl carousel CSS -->
-    <link rel="stylesheet" href="{{asset('assets/css/owl.carousel.min.css')}}">
+    {{-- <link rel="stylesheet" href="{{asset('assets/css/owl.carousel.min.css')}}"> --}}
 
     <!-- select CSS -->
-    <link rel="stylesheet" href="{{asset('assets/plugins/select2/css/select2.min.css')}}">
+    {{-- <link rel="stylesheet" href="{{asset('assets/plugins/select2/css/select2.min.css')}}"> --}}
 
     <!-- Datepicker CSS -->
-    <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datetimepicker.min.css')}}">
+    {{-- <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datetimepicker.min.css')}}"> --}}
 
     <!-- Apex Css -->
-    <link rel="stylesheet" href="{{asset('assets/plugins/apex/apexcharts.css')}}">
+    {{-- <link rel="stylesheet" href="{{asset('assets/plugins/apex/apexcharts.css')}}"> --}}
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{asset('assets/css/custom.css')}}">
@@ -76,22 +76,22 @@
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
 
     <!-- Sticky Sidebar JS -->
-    <script src="{{asset('assets/plugins/theia-sticky-sidebar/ResizeSensor.js')}}"></script>
+        <script src="{{asset('assets/plugins/theia-sticky-sidebar/ResizeSensor.js')}}"></script>
     <script src="{{asset('assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js')}}"></script>
 
     <!-- select JS -->
     <script src="{{asset('assets/plugins/select2/js/select2.min.js')}}"></script>
 
     <!-- Owl Carousel JS -->
-    <script src="{{asset('assets/js/owl.carousel.min.js')}}"></script>
+    {{-- <script src="{{asset('assets/js/owl.carousel.min.js')}}"></script> --}}
 
     <!-- Apexchart JS -->
-    <script src="{{asset('assets/plugins/apex/apexcharts.min.js')}}"></script>
-    <script src="{{asset('assets/plugins/apex/chart-data.js')}}"></script>
+    {{-- <script src="{{asset('assets/plugins/apex/apexcharts.min.js')}}"></script>
+    <script src="{{asset('assets/plugins/apex/chart-data.js')}}"></script> --}}
 
     <!-- Datepicker JS -->
-    <script src="{{asset('assets/js/moment.min.js')}}"></script>
-    <script src="{{asset('assets/js/bootstrap-datetimepicker.min.js')}}"></script>
+    {{-- <script src="{{asset('assets/js/moment.min.js')}}"></script>
+    <script src="{{asset('assets/js/bootstrap-datetimepicker.min.js')}}"></script> --}}
 
     <!-- Circle Progress JS -->
     <script src="{{asset('assets/js/circle-progress.min.js')}}"></script>
