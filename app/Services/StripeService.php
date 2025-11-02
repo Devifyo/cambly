@@ -195,5 +195,68 @@ class stripeService
 
         return null;
     }
+
+    /**
+         * Cancel a customer's active subscription in Stripe.
+         *
+         * @param  string  $subscriptionId  Stripe subscription ID (e.g. sub_XXXX)
+         * @param  bool    $cancelImmediately  If true, cancel now; otherwise cancel at period end
+         * @return array
+     */
+    public function cancelSubscription(string $subscriptionId, bool $cancelImmediately = false): array
+    {
+        $this->initStripe();
+
+        $client = new StripeClient(config('cashier.secret'));
+        $subscriptionService = new SubscriptionService();
+        try {
+            // Retrieve subscription
+            $subscription = $client->subscriptions->retrieve($subscriptionId);
+
+            if (! $subscription) {
+                return ['error' => 'Subscription not found'];
+            }
+
+            // Cancel behavior
+            if ($cancelImmediately) {
+                // Immediate cancellation
+                $canceled = $client->subscriptions->cancel($subscriptionId, [
+                    'invoice_now' => false,
+                    'prorate' => false,
+                ]);
+
+                $subscriptionService->cancelSubscription($subscriptionId);
+
+            } else {
+                // Let current billing period finish
+                $canceled = $client->subscriptions->update($subscriptionId, [
+                    'cancel_at_period_end' => true,
+                ]);
+                
+                $subscriptionService->cancelSubscription($subscriptionId);
+            }
+
+            return [
+                'success' => true,
+                'subscription_id' => $canceled->id,
+                'status' => $canceled->status,
+                'cancel_at_period_end' => $canceled->cancel_at_period_end,
+                'current_period_end' => isset($canceled->current_period_end)
+                    ? \Carbon\Carbon::createFromTimestamp($canceled->current_period_end)->toDateTimeString()
+                    : null,
+            ];
+        } catch (ApiErrorException $e) {
+            logger()->error('Stripe cancelSubscription ApiError: ' . $e->getMessage(), [
+                'subscription_id' => $subscriptionId,
+            ]);
+            return ['error' => $e->getMessage()];
+        } catch (\Exception $e) {
+            logger()->error('Stripe cancelSubscription error: ' . $e->getMessage(), [
+                'subscription_id' => $subscriptionId,
+            ]);
+            return ['error' => $e->getMessage()];
+        }
+    }
+
     
 }

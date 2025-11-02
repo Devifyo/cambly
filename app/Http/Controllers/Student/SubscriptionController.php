@@ -144,7 +144,20 @@ class SubscriptionController extends Controller
 
     public function cancel()
     {   
-        dd('cancel');
-        return view($this->view_path . '.cancel');
+        $subscriptionId = auth()->user()->activeSubscription->stripe_subscription_id ?? null;
+       if (! $subscriptionId) {
+            return back()->withErrors(['Subscription not found.']);
+        }
+
+        $result =  $this->stripeService->cancelSubscription($subscriptionId);
+
+        if (!empty($result['error'])) {
+            return back()->withErrors([$result['error']]);
+        }
+
+        // return back()->with('success', 'Your subscription has been canceled.');
+        return redirect()
+            ->route('student.account.subscription')
+            ->with('success', 'Your subscription has been canceled successfully. It will remain active until the end of your billing period.');
     }
 }

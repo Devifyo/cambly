@@ -276,11 +276,14 @@
                             <div class="chart-over-all-report text-center">
                                 <h6>{{ trans_choice('app.credits',2) }} Left</h6>
                                 <div class="circle-bar circle-bar3 report-chart mb-2">
-                                    <div class="circle-graph3" data-percent="{{ $currentCredits['consume_percentage'] }}">
-                                        <p>{{ trans_choice('app.credits',2) }} Left<br>{{$currentCredits['available']}} / {{$currentCredits['issued']}} </p>
+                                    <div class="circle-graph3" data-percent="{{ isset($currentCredits['consume_percentage']) ? $currentCredits['consume_percentage'] : 0 }}">
+                                        <p>
+                                            {{ trans_choice('app.credits', 2) }} Left<br>
+                                            {{ $currentCredits['available'] ?? 0 }} / {{ $currentCredits['issued'] ?? 0 }}
+                                        </p>
                                     </div>
                                 </div>
-                                <span class="health-percentage d-block mb-2">You have enough {{ trans_choice('app.credits_lower',2) }} for {{$currentCredits['available']}} more sessions</span>
+                                <span class="health-percentage d-block mb-2">You have enough {{ trans_choice('app.credits_lower',2) }} for {{$currentCredits['available'] ?? 0}} more sessions</span>
                                 <a href="{{ route('student.account.subscription') }}" class="btn btn-dark w-100 rounded-pill">Manage Subscriptions<i
                                         class="fa-solid fa-chevron-right ms-2"></i></a>
                             </div>
@@ -289,9 +292,11 @@
                     </div>
 
                     <!-- Subscription Info -->
+                    @if($activeSubscription)
                     <div class="report-gen-date mt-4">
                         <p>Subscription valid till: <strong>{{formatDate($activeSubscription['current_period_start'])}}</strong> <span><i class="fa-solid fa-copy"></i></span></p>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -10,6 +10,7 @@ use App\Services\StripeWebhookService;
 use App\Services\CreditService;
 use App\Services\SubscriptionService;
 use App\Exceptions\WebhookException;
+use Carbon\Carbon;
 
 class StripeWebhookController extends Controller
 {
@@ -221,12 +222,13 @@ class StripeWebhookController extends Controller
 
     private function processSubscriptionInvoice($user, $plan, $credits, $invoice, $subscriptionId): void
     {
-        $periodStart = isset($invoice->period_start) 
-            ? \Carbon\Carbon::createFromTimestamp($invoice->period_start) 
+        $periodStart = isset($invoice->lines->data[0]->period->start)
+            ? Carbon::createFromTimestamp($invoice->lines->data[0]->period->start)
             : null;
-        $periodEnd = isset($invoice->period_end) 
-            ? \Carbon\Carbon::createFromTimestamp($invoice->period_end) 
+        $periodEnd = isset($invoice->lines->data[0]->period->end)
+            ? Carbon::createFromTimestamp($invoice->lines->data[0]->period->end)
             : null;
+
 
         // Update subscription
         $subscription = $this->subscriptionService->updateSubscriptionPeriod(

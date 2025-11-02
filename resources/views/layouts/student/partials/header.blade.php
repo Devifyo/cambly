@@ -41,12 +41,12 @@
                         </ul>
                     </li>
 
-                    <li><a href="#">Search Teacher</a></li>
-                    <li class="has-submenu ">
+                    <li class="{{ request()->routeIs('student.tutors.search') ? 'active' : '' }}"><a href="{{ route('student.tutors.search') }}">Search Teacher</a></li>
+                    <li class="has-submenu {{ request()->routeIs('student.account.subscription') ? 'active' : '' }}">
                         <a href="#">Account <i class="fas fa-chevron-down"></i> </a>
                         <ul class="submenu">
-                            <li class=""><a href="{{ route('student.account.subscription') }}">Subscription</a></li>
-                            <li><a href="#">Profile settings</a></li>
+                            <li class="{{ request()->routeIs('student.account.subscription') ? 'active' : '' }}"><a href="{{ route('student.account.subscription') }}">Subscription</a></li>
+                            <li class=""><a href="">Profile settings</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -78,7 +78,7 @@
                     </li> --}}
 
                     <!-- Notifications -->
-                    <li class="nav-item dropdown noti-nav me-3 pe-0">
+                    {{-- <li class="nav-item dropdown noti-nav me-3 pe-0">
                         <a href="#" class="dropdown-toggle active-dot active-dot-danger nav-link p-0" data-bs-toggle="dropdown">
                             <i class="isax isax-notification-bing"></i>
                         </a>
@@ -105,7 +105,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </li>
+                    </li> --}}
 
                     <!-- Messages -->
                     {{-- <li class="nav-item noti-nav me-3 pe-0">

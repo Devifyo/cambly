@@ -49,7 +49,6 @@ class SubscriptionService
 
             $plan = $this->resolvePlanFromStripeSubscription($stripeSubscription);
             $status = $stripeSubscription->status ?? 'pending';
-
             $periodStart = isset($stripeSubscription->current_period_start)
                 ? Carbon::createFromTimestamp($stripeSubscription->current_period_start)
                 : null;
@@ -63,10 +62,19 @@ class SubscriptionService
                 'current_period_start' => $periodStart,
                 'current_period_end' => $periodEnd,
             ];
-
+            Log::info('Syncing subscription from Stripe', [
+                'user_id' => $user->id,
+                'stripe_subscription_id' => $subscriptionId,
+                'plan_id' => $plan?->id,
+                'status' => $status,
+                'current_period_start' => $periodStart,
+                'current_period_end' => $periodEnd,
+            ]);
             // Handle subscription cancellation
             if (($stripeSubscription->cancel_at_period_end ?? false) && $periodEnd) {
                 $updateData['ends_at'] = $periodEnd;
+                $updateData['status'] = 'cancelled';
+
             }
 
             Subscription::updateOrCreate(
@@ -91,7 +99,13 @@ class SubscriptionService
         if (!$subscription) {
             throw new \InvalidArgumentException("Subscription not found: {$stripeSubscriptionId}");
         }
-
+        Log::info('Updating subscription period', [
+            'subscription_id' => $subscription->id,
+            'plan_id' => $planId,
+            'status' => $status,
+            'period_start' => $periodStart,
+            'period_end' => $periodEnd,
+        ]);
         $subscription->update([
             'plan_id' => $planId ?? $subscription->plan_id,
             'status' => $status,
@@ -108,17 +122,17 @@ class SubscriptionService
             ->update(['status' => $status]);
     }
 
-    public function cancelSubscription(string $stripeSubscriptionId): void
-    {
-        $subscription = Subscription::where('stripe_subscription_id', $stripeSubscriptionId)->first();
-        
-        if ($subscription) {
-            $subscription->update([
-                'status' => 'cancelled',
-                'ends_at' => now(),
-            ]);
+        public function cancelSubscription(string $stripeSubscriptionId): void
+        {
+            $subscription = Subscription::where('stripe_subscription_id', $stripeSubscriptionId)->first();
+            if ($subscription) {
+                $subscription->update([
+                    'status' => 'cancelled',
+                    'ends_at' => now(),
+                ]);
+            }
+            $subscription = Subscription::where('stripe_subscription_id', $stripeSubscriptionId)->first();
         }
-    }
 
     public function markSubscriptionsPastDue(string $stripeCustomerId): void
     {

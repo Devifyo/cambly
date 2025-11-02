@@ -20,7 +20,15 @@ class StudentDashboardController extends Controller
     {   
         $user = auth()->user();
         $currentCredits = $this->creditService->getCurrentMonthCredits($user);
-        $currentCredits['consume_percentage'] = ($currentCredits['available'] / $currentCredits['issued']) * 100 ;
+        if (
+            isset($currentCredits['available'], $currentCredits['issued']) &&
+            $currentCredits['issued'] > 0
+        ) {
+            $percentage = ($currentCredits['available'] / $currentCredits['issued']) * 100;
+            $currentCredits['consume_percentage'] = number_format($percentage, 2) . '%';
+        } else {
+            $currentCredits['consume_percentage'] = '0%';
+        }
         $activeSubscription =  $this->subs->getActiveSubscriptionDetails($user);
         return view('student.dashboard', [
             'currentCredits' => $currentCredits,
