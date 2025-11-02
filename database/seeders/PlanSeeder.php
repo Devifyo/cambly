@@ -17,13 +17,13 @@ class PlanSeeder extends Seeder
             [
                 'name' => 'Trial',
                 'subtitle' => 'Try your first lesson for only ¥100',
-                'description' => '1 credit for ¥100 — one-time trial plan.',
+                'description' => '1 Ticket for ¥100 — one-time trial plan.',
                 'price' => 100,
                 'credits_per_cycle' => 1,
                 'interval' => 'one_time',
                 'slug' => 'trial_one_time',
                 'features' => [
-                    '1 credit (one 25-minute lesson)',
+                    '1 Ticket (one 25-minute lesson)',
                     'Book from teacher calendar',
                     'Email confirmation & reminder',
                     'Discord call with your teacher',
@@ -34,14 +34,14 @@ class PlanSeeder extends Seeder
             [
                 'name' => 'Basic',
                 'subtitle' => 'Perfect for casual learners',
-                'description' => '4 credits per month ',
+                'description' => '4 tickets per month ',
                 'price' => 4500,
                 'credits_per_cycle' => 4,
                 'interval' => 'monthly',
                 'slug' => 'basic_monthly',
 
                 'features' => [
-                    '4 Credits per month',
+                    '4 Tickets per month',
                     'Book directly from teacher calendar',
                     'Email confirmations & reminders',
                     'Discord call with your teacher',
@@ -52,13 +52,13 @@ class PlanSeeder extends Seeder
             [
                 'name' => 'Premium',
                 'subtitle' => 'Ideal for regular learners',
-                'description' => '8 credits per month',
+                'description' => '8 tickets per month',
                 'price' => 8000,
                 'credits_per_cycle' => 8,
                 'interval' => 'monthly',
                 'slug' => 'premium_monthly',
                 'features' => [
-                    '8 Credits per month',
+                    '8 Tickets per month',
                     'Priority booking',
                     'Lesson history & reminders',
                     'Priority support',
@@ -69,13 +69,13 @@ class PlanSeeder extends Seeder
             [
                 'name' => 'Enterprise',
                 'subtitle' => 'For dedicated and serious learners',
-                'description' => '12 credits per month',
+                'description' => '12 tickets per month',
                 'price' => 9000,
                 'credits_per_cycle' => 12,
                 'interval' => 'monthly',
                 'slug' => 'enterprise_monthly',
                 'features' => [
-                    '12 Credits per month',
+                    '12 Tickets per month',
                     'Highest booking limits',
                     'Full lesson history',
                     'Dedicated support',

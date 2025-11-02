@@ -27,10 +27,13 @@ class SubscriptionController extends Controller
     {
         $monthlyPlans = Plan::active()->where('interval', 'monthly')->get();
         $trialPlan = Plan::active()->where('interval', 'one_time')->first();
-
+        $user = Auth::user();
+        $activeSubscription = $user->activeSubscription()->with('plan')->first();
         return view($this->view_path . '.pricing', [
             'monthlyPlans' => $monthlyPlans,
             'trialPlan' => $trialPlan,
+            'user' =>  $user,
+            'activeSubscription' => $activeSubscription,
         ]);
     }
 

@@ -16,10 +16,13 @@
                     <div class="plan-choose-info">
                         <label class="monthly-plan">Monthly</label>
                     </div>
-
-                    <p style="margin-top:12px;">
-                      {{ $trialPlan->description }}
-                    </p>
+                    {{-- trail description --}}
+                    @if(!$user?->hasEverSubscribed())
+                        <p style="margin-top:12px;">
+                        {{ $trialPlan->description }}
+                        </p>
+                    @endif
+                    {{-- end of trail description --}}
                 </div>
             </div>
         </div>
@@ -61,7 +64,7 @@
                                     </ul>
                                 </div>
                                 <div class="pricing-btn">
-                                    <a href="{{ route('student.subscription.checkout', $plan->slug) }}" class="btn btn-primary">Choose Plan</a>
+                                <x-subscription-button :plan="$plan" :active-subscription="$activeSubscription" />
                                 </div>
                             </div>
                         </div>
@@ -71,11 +74,13 @@
         </div>
 
         <!-- Single, centered trial CTA under the cards -->
-        <div class="row trial-cta-row align-items-center justify-content-center">
-            <div class="col-lg-6 text-center">
-                <a href="{{ route('student.subscription.checkout', $trialPlan->slug) }}" class="trial-link"> <strong>{{ $trialPlan->name }}</strong> - {{ $trialPlan->subtitle }}</a>
+        @if(!$user?->hasEverSubscribed())
+            <div class="row trial-cta-row align-items-center justify-content-center">
+                <div class="col-lg-6 text-center">
+                    <a href="{{ route('student.subscription.checkout', $trialPlan->slug) }}" class="trial-link"> <strong>{{ $trialPlan->name }}</strong> - {{ $trialPlan->subtitle }}</a>
+                </div>
             </div>
-        </div>
+        @endif
 
         <!-- Simple note for users -->
         <div class="row align-items-center justify-content-center" style="margin-top:18px;">

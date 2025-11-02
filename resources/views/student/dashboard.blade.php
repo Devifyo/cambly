@@ -167,7 +167,6 @@
                         <span class="dash-icon-box"><i class="fa-solid fa-user-check"></i></span>
                     </div>
                 </div>
-
                 <!-- Bonus Credits -->
                 <div class="dashboard-widget-box">
                     <div class="dashboard-content-info">

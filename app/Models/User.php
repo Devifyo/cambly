@@ -107,4 +107,11 @@ class User extends Authenticatable
     {
         return $this->activeSubscription()->with('plan')->first()?->plan;
     }
+
+    public function hasEverSubscribed()
+    {
+        return $this->subscriptions()
+            ->whereNotNull('plan_id')
+            ->exists();
+    }
 }
