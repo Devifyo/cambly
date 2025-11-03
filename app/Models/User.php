@@ -73,6 +73,35 @@ class User extends Authenticatable
         return $this->hasMany(Subscription::class);
     }
 
+        public function isTeacher(): bool
+    {
+        return $this->hasRole(config('roles.teacher'));
+    }
+
+    /**
+     * Check if the user has the 'student' role.
+     */
+    public function isStudent(): bool
+    {
+        return $this->hasRole(config('roles.student'));
+    }
+
+        /**
+     * Scope a query to only include teachers.
+     */
+    public function scopeTeachers($query)
+    {
+        return $query->role(config('roles.teacher'));
+    }
+
+    /**
+     * Scope a query to only include students.
+     */
+    public function scopeStudents($query)
+    {
+        return $query->role(config('roles.student'));
+    }
+
     /**
      * Get the active and valid subscription for the user.
      * A subscription is considered active if:
@@ -114,4 +143,55 @@ class User extends Authenticatable
             ->whereNotNull('plan_id')
             ->exists();
     }
+
+
+/*********************Teacher filter scopes*******************************/
+public function scopeWithFilter($query, array $filters = [])
+{
+    // Check what kind of filters we have
+    $hasNameFilter = !empty($filters['name']);
+    $hasAvailabilityFilter = !empty($filters['start_utc']) 
+        || !empty($filters['end_utc']) 
+        || isset($filters['include_past']);
+    return $query
+        // 1️⃣ Filter by teacher name if provided
+        ->when($hasNameFilter, function ($q) use ($filters) {
+            $q->where('name', 'like', '%' . trim($filters['name']) . '%');
+        })
+
+        // 2️⃣ Only apply whereHas if availability-related filters are provided
+        ->when($hasAvailabilityFilter, function ($q) use ($filters) {
+            $q->whereHas('availabilities', function ($subQ) use ($filters) {
+                $this->applyAvailabilityFilters($subQ, $filters);
+            });
+        })
+
+        // 3️⃣ Always eager load availabilities (filtered or not)
+        ->with(['availabilities' => function ($q) use ($filters, $hasAvailabilityFilter) {
+            if ($hasAvailabilityFilter) {
+                $this->applyAvailabilityFilters($q, $filters);
+            }
+            $q->orderBy('start_utc', 'asc');
+        }]);
+}
+
+/**
+ * Apply common availability filters
+ */
+protected function applyAvailabilityFilters($query, array $filters)
+{   
+    return $query
+        ->where('is_booked', false)
+        ->when(!empty($filters['start_utc']), function ($q) use ($filters) {
+            $q->whereDate('start_utc', '>=', $filters['start_utc']);
+        })
+        ->when(!empty($filters['end_utc']), function ($q) use ($filters) {
+            $q->whereDate('end_utc', '<=', $filters['end_utc']);
+        })
+        ->when(empty($filters['include_past']), function ($q) {
+            $q->where('start_utc', '>=', now());
+        });
+}
+
+
 }

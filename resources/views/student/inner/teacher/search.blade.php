@@ -34,12 +34,12 @@
                                 <input type="text" class="form-control" placeholder="Search for Tutors, Skills, or Subjects">
                             </div>
                         </div>
-                        <div class="search-input search-map-line">
+                        {{-- <div class="search-input search-map-line">
                             <i class="isax isax-location5"></i>
                             <div class=" mb-0">
                                 <input type="text" class="form-control" placeholder="Location or Time Zone">
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="search-input search-calendar-line">
                             <i class="isax isax-calendar-tick5"></i>
                             <div class=" mb-0">

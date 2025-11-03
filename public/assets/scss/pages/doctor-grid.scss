@@ -2,7 +2,7 @@
 @use "../utils/variables";
 
 .doctors-search-box {
-	max-width: 855px;
+	max-width: 804px;
 	margin: 20px auto -80px;
 	padding: 2px;
 	@include mixins.respond-below(md) {
