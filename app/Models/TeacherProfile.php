@@ -11,10 +11,18 @@ class TeacherProfile extends Model
     protected $fillable = [
         'user_id',
         'preferred_name',
+        'native_language',
+        'english_level',
         'age',
         'tz',
         'discord_id',
         'bio',
-        'started_at'
+        'started_at',
+        'gender',
     ];
+
+            public function user()
+        {
+            return $this->belongsTo(User::class);
+        }
 }

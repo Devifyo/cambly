@@ -68,6 +68,7 @@ class User extends Authenticatable
         return $this->hasMany(TicketLedger::class, 'student_id');
     }
 
+
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
@@ -145,53 +146,94 @@ class User extends Authenticatable
     }
 
 
-/*********************Teacher filter scopes*******************************/
-public function scopeWithFilter($query, array $filters = [])
-{
-    // Check what kind of filters we have
-    $hasNameFilter = !empty($filters['name']);
-    $hasAvailabilityFilter = !empty($filters['start_utc']) 
-        || !empty($filters['end_utc']) 
-        || isset($filters['include_past']);
-    return $query
-        // 1️⃣ Filter by teacher name if provided
-        ->when($hasNameFilter, function ($q) use ($filters) {
-            $q->where('name', 'like', '%' . trim($filters['name']) . '%');
-        })
-
-        // 2️⃣ Only apply whereHas if availability-related filters are provided
-        ->when($hasAvailabilityFilter, function ($q) use ($filters) {
-            $q->whereHas('availabilities', function ($subQ) use ($filters) {
-                $this->applyAvailabilityFilters($subQ, $filters);
-            });
-        })
-
-        // 3️⃣ Always eager load availabilities (filtered or not)
-        ->with(['availabilities' => function ($q) use ($filters, $hasAvailabilityFilter) {
-            if ($hasAvailabilityFilter) {
-                $this->applyAvailabilityFilters($q, $filters);
-            }
-            $q->orderBy('start_utc', 'asc');
-        }]);
-}
-
-/**
- * Apply common availability filters
- */
-protected function applyAvailabilityFilters($query, array $filters)
-{   
-    return $query
-        ->where('is_booked', false)
-        ->when(!empty($filters['start_utc']), function ($q) use ($filters) {
-            $q->whereDate('start_utc', '>=', $filters['start_utc']);
-        })
-        ->when(!empty($filters['end_utc']), function ($q) use ($filters) {
-            $q->whereDate('end_utc', '<=', $filters['end_utc']);
-        })
-        ->when(empty($filters['include_past']), function ($q) {
-            $q->where('start_utc', '>=', now());
+/********************* Teacher filter scopes *******************************/
+    
+    /**
+     * Filter teachers by name
+     */
+    public function scopeFilterByName($query, $name)
+    {
+        return $query->when($name, function ($q) use ($name) {
+            $q->where('name', 'like', "%{$name}%");
         });
-}
+    }
+
+    /**
+     * Filter teachers who have availabilities at specific datetime
+     */
+    public function scopeFilterByAvailability($query, $startUtc)
+    {
+        return $query->when($startUtc, function ($q) use ($startUtc) {
+            $start = \Carbon\Carbon::parse($startUtc);
+            
+            $q->whereHas('availabilities', function ($query) use ($start) {
+                $query->where('is_booked', false)
+                    ->whereBetween('start_utc', [
+                        $start->copy()->startOfMinute(),
+                        $start->copy()->endOfMinute(),
+                    ]);
+            });
+        });
+    }
+
+    /**
+     * Eager load teacher profile and filtered availabilities
+     */
+    public function scopeWithTeacherData($query, $startUtc = null)
+    {
+        return $query->with([
+            'teacherProfile',
+            'availabilities' => function ($q) use ($startUtc) {
+                $q->where('is_booked', false);
+
+                if ($startUtc) {
+                    $start = \Carbon\Carbon::parse($startUtc);
+                    $q->whereBetween('start_utc', [
+                        $start->copy()->startOfMinute(),
+                        $start->copy()->endOfMinute(),
+                    ]);
+                }
+
+                $q->select('id', 'teacher_id', 'start_utc', 'end_utc', 'is_booked')
+                  ->orderBy('start_utc');
+            }
+        ]);
+    }
+
+
+    /**
+     * Filter teachers by gender
+     */
+    public function scopeFilterByGender($query, $gender)
+    {  
+        if(!is_null($gender)){
+            return $query->when($gender, function ($q) use ($gender) {
+                $q->whereHas('teacherProfile', function ($query) use ($gender) {
+                    $query->where('gender', $gender);
+                });
+            });
+         }
+    }
+
+    /**
+     * Filter teachers by native language
+     */
+    public function scopeFilterByLanguage($query, $languages)
+    {
+        return $query->when($languages, function ($q) use ($languages) {
+            // Handle both array and single value
+            $languageArray = is_array($languages) ? $languages : [$languages];
+            // dd($languageArray);
+            $languageArray = ['english'];
+            $q->whereHas('teacherProfile', function ($query) use ($languageArray) {
+                $query->whereIn('native_language', $languageArray);
+            });
+        });
+    }
+
+
+
+
 
 
 }
