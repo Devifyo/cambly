@@ -806,7 +806,7 @@
     vertical-align: variables.$middle;
     position: variables.$relative;
     &.search-line {
-        width: 35%;
+        width: 50%;
         &::before {
             @include mixins.position(variables.$absolute, 50%, 0, null, null);
             @include mixins.transform(translateY(-50%));
