@@ -1287,9 +1287,9 @@ Version      : 1.3
 
 	// Reschedule Open Popup
 
-	$(document).ready(function() {
-		$('#reschedule-book-modal').modal('show');
-	});
+	// $(document).ready(function() {
+	// 	$('#reschedule-book-modal').modal('show');
+	// });
 
 	//browse slider
 	if ($('.browse-slider').length > 0) {

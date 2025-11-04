@@ -17,7 +17,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-
+    'ticket_per_meeting' => 1,
     /*
     |--------------------------------------------------------------------------
     | Application Environment

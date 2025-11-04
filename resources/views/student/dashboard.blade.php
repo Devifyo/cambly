@@ -195,7 +195,7 @@
                         <div class="col-sm-7">
                             <div class="book-appointment-head mb-3 d-flex justify-content-between align-items-center">
                                 <h3><span>Book a new</span> Tutor</h3>
-                                <span class="add-icon"><a href="{{ url('search-tutors') }}"><i
+                                <span class="add-icon"><a href="{{ route('student.tutors.search') }}"><i
                                             class="fa-solid fa-circle-plus"></i></a></span>
                             </div>
 

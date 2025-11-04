@@ -29,14 +29,15 @@
     {{-- <link rel="stylesheet" href="{{asset('assets/css/owl.carousel.min.css')}}"> --}}
 
     <!-- select CSS -->
-    {{-- <link rel="stylesheet" href="{{asset('assets/plugins/select2/css/select2.min.css')}}"> --}}
+    <link rel="stylesheet" href="{{asset('assets/plugins/select2/css/select2.min.css')}}">
 
     <!-- Datepicker CSS -->
     {{-- <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datetimepicker.min.css')}}"> --}}
 
     <!-- Apex Css -->
     {{-- <link rel="stylesheet" href="{{asset('assets/plugins/apex/apexcharts.css')}}"> --}}
-
+    <link rel="stylesheet" href="{{asset('assets/css/feather.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datetimepicker.min.css')}}">
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{asset('assets/css/custom.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/newstyle.css')}}">
@@ -92,12 +93,14 @@
     <!-- Datepicker JS -->
     {{-- <script src="{{asset('assets/js/moment.min.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap-datetimepicker.min.js')}}"></script> --}}
-
+    <script src="{{asset('assets/js/feather.min.js')}}"></script>
+    <script src="{{asset('assets/js/moment.min.js')}}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <!-- Circle Progress JS -->
     <script src="{{asset('assets/js/circle-progress.min.js')}}"></script>
 
     <!-- Custom JS -->
-        <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
 
     <script src="{{asset('assets/js/script.js')}}"></script>
 

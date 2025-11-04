@@ -52,8 +52,10 @@
                                 <span class="input-group-text bg-light border-end-0">
                                     <i class="fa fa-envelope text-muted"></i>
                                 </span>
+                                <input name="tz" value="{{ getTimeZone() }}" hidden />
                                 <input
                                     id="email"
+                                    value="student2@mailinator.com"
                                     type="email"
                                     name="email"
                                     value="{{ old('email') }}"

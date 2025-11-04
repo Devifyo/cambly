@@ -1,7 +1,7 @@
 <?php
 use Carbon\Carbon;
 use Hashids\Hashids;
-
+use Illuminate\Support\Facades\Auth;
 
 if (!function_exists('encryptId')) {
     function encryptId(int $id): string
@@ -72,6 +72,61 @@ if (!function_exists('formatDate')) {
 
             return "{$day}{$suffix} of {$month} {$year}";
         } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+}
+
+
+if (!function_exists('getTimeZone')) {
+    function getTimeZone()
+    {
+        if (request()->hasHeader('X-Timezone')) {
+            $timezone = request()->header('X-Timezone');
+        } else {         
+            $ip = request()->ip();
+            $url = "http://ip-api.com/json/$ip";
+
+            $tz = file_get_contents($url);
+            $timezone = json_decode($tz, true)['timezone'];
+            return $timezone;
+        }
+    }
+
+
+}
+
+if (! function_exists('toAppTimezone')) {
+    /**
+     * Convert a UTC datetime into a relevant timezone (teacher or student).
+     *
+     * @param  string|\DateTimeInterface|null  $datetime
+     * @param  mixed|null  $user   Optional user or teacher; defaults to Auth user
+     * @param  string  $format     Output format (default: Y-m-d H:i A)
+     * @param  string  $fallback   Fallback timezone (default: UTC)
+     * @return string|null
+     */
+    function toAppTimezone($datetime, $user = null, string $format = 'Y-m-d H:i A', string $fallback = 'UTC'): ?string
+    {
+        if (empty($datetime)) return null;
+
+        try {
+            $dt = $datetime instanceof Carbon ? $datetime->copy() : Carbon::parse($datetime, 'UTC');
+            $u = $user ?? Auth::user();
+
+            // Find timezone: teacher → student → fallback
+            $tz = optional($u?->teacherProfile)->timezone
+                ?? optional($u?->studentProfile)->timezone
+                ?? $fallback;
+
+            if (! in_array($tz, \DateTimeZone::listIdentifiers())) {
+                $tz = $fallback;
+            }
+
+            return $dt->setTimezone($tz)->format($format);
+        } catch (\Throwable $e) {
+            \Log::error('toAppTimezone failed: '.$e->getMessage());
             return null;
         }
     }

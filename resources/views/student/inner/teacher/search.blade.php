@@ -5,8 +5,6 @@
 @push('styles')
     <link rel="stylesheet" href="{{asset('assets/plugins/ion-rangeslider/css/ion.rangeSlider.css')}}">
     <link rel="stylesheet" href="{{asset('assets/plugins/ion-rangeslider/css/ion.rangeSlider.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datetimepicker.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/css/feather.css')}}">
 @endpush
 
 @section('content')
@@ -328,7 +326,7 @@
                                                     <p class="mb-0 text-muted">No upcoming slots</p>
                                                 @endif
 
-                                                <a href="#" class="btn btn-md btn-primary-gradient rounded-pill">
+                                                <a href="{{ route('student.tutors.booking.datetime',['teacherId' => encryptId($teacher->id)]) }}" class="btn btn-md btn-primary-gradient rounded-pill">
                                                     <i class="isax isax-calendar-1 me-2"></i>Book Lesson
                                                 </a>
                                             </div>
@@ -355,10 +353,10 @@
 @endsection
 
 @push('scripts')
-    <script src="{{asset('assets/js/feather.min.js')}}"></script>
+    {{-- <script src="{{asset('assets/js/feather.min.js')}}"></script> --}}
     <script src="{{asset('assets/plugins/ion-rangeslider/js/ion.rangeSlider.js')}}"></script>
-    <script src="{{asset('assets/js/moment.min.js')}}"></script>
-    <script src="{{asset('assets/js/bootstrap-datetimepicker.min.js')}}"></script>
+    {{-- <script src="{{asset('assets/js/moment.min.js')}}"></script>
+    <script src="{{asset('assets/js/bootstrap-datetimepicker.min.js')}}"></script> --}}
     <script>
         feather.replace();
         $("#range_03").ionRangeSlider({

@@ -36,6 +36,7 @@ class UseCreditService
         }
 
         return [
+            'ledger_id' => $ledger->id,
             'cycle_number' => $ledger->cycle_number,
             'issued' => $ledger->issued_credits,
             'used' => $ledger->used_credits,
