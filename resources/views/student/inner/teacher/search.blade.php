@@ -250,7 +250,7 @@
                                 <div class="d-md-flex align-items-center">
                                     {{-- Teacher image --}}
                                     <div class="card-img card-img-hover">
-                                        <a href="#">
+                                        <a href="{{ route('student.tutors.profile',['id' => encryptId($teacher->id)]) }}">
                                             <img src="{{ asset('assets/img/profile-placeholder.jpg') }}" alt="{{ $teacher->name }}">
                                         </a>
                                         {{-- <div class="grid-overlay-item d-flex align-items-center justify-content-between">
@@ -266,7 +266,7 @@
                                     <div class="card-body p-0">
                                         {{-- Header --}}
                                         <div class="d-flex align-items-center justify-content-between border-bottom p-3">
-                                            <a href="#" class="text-teal fw-medium fs-14">
+                                            <a href="{{ route('student.tutors.profile',['id' => encryptId($teacher->id)]) }}" class="text-teal fw-medium fs-14">
                                                 {{ $teacher->teacherProfile->preferred_name ?? $teacher->name }}
                                             </a>
                                             <span class="badge bg-success-light d-inline-flex align-items-center">
@@ -280,7 +280,7 @@
                                                 <div class="row align-items-center gy-3">
                                                     <div class="col-sm-6">
                                                         <h6 class="d-flex align-items-center mb-1">
-                                                            <a href="#">{{ $teacher->teacherProfile->preferred_name ?? $teacher->name }}</a>
+                                                            <a href="{{ route('student.tutors.profile',['id' => encryptId($teacher->id)]) }}">{{ $teacher->teacherProfile->preferred_name ?? $teacher->name }}</a>
                                                             <i class="isax isax-tick-circle5 text-success ms-2"></i>
                                                         </h6>
                                                         <p class="mb-2">

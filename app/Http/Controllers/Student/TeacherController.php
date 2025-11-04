@@ -33,6 +33,13 @@ public function searchTeachers(Request $request)
     return view('student.inner.teacher.search', compact('teachers', 'filters'));
 }
 
+public function showProfile($id)
+{
+    $teacher = User::teachers()->findOrFail(decryptId($id));
+
+    return view('student.inner.teacher.profile', compact('teacher'));
+}
+
 
 
 

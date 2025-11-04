@@ -1,5 +1,27 @@
 <?php
 use Carbon\Carbon;
+use Hashids\Hashids;
+
+
+if (!function_exists('encryptId')) {
+    function encryptId(int $id): string
+    {
+        $salt = config('app.key') ?: 'fallback-salt'; // never null
+        $hashids = new Hashids($salt, 8, 'abcdefghijklmnopqrstuvwxyz1234567890');
+        return $hashids->encode($id);
+    }
+}
+
+if (!function_exists('decryptId')) {
+    function decryptId(string $hash): ?int
+    {
+        $salt = config('app.key') ?: 'fallback-salt'; // same salt as encryptId
+        $hashids = new Hashids($salt, 8, 'abcdefghijklmnopqrstuvwxyz1234567890');
+        $decoded = $hashids->decode($hash);
+        return $decoded[0] ?? null;
+    }
+}
+
 
 if (! function_exists('format_currency')) {
     /**

@@ -21,6 +21,7 @@ Route::any('subscription/cancel', [SubscriptionController::class, 'cancel'])->na
 // doctor route for student
 
 Route::get('search/tutors', [TeacherController::class, 'searchTeachers'])->name('tutors.search');
+Route::get('tutors/profile/{id}', [TeacherController::class, 'showProfile'])->name('tutors.profile');
 
 });
 
