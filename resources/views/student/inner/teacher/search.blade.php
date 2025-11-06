@@ -251,14 +251,6 @@
                                         <a href="{{ route('student.tutors.profile',['id' => encryptId($teacher->id)]) }}">
                                             <img src="{{ asset('assets/img/profile-placeholder.jpg') }}" alt="{{ $teacher->name }}">
                                         </a>
-                                        {{-- <div class="grid-overlay-item d-flex align-items-center justify-content-between">
-                                            <span class="badge bg-orange">
-                                                <i class="fa-solid fa-star me-1"></i>4.9
-                                            </span>
-                                            <a href="javascript:void(0)" class="fav-icon">
-                                                <i class="fa fa-heart"></i>
-                                            </a>
-                                        </div> --}}
                                     </div>
 
                                     <div class="card-body p-0">
@@ -294,10 +286,7 @@
                                                             <i class="isax isax-language-circle text-dark me-2"></i>
                                                             {{ $teacher->teacherProfile->native_language ?? 'English' }}
                                                         </p>
-                                                        <p class="d-flex align-items-center mb-2 fs-14">
-                                                            <i class="isax isax-like-1 text-dark me-2"></i>
-                                                            98% (245 Reviews)
-                                                        </p>
+  
                                                         <p class="d-flex align-items-center mb-0 fs-14">
                                                             <i class="isax isax-archive-14 text-dark me-2"></i>
                                                             5 Years Experience
@@ -353,10 +342,7 @@
 @endsection
 
 @push('scripts')
-    {{-- <script src="{{asset('assets/js/feather.min.js')}}"></script> --}}
     <script src="{{asset('assets/plugins/ion-rangeslider/js/ion.rangeSlider.js')}}"></script>
-    {{-- <script src="{{asset('assets/js/moment.min.js')}}"></script>
-    <script src="{{asset('assets/js/bootstrap-datetimepicker.min.js')}}"></script> --}}
     <script>
         feather.replace();
         $("#range_03").ionRangeSlider({

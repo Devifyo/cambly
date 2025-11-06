@@ -10,6 +10,14 @@
     <style>
         /* minor styles for slot buttons */
         .slot-btn { margin: 0 .25rem .5rem 0; }
+        .slot-btn.btn-success {
+            border: 2px solid #198754;
+        }
+
+        .slot-btn .badge {
+            padding: 0.15rem 0.4rem;
+            font-weight: 600;
+        }
     </style>
 
     <!-- SweetAlert2 CSS (CDN) -->
@@ -28,9 +36,11 @@
                                 <img src="{{ asset('assets/img/clients/client-15.jpg') }}" alt="">
                             </span>
                             <div>
-                                <h4 class="mb-1">{{ $teacher->teacherProfile->preferred_name ?? $teacher->name ?? 'Dr. Michael Brown' }} <span class="badge bg-orange fs-12"><i class="fa-solid fa-star me-1"></i>5.0</span></h4>
-                                <p class="text-indigo mb-3 fw-medium">{{ $teacher->teacherProfile->title ?? 'Psychologist' }}</p>
-                                <p class="mb-0"><i class="isax isax-location me-2"></i>{{ $teacher->teacherProfile->location ?? '5th Street - 1011 W 5th St, Austin, TX' }}</p>
+                                <h4 class="mb-1">{{ $teacher->teacherProfile->preferred_name ?? $teacher->name ?? 'Dr. Michael Brown' }} 
+                                    {{-- <span class="badge bg-orange fs-12"><i class="fa-solid fa-star me-1"></i>5.0</span> --}}
+                                </h4>
+                                <p class="text-indigo mb-3 fw-medium">{{ $teacher->teacherProfile->title ?? '' }}</p>
+                                {{-- <p class="mb-0"><i class="isax isax-location me-2"></i>{{ $teacher->teacherProfile->location ?? '5th Street - 1011 W 5th St, Austin, TX' }}</p> --}}
                             </div>
                         </div>
                         <h6 class="mb-2">Booking Info</h6>
@@ -38,25 +48,25 @@
                             <div class="col-lg-3 col-sm-6">
                                 <div>
                                     <h6 class="fs-14 fw-medium mb-1">Service</h6>
-                                    <p class="mb-0">Cardiology (30 Mins)</p>
+                                    <p class="mb-0">1-1 Lesson (25 Mins)</p>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6">
                                 <div>
-                                    <h6 class="fs-14 fw-medium mb-1">Service</h6>
-                                    <p class="mb-0">Echocardiograms</p>
+                                    <h6 class="fs-14 fw-medium mb-1">Total Lessons</h6>
+                                    <p class="mb-0">1</p>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6">
                                 <div>
-                                    <h6 class="fs-14 fw-medium mb-1">Date &amp; Time</h6>
-                                    <p class="mb-0">Select below</p>
+                                    <h6 class="fs-14 fw-medium mb-1">Joined at</h6>
+                                    <p class="mb-0">20 Oct, 2025</p>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-sm-6">
                                 <div>
-                                    <h6 class="fs-14 fw-medium mb-1">Appointment type</h6>
-                                    <p class="mb-0">Clinic (Wellness Path)</p>
+                                    <h6 class="fs-14 fw-medium mb-1">Total Expirence</h6>
+                                    <p class="mb-0">5 years</p>
                                 </div>
                             </div>
                         </div>
@@ -143,110 +153,147 @@
     feather.replace();
 
     (function () {
+        // Cache DOM elements and constants
+        const $morningSlots = $('#morningSlots');
+        const $afternoonSlots = $('#afternoonSlots');
+        const $eveningSlots = $('#eveningSlots');
+        const $pickedSlot = $('#picked_slot');
+        const $confirmBtn = $('#confirmBtn');
+        const $datepicker = $('#booking_datepicker');
+        const $bookingFieldset = $('#bookingFieldset');
+        
         const teacherRawId = $('#teacher_id_raw').val() || '';
-        const teacherEnc = $('#teacher_id_enc').val() || ''; // if you use encrypted id in routes
-        // Use the plain teacher id route generation (you can switch to encrypted if your routes expect it)
         const slotsUrl = "{{ route('student.booking.slots', ['teacherId' => encryptId($teacher->id) ?? 'TEACHER_ID']) }}".replace('TEACHER_ID', teacherRawId || '{{ $teacher->id ?? "" }}');
         const confirmUrl = "{{ route('student.booking.confirm') }}";
         const csrf = "{{ csrf_token() }}";
+        const today = moment();
 
-        function renderSlotsArray(arr, selector) {
-            $(selector).empty();
-            if (!arr || arr.length === 0) {
-                $(selector).html('<div class="text-muted">No slots</div>');
+        // Slot button configuration
+        const slotConfig = {
+            bookedByViewer: {
+                classes: 'btn-success position-relative',
+                template: (label) => `${label} <span class="badge bg-white text-success ms-1" style="font-size: 0.65rem;">Booked by You</span>`,
+                style: { opacity: '0.85', cursor: 'default' }
+            },
+            bookedByOther: {
+                classes: 'btn-secondary',
+                template: (label) => label,
+                style: { opacity: '0.5', cursor: 'not-allowed', textDecoration: 'line-through' }
+            },
+            available: {
+                classes: 'btn-outline-secondary',
+                template: (label) => label,
+                style: {}
+            }
+        };
+
+        function createSlotButton(entry) {
+            const label = entry.label_user ?? entry.label_teacher ?? entry.time_teacher ?? entry.time_user ?? entry.time_utc ?? 'Slot';
+            const isBooked = entry.slot_status === 'booked';
+            const bookedByViewer = entry.booked_by_viewer === true;
+            
+            let config;
+            if (isBooked) {
+                config = bookedByViewer ? slotConfig.bookedByViewer : slotConfig.bookedByOther;
+            } else {
+                config = slotConfig.available;
+            }
+
+            return $('<button>', {
+                type: 'button',
+                class: `btn btn-sm rounded-pill slot-btn ${config.classes}`,
+                'data-availability-id': entry.id,
+                'data-iso-user': entry.iso_user ?? entry.iso_teacher ?? entry.iso_utc ?? '',
+                disabled: isBooked,
+                html: config.template(label)
+            }).css(config.style);
+        }
+
+        function renderSlotsArray(arr, $container) {
+            $container.empty();
+            
+            if (!arr?.length) {
+                $container.html('<div class="text-muted">No slots</div>');
                 return;
             }
 
-            arr.forEach(function (entry) {
-                // pick the best label available (viewer-local first)
-                const label = entry.label_user ?? entry.label_teacher ?? entry.time_teacher ?? entry.time_user ?? entry.time_utc ?? 'Slot';
-                const btn = $('<button>')
-                    .addClass('btn btn-outline-secondary btn-sm rounded-pill slot-btn')
-                    .attr('type', 'button')
-                    .attr('data-availability-id', entry.id)
-                    .attr('data-iso-user', entry.iso_user ?? entry.iso_teacher ?? entry.iso_utc ?? '')
-                    .text(label);
+            const fragment = $(document.createDocumentFragment());
+            arr.forEach(entry => fragment.append(createSlotButton(entry)));
+            $container.append(fragment);
+        }
 
-                $(selector).append(btn);
-            });
+        function clearSlots() {
+            $morningSlots.add($afternoonSlots).add($eveningSlots).empty();
+            $pickedSlot.val('');
+            $confirmBtn.addClass('disabled');
         }
 
         function loadSlots(dateStr) {
-            $('#morningSlots, #afternoonSlots, #eveningSlots').empty();
-            $('#picked_slot').val('');
-            $('#confirmBtn').addClass('disabled');
-
-            // show loading placeholders
-            $('#morningSlots, #afternoonSlots, #eveningSlots').html('<div class="text-muted">Loading...</div>');
+            clearSlots();
+            $morningSlots.add($afternoonSlots).add($eveningSlots).html('<div class="text-muted">Loading...</div>');
 
             $.get(slotsUrl, { date: dateStr })
-                .done(function (res) {
-                    const slots = res.slots || {};
-                    renderSlotsArray(slots.morning, '#morningSlots');
-                    renderSlotsArray(slots.afternoon, '#afternoonSlots');
-                    renderSlotsArray(slots.evening, '#eveningSlots');
+                .done(({ slots = {} }) => {
+                    renderSlotsArray(slots.morning, $morningSlots);
+                    renderSlotsArray(slots.afternoon, $afternoonSlots);
+                    renderSlotsArray(slots.evening, $eveningSlots);
                 })
-                .fail(function (xhr) {
-                    $('#morningSlots, #afternoonSlots, #eveningSlots').html('<div class="text-danger">Failed to load slots</div>');
-                    console.error('Slots load error', xhr);
+                .fail((xhr) => {
+                    $morningSlots.add($afternoonSlots).add($eveningSlots).html('<div class="text-danger">Failed to load slots</div>');
+                    console.error('Slots load error:', xhr);
                 });
         }
 
-        // init datetimepicker once
-        $('#booking_datepicker').datetimepicker({
-            format: 'YYYY-MM-DD',
-            showClose: true,
-            showClear: true,
-            icons: {
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right'
-            }
-        });
+        function initDatepicker() {
+            $datepicker.datetimepicker({
+                format: 'YYYY-MM-DD',
+                showClose: true,
+                showClear: true,
+                minDate: today,
+                defaultDate: today,
+                icons: {
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right'
+                }
+            });
 
-        // select today's date on load
-        const today = moment().format('YYYY-MM-DD');
-        try {
-            $('#booking_datepicker').data('DateTimePicker').date(moment(today));
-            $('#booking_datepicker').val(today);
-        } catch (e) {
-            // fallback if widget not initialized yet
-            $('#booking_datepicker').val(today);
+            setTimeout(() => {
+                const picker = $datepicker.data('DateTimePicker');
+                if (picker) picker.date(today);
+                $datepicker.val(today.format('YYYY-MM-DD'));
+            }, 100);
         }
 
-        // initial load
-        loadSlots(today);
+        function handleSlotClick() {
+            const $this = $(this);
+            
+            if ($this.is(':disabled')) {
+                const isOwn = $this.hasClass('btn-success');
+                Swal.fire({
+                    title: isOwn ? 'Your Booking' : 'Slot Unavailable',
+                    text: isOwn ? 'This slot is already booked by you.' : 'This slot is already booked by another student.',
+                    icon: isOwn ? 'info' : 'warning'
+                });
+                return;
+            }
 
-        // on date change, reload slots
-        $('#booking_datepicker').on('dp.change', function (e) {
-            const sel = e && e.date ? e.date.format('YYYY-MM-DD') : moment().format('YYYY-MM-DD');
-            $('#picked_slot').val('');
-            $('#confirmBtn').addClass('disabled');
-            loadSlots(sel);
-        });
+            $('.slot-btn:not(:disabled)').removeClass('btn-primary').addClass('btn-outline-secondary');
+            $this.removeClass('btn-outline-secondary').addClass('btn-primary');
+            $pickedSlot.val($this.data('availability-id'));
+            $confirmBtn.removeClass('disabled');
+        }
 
-        // single-selection of a slot
-        $(document).on('click', '.slot-btn', function () {
-            $('.slot-btn').removeClass('btn-primary').addClass('btn-outline-secondary');
-            $(this).removeClass('btn-outline-secondary').addClass('btn-primary');
-
-            const availabilityId = $(this).data('availability-id');
-            $('#picked_slot').val(availabilityId);
-            $('#confirmBtn').removeClass('disabled');
-        });
-
-        // confirm booking: send availability_id (not free-text datetime)
-        $('#confirmBtn').on('click', function (e) {
+        function confirmBooking(e) {
             e.preventDefault();
             if ($(this).hasClass('disabled')) return;
 
-            const availabilityId = $('#picked_slot').val();
+            const availabilityId = $pickedSlot.val();
             if (!availabilityId) {
                 Swal.fire('Select slot', 'Please choose a time slot first.', 'warning');
                 return;
             }
 
-            const chosenBtn = $(`.slot-btn[data-availability-id="${availabilityId}"]`);
-            const label = chosenBtn.text() || '';
+            const label = $(`.slot-btn[data-availability-id="${availabilityId}"]`).text() || '';
 
             Swal.fire({
                 title: 'Confirm Booking',
@@ -255,10 +302,10 @@
                 showCancelButton: true,
                 confirmButtonText: 'Proceed (Use 1 ticket)',
             }).then((result) => {
-                if (!result.isConfirmed){
-                    const $fs = $('#bookingFieldset').show();
-                     return
-                    };
+                if (!result.isConfirmed) {
+                    $bookingFieldset.show();
+                    return;
+                }
 
                 Swal.fire({
                     title: 'Booking...',
@@ -269,31 +316,40 @@
                 $.post(confirmUrl, {
                     _token: csrf,
                     availability_id: availabilityId,
-                    // teacher id optional - server will verify availability belongs to teacher
-                    teacher_id: $('#teacher_id_raw').val() || ''
-                }).done(function (res) {
+                    teacher_id: teacherRawId
+                })
+                .done((res) => {
                     Swal.fire({
                         title: 'Booked!',
                         html: `<p>${res.label_start_teacher ?? res.start_teacher ?? label}</p>`,
                         icon: 'success'
                     }).then(() => {
-                        const $fs = $('#bookingFieldset').show();
-
-                        // refresh slots for the currently selected date
-                        const currDate = $('#booking_datepicker').val() || moment().format('YYYY-MM-DD');
-                        loadSlots(currDate);
+                        $bookingFieldset.show();
+                        loadSlots($datepicker.val() || today.format('YYYY-MM-DD'));
                     });
-                }).fail(function (xhr) {
-                      const $fs = $('#bookingFieldset').show();
-                    const json = xhr.responseJSON || {};
-                    const msg = json.message || 'Failed to book slot. Please try again.';
+                })
+                .fail((xhr) => {
+                    $bookingFieldset.show();
+                    const msg = xhr.responseJSON?.message || 'Failed to book slot. Please try again.';
                     Swal.fire('Error', msg, 'error');
-                    // reload slots to reflect current DB state (in case of race)
-                    const currDate = $('#booking_datepicker').val() || moment().format('YYYY-MM-DD');
-                    loadSlots(currDate);
+                    loadSlots($datepicker.val() || today.format('YYYY-MM-DD'));
                 });
             });
+        }
+
+        // Initialize
+        initDatepicker();
+        loadSlots(today.format('YYYY-MM-DD'));
+
+        // Event listeners
+        $datepicker.on('dp.change', (e) => {
+            const sel = e?.date ? e.date.format('YYYY-MM-DD') : today.format('YYYY-MM-DD');
+            clearSlots();
+            loadSlots(sel);
         });
+
+        $(document).on('click', '.slot-btn', handleSlotClick);
+        $confirmBtn.on('click', confirmBooking);
 
     })();
 </script>

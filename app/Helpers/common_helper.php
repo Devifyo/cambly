@@ -131,3 +131,33 @@ if (! function_exists('toAppTimezone')) {
         }
     }
 }
+
+if (! function_exists('bookedBy')) {
+    /**
+     * Check if a given availability is booked by a specific user (or the logged-in user by default).
+     *
+     * @param  \App\Models\Availability  $availability
+     * @param  \App\Models\User|null     $user
+     * @return bool
+     */
+    function bookedBy($availability, $user = null): bool
+    {
+        // Default to the logged-in user
+        $user = $user ?: auth()->user();
+
+        // If no user or availability, short-circuit
+        if (! $user || ! $availability) {
+            return false;
+        }
+
+        // If the availability is not booked at all
+        if (! $availability->is_booked) {
+            return false;
+        }
+
+        // Check if the current user's reservation exists for this availability
+        return $availability->reservation()
+            ->where('student_id', $user->id)
+            ->exists();
+    }
+}

@@ -40,7 +40,6 @@ class BookingService
         $endUtc   = $date->copy()->endOfDay()->toDateTimeString();
 
         $availabilities = Availability::where('teacher_id', $teacher->id)
-            ->where('is_booked', false)
             ->whereBetween('start_utc', [$startUtc, $endUtc])
             ->orderBy('start_utc')
             ->get();
@@ -54,6 +53,8 @@ class BookingService
 
             $entry = [
                 'id' => function_exists('encryptId') ? encryptId($av->id) : $av->id,
+                'slot_status' => $av->is_booked ? 'booked' : 'available',
+                'booked_by_viewer' => $av->is_booked && $viewer ? bookedBy($av, $viewer) : false,
                 'raw_id' => $av->id,
                 'iso_utc' => $dtUtc->toDateTimeString(),
                 'iso_user' => $dtUser->toDateTimeString(),

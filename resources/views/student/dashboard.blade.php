@@ -147,7 +147,7 @@
                 <!-- Upcoming Sessions -->
                 <div class="dashboard-widget-box">
                     <div class="dashboard-content-info">
-                        <h6>Upcoming Sessions</h6>
+                        <h6>Upcoming Lessons</h6>
                         <h4>5</h4>
                         <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +2% From Last Week</span>
                     </div>
@@ -159,7 +159,7 @@
                 <!-- Completed Sessions -->
                 <div class="dashboard-widget-box">
                     <div class="dashboard-content-info">
-                        <h6>Completed Sessions</h6>
+                        <h6>Completed Lessons</h6>
                         <h4>15</h4>
                         <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +10% From Last Week</span>
                     </div>
@@ -194,7 +194,7 @@
                         <!-- Book Tutor -->
                         <div class="col-sm-7">
                             <div class="book-appointment-head mb-3 d-flex justify-content-between align-items-center">
-                                <h3><span>Book a new</span> Tutor</h3>
+                                <h3><span>Book a new</span> Teacher</h3>
                                 <span class="add-icon"><a href="{{ route('student.tutors.search') }}"><i
                                             class="fa-solid fa-circle-plus"></i></a></span>
                             </div>
@@ -283,7 +283,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <span class="health-percentage d-block mb-2">You have enough {{ trans_choice('app.credits_lower',2) }} for {{$currentCredits['available'] ?? 0}} more sessions</span>
+                                <span class="health-percentage d-block mb-2">You have enough {{ trans_choice('app.credits_lower',2) }} for {{$currentCredits['available'] ?? 0}} more lessons</span>
                                 <a href="{{ route('student.account.subscription') }}" class="btn btn-dark w-100 rounded-pill">Manage Subscriptions<i
                                         class="fa-solid fa-chevron-right ms-2"></i></a>
                             </div>
@@ -292,11 +292,11 @@
                     </div>
 
                     <!-- Subscription Info -->
-                    @if($activeSubscription)
+                    {{-- @if($activeSubscription)
                     <div class="report-gen-date mt-4">
                         <p>Subscription valid till: <strong>{{formatDate($activeSubscription['current_period_start'])}}</strong> <span><i class="fa-solid fa-copy"></i></span></p>
                     </div>
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>
@@ -306,7 +306,7 @@
             <div class="dashboard-card w-100">
                 <div class="dashboard-card-head">
                     <div class="header-title">
-                        <h5>Scheduled Sessions</h5>
+                        <h5>Scheduled Lessons</h5>
                     </div>
                     <div class="card-view-link"><a href="#">View Calendar</a></div>
                 </div>
