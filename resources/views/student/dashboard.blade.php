@@ -140,44 +140,43 @@
 @section('content')
 <div class="container py-4 py-md-5">
     <div class="row">
-
         <!-- ===== LEFT COLUMN : Dashboard Widgets ===== -->
         <div class="col-xl-4 d-flex">
             <div class="dashboard-box-col w-100">
-                <!-- Upcoming Sessions -->
+                <!-- Total Sessions -->
                 <div class="dashboard-widget-box">
                     <div class="dashboard-content-info">
-                        <h6>Upcoming Lessons</h6>
-                        <h4>5</h4>
-                        <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +2% From Last Week</span>
+                        <h6>Total Lessons</h6>
+                        <h4>{{$dashboardDetails['lesson_stats']['total']}}</h4>
+                        {{-- <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +2% From Last Week</span> --}}
                     </div>
                     <div class="dashboard-widget-icon">
                         <span class="dash-icon-box"><i class="fa-solid fa-calendar-days"></i></span>
                     </div>
                 </div>
-
+                <!-- Upcoming Sessions -->
+                <div class="dashboard-widget-box">
+                    <div class="dashboard-content-info">
+                        <h6>Upcoming Lessons</h6>
+                        <h4>{{$dashboardDetails['lesson_stats']['upcoming']}}</h4>
+                        {{-- <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +2% From Last Week</span> --}}
+                    </div>
+                    <div class="dashboard-widget-icon">
+                        <span class="dash-icon-box"><i class="fa-solid fa-calendar-days"></i></span>
+                    </div>
+                </div>
                 <!-- Completed Sessions -->
                 <div class="dashboard-widget-box">
                     <div class="dashboard-content-info">
                         <h6>Completed Lessons</h6>
-                        <h4>15</h4>
-                        <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +10% From Last Week</span>
+                        <h4>{{$dashboardDetails['lesson_stats']['completed']}}</h4>
+                        {{-- <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +10% From Last Week</span> --}}
                     </div>
                     <div class="dashboard-widget-icon">
                         <span class="dash-icon-box"><i class="fa-solid fa-user-check"></i></span>
                     </div>
                 </div>
-                <!-- Bonus Credits -->
-                <div class="dashboard-widget-box">
-                    <div class="dashboard-content-info">
-                        <h6>Bonus {{ trans_choice('app.credits',2) }}</h6>
-                        <h4>20</h4>
-                        <span class="text-warning"><i class="fa-solid fa-arrow-up"></i> +5% From Last Week</span>
-                    </div>
-                    <div class="dashboard-widget-icon">
-                        <span class="dash-icon-box"><i class="fa-solid fa-gift"></i></span>
-                    </div>
-                </div>
+
             </div>
         </div>
 
@@ -211,56 +210,52 @@
                                     <div class="table-responsive">
                                         <table class="table dashboard-table appoint-table mb-0">
                                             <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div class="patient-info-profile">
-                                                            <a href="#" class="table-avatar">
-                                                                <img src="{{ asset('assets/img/dashboard/profile-06.jpg') }}" alt="Tutor">
-                                                            </a>
-                                                            <div class="patient-name-info">
-                                                                <h5><a href="#">Mr. Smith</a></h5>
-                                                                <span>Math</span>
+                                                @forelse ($dashboardDetails['top_upcoming_lessons'] as $lesson)
+                                                    <tr>
+                                                        <td>
+                                                            <div class="patient-info-profile">
+                                                                <a href="#" class="table-avatar">
+                                                                    <img src="{{ $lesson['teacher_avatar'] }}" alt="{{ $lesson['teacher_name'] }}">
+                                                                </a>
+                                                                <div class="patient-name-info">
+                                                                    <h5><a href="#">{{ $lesson['teacher_name'] }}</a></h5>
+                                                                    <span>{{ $lesson['teacher_title'] }}</span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="appointment-date-created">
-                                                            <h6>26 Oct 2025 - 10:00 AM</h6>
-                                                            <span class="badge table-badge bg-success">Upcoming</span>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="apponiment-actions d-flex align-items-center">
-                                                            <a href="#" class="text-success-icon me-2"><i class="fa-solid fa-video"></i></a>
-                                                            <a href="#" class="text-danger-icon"><i class="fa-solid fa-xmark"></i></a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="patient-info-profile">
-                                                            <a href="#" class="table-avatar">
-                                                                <img src="{{ asset('assets/img/dashboard/profile-06.jpg') }}" alt="Tutor">
-                                                            </a>
-                                                            <div class="patient-name-info">
-                                                                <h5><a href="#">Ms. Johnson</a></h5>
-                                                                <span>English</span>
+                                                        </td>
+                                                        <td>
+                                                            <div class="appointment-date-created">
+                                                                <h6>{{ $lesson['user_formatted_datetime'] }}</h6>
+                                                                <span class="badge table-badge {{ $lesson['is_today'] ? 'bg-warning' : 'bg-success' }}">
+                                                                    {{ $lesson['time_from_now'] }}
+                                                                </span>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="appointment-date-created">
-                                                            <h6>Tomorrow - 2:00 PM</h6>
-                                                            <span class="badge table-badge bg-info">Scheduled</span>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="apponiment-actions d-flex align-items-center">
-                                                            <a href="#" class="text-success-icon me-2"><i class="fa-solid fa-video"></i></a>
-                                                            <a href="#" class="text-danger-icon"><i class="fa-solid fa-xmark"></i></a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                        <td>
+                                                            <div class="apponiment-actions d-flex align-items-center">
+                                                                {{-- <a href="#" class="text-success-icon me-2" title="Join Lesson">
+                                                                    <i class="fa-solid fa-video"></i>
+                                                                </a> --}}
+                                                                <a href="{{ route('student.booking.cancel',['reservation' => encryptId($lesson['id'])]) }}" class="text-danger-icon" title="Cancel Lesson" 
+                                                               >
+                                                                    <i class="fa-solid fa-xmark"></i>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="3" class="text-center py-4">
+                                                            <div class="text-muted">
+                                                                <i class="fa-solid fa-calendar-xmark fa-2x mb-2"></i>
+                                                                <p class="mb-0">No upcoming lessons scheduled</p>
+                                                                <a href="{{ route('student.tutors.search') }}" class="btn btn-primary btn-sm mt-2">
+                                                                    Book a Lesson
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>

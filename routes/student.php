@@ -29,7 +29,7 @@ Route::get('booking/{teacherId}/slots', [BookingController::class, 'slots'])->na
 // confirm (create) a reservation
 Route::post('booking/confirm', [BookingController::class, 'confirm'])->name('booking.confirm');
 // cancel a reservation
-Route::post('booking/{reservation}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
+Route::any('booking/{reservation}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
 
 });
 

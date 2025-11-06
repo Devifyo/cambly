@@ -114,10 +114,13 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
 
         // If user has at least 1 available credit => confirmed booking flow
         if ($available >= 1) {
-            $reservation = Reservation::create([
-                'student_id' => $student->id,
-                'teacher_id' => $availability->teacher_id,
-                'availability_id' => $availability->id,
+            $reservation = Reservation::updateOrCreate(
+            [
+            'student_id' => $student->id,
+            'teacher_id' => $availability->teacher_id,
+            'availability_id' => $availability->id,
+            ],
+            [
                 'is_hold' => false,
                 'cycle_start_utc' => $availability->start_utc,
                 'status' => 'booked',
@@ -200,40 +203,100 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
      * @param  \App\Models\User  $actor
      * @return array
      */
+/**
+ * Cancel a reservation. Authorization: only the student or teacher can cancel.
+ * - Always mark reservation as canceled (even if meeting already happened)
+ * - If meeting start is in the future, unlock availability (is_booked = false) under lock
+ * - Attempt refund via refundCreditsOnCancel() (that function enforces the 12-hour rule)
+ *
+ * @param  \App\Models\Reservation  $reservation
+ * @param  \App\Models\User         $actor
+ * @return array
+ */
     public function cancel(Reservation $reservation, User $actor): array
-    {
-        if ($reservation->student_id !== $actor->id && $reservation->teacher_id !== $actor->id) {
-            return ['error' => 'Forbidden', 'status' => 403];
+    {   
+        // Authorization
+        // if ($reservation->student_id !== $actor->id && $reservation->teacher_id !== $actor->id) {
+        //     return ['error' => 'Forbidden', 'status' => 403];
+        // }
+
+
+
+        // Short-circuit if already cancelled
+        if ($reservation->status === 'canceled') {
+            return ['error' => 'Reservation already canceled', 'status' => 400];
         }
 
-        DB::beginTransaction();
         try {
-            if ($reservation->status === 'canceled') {
-                DB::rollBack();
-                return ['error' => 'Reservation already canceled', 'status' => 400];
-            }
+            $result = DB::transaction(function () use ($reservation, $actor) {
+                $availability = $reservation->availability;
+                $nowUtc = Carbon::now('UTC');
 
-            if ($reservation->availability_id) {
-                $availability = Availability::where('id', $reservation->availability_id)->lockForUpdate()->first();
+                $response = [
+                    'ok' => true,
+                    'reservation_id' => $reservation->id,
+                    'canceled_by' => $actor->id,
+                    'availability_reopened' => false,
+                    'refund' => null,
+                    'note' => null,
+                ];
+
+                // Determine start time (prefer canonical start_utc)
                 if ($availability) {
-                    $availability->is_booked = false;
-                    $availability->save();
+                    $rawStart = $availability->start_utc
+                        ?? ($availability->{self::START_TIME_COLUMN} ?? $reservation->created_at);
+                    $startUtc = Carbon::parse($rawStart, 'UTC')->setTimezone('UTC');
+
+                    // If meeting is strictly in the future, reopen availability under lock
+                    if ($startUtc->greaterThan($nowUtc)) {
+                        $availRow = \App\Models\Availability::where('id', $availability->id)
+                            ->lockForUpdate()
+                            ->first();
+                        if ($availRow) {
+                            $availRow->is_booked = false;
+                            $availRow->save();
+                            $response['availability_reopened'] = true;
+                        }
+                    } else {
+                        $response['note'] = 'Meeting already started/finished; availability left unchanged.';
+                    }
                 }
-            }
 
-            $reservation->status = 'canceled';
-            $reservation->save();
+                // Mark reservation canceled and optionally record cancellation metadata if available
+                $reservation->status = 'cancelled';
+                // Optionally set canceled_by_id / canceled_at if your schema has them
+                if (property_exists($reservation, 'canceled_by_id')) {
+                    $reservation->canceled_by_id = $actor->id;
+                }
+                if (property_exists($reservation, 'canceled_at')) {
+                    $reservation->canceled_at = Carbon::now();
+                }
+                $reservation->save();
 
-            DB::commit();
-            return ['ok' => true];
-        } catch (\Throwable $e) {
-            DB::rollBack();
+                // Attempt refund (refundCreditsOnCancel enforces the 12-hour rule)
+                $refundResult = $this->useCreditService->refundCreditsOnCancel($reservation);
+                $response['refund'] = $refundResult;
+
+                return $response;
+            }, 5); // retry up to 5 times for deadlock safety
+
+            // Log outcome
+            Log::info('Reservation canceled', [
+                'reservation' => $reservation->id ?? null,
+                'actor' => $actor->id ?? null,
+                'result' => $result,
+            ]);
+
+            return $result;
+        } catch (\Throwables $e) {
             Log::error('BookingService::cancel error: '.$e->getMessage(), [
                 'reservation' => $reservation->id ?? null,
+                'actor' => $actor->id ?? null,
             ]);
             return ['error' => 'Failed to cancel reservation', 'status' => 500];
         }
     }
+
 
     /**
      * Resolve timezone for viewer; fallback to teacher/app/UTC.

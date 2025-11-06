@@ -84,17 +84,17 @@ class BookingController extends Controller
     /**
      * POST /student/booking/{reservation}/cancel
      */
-    public function cancel(Request $request, Reservation $reservation)
+    public function cancel(Request $request,$reservation)
     {
         $user = $request->user();
+        $reservation = Reservation::find(decryptId($reservation));
         $result = $this->bookingService->cancel($reservation, $user);
-
         if (isset($result['error'])) {
             $status = $result['status'] ?? 500;
             return response()->json(['message' => $result['error']], $status);
         }
 
-        return response()->json(['message' => 'Reservation canceled.']);
+        return back()->with('success', 'Reservation canceled.');
     }
 
 
