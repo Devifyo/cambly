@@ -59,7 +59,7 @@ class AuthController extends Controller
                     'error' => $e->getMessage()
                 ]);
             } 
-              
+
             if($user->isStudent() && $user->hasActiveSubscription() ){
                 //  4. Redirect to intended page or dashboard
                 return redirect()->intended('/dashboard')->with('success', 'Welcome back!');
@@ -126,7 +126,7 @@ class AuthController extends Controller
         $user->assignRole($request->role);
 
         // Auto-login the user
-        Auth::login($user);
+        // Auth::login($user);
 
         return redirect()->route('auth.login')->with('success', 'Registration successful! Welcome aboard 🎉');
     }
