@@ -198,11 +198,11 @@
                                             class="fa-solid fa-circle-plus"></i></a></span>
                             </div>
 
-                            <!-- Upcoming Meetings Table -->
+                            <!-- Upcoming Lessons Table -->
                             <div class="dashboard-card mt-2">
                                 <div class="dashboard-card-head d-flex justify-content-between align-items-center">
                                     <div class="header-title">
-                                        <h6>Upcoming Meetings</h6>
+                                        <h6>Upcoming Lessons</h6>
                                     </div>
                                     <div class="card-view-link"><a href="#">View All</a></div>
                                 </div>
@@ -303,7 +303,7 @@
                     <div class="header-title">
                         <h5>Scheduled Lessons</h5>
                     </div>
-                    <div class="card-view-link"><a href="#">View Calendar</a></div>
+                    <div class="card-view-link"><a href="#">View Lessons</a></div>
                 </div>
                 <div class="dashboard-card-body p-3">
                     <div id="calendar"></div>
@@ -317,34 +317,118 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const calendarEl = document.getElementById('calendar');
-            const today = new Date();
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
 
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek'
-                },
-                height: 600,
-                events: [
-                    { title: 'Math - Mr. Smith', start: '2025-10-26T10:00:00' },
-                    { title: 'English - Ms. Johnson', start: '2025-10-27T14:00:00' },
-                    { title: 'Physics - Dr. Brown', start: '2025-10-20T11:00:00' },
-                    { title: 'Chemistry - Ms. Davis', start: '2025-10-27T16:00:00' }
-                ],
-                eventDidMount: function(info) {
-                    const eventDate = new Date(info.event.start);
-                    if (eventDate.toDateString() === today.toDateString()) info.el.classList.add('event-today');
-                    else if (eventDate < today) info.el.classList.add('event-past');
-                    else info.el.classList.add('event-upcoming');
-                }
-            });
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        selectable: false,
+        editable: false,
+        eventDisplay: 'block',
 
-            calendar.render();
-        });
-    </script>
+        // called when the visible date-range changes
+        datesSet: function(dateInfo) {
+            // useful if you want to show the current range in UI
+            console.log('Visible range:', dateInfo.view.activeStart.toISOString().split('T')[0], '->', dateInfo.view.activeEnd.toISOString().split('T')[0]);
+        },
+
+        // FullCalendar will call this whenever it needs events for the current view
+        events: function(fetchInfo, successCallback, failureCallback) {
+            // fetchInfo.startStr and fetchInfo.endStr are ISO (YYYY-MM-DD) strings
+            const start = fetchInfo.startStr; // inclusive start
+            const end = fetchInfo.endStr;     // exclusive end (FullCalendar common behavior)
+            console.log('Fetching events for range:', start, '->', end);
+
+            // call your endpoint with both start and end
+            fetch(`/dashboard/calendar-events?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(serverData => {
+                    // If your endpoint already returns events in FullCalendar format, just pass them through:
+                    // successCallback(serverData);
+
+                    // Otherwise map your server objects to FullCalendar event objects.
+                    // Expected server item example: { id, title, start, end, status, is_today, extendedProps: { reservation_id } }
+                    const events = serverData.map(item => {
+                        // default colors
+                        let bg = '#0d6efd';
+                        let bord = '#0d6efd';
+                        let text = '#ffffff';
+
+                        if (item.status === 'completed') {
+                            bg = '#198754'; bord = '#198754';
+                        } else if (item.status === 'cancelled') {
+                            bg = '#dc3545'; bord = '#dc3545'; text = '#ffffff';
+                        }
+
+                        // return FullCalendar event object
+                        return {
+                            id: item.id,
+                            title: item.title || 'Untitled',
+                            start: item.start,
+                            end: item.end,
+                            allDay: !!item.allDay,
+                            backgroundColor: bg,
+                            borderColor: bord,
+                            textColor: text,
+                            display: 'block',
+                            classNames: [
+                                item.status === 'upcoming' ? 'event-upcoming' : '',
+                                item.status === 'past' ? 'event-past' : '',
+                                item.is_today ? 'event-today' : '',
+                                item.status === 'cancelled' ? 'event-cancelled' : ''
+                            ].filter(Boolean),
+                            extendedProps: {
+                                reservation_id: item.extendedProps?.reservation_id ?? item.id,
+                                status: item.status
+                            }
+                        };
+                    });
+
+                    successCallback(events);
+                })
+                .catch(err => {
+                    console.error('Error fetching calendar events:', err);
+                    failureCallback(err);
+                });
+        },
+
+        // style DOM after event is added
+        eventDidMount: function(info) {
+            const status = info.event.extendedProps?.status;
+            if (status === 'completed') {
+                info.el.style.backgroundColor = '#198754';
+                info.el.style.borderColor = '#198754';
+                info.el.style.color = '#fff';
+            } else if (status === 'cancelled') {
+                info.el.style.backgroundColor = '#dc3545';
+                info.el.style.borderColor = '#dc3545';
+                info.el.style.opacity = '0.85';
+                info.el.style.color = '#fff';
+            } else {
+                // default blue (you can omit and let FullCalendar use event.backgroundColor)
+                info.el.style.backgroundColor = info.event.backgroundColor || '#0d6efd';
+                info.el.style.borderColor = info.event.borderColor || info.event.backgroundColor || '#0d6efd';
+                info.el.style.color = info.event.textColor || '#fff';
+            }
+        },
+
+        eventClick: function(info) {
+            const reservationId = info.event.extendedProps?.reservation_id || info.event.id;
+            if (reservationId) {
+                console.log(info, 'tutors/profile/' + reservationId);
+                // e.g. window.location = '/tutors/profile/' + reservationId;
+            } else {
+                console.error('Reservation ID not found for this event');
+            }
+        }
+    });
+
+    calendar.render();  
+});
+</script>
+
 @endpush

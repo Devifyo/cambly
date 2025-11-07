@@ -16,7 +16,8 @@ class DashboardService
      * Get comprehensive dashboard data for a student
      */
     public function getStudentDashboardData(User $user): array
-    {
+    {   
+        // dd($this->getLessonsByMonth($user));
         return [
             'top_upcoming_lessons' => $this->getTopUpcomingLessons($user, 5),
             'total_upcoming_lessons' => $this->getTotalUpcomingLessons($user),
@@ -181,6 +182,63 @@ class DashboardService
             ->map(function ($reservation) {
                 return $this->formatLesson($reservation);
             });
+    }
+
+    /**
+     * Get all student reservations for a specific month, formatted for a calendar.
+     *
+     * @param User $user The student
+     * @param string $dateString A date string (e.g., "2025-10-28") to identify the month
+     * @return \Illuminate\Support\Collection
+     */
+    public function getStudentReservationsForMonth(User $user, string $dateString)
+    {
+        // Parse the provided date and find the start and end of that month
+        try {
+            $date = Carbon::parse($dateString);
+        } catch (\Exception $e) {
+            // Default to current month if date is invalid
+            $date = Carbon::now();
+        }
+        
+        $startOfMonth = $date->copy()->startOfMonth();
+        $endOfMonth = $date->copy()->endOfMonth();
+        $reservations = Reservation::with(['teacher.teacherProfile', 'availability'])
+            ->where('student_id', $user->id)
+            // Get all relevant statuses for a calendar
+            ->whereIn('status', ['booked', 'completed', 'cancelled'])
+            // Use whereHas to filter by the lesson's actual date in the availability table
+            ->whereHas('availability', function ($query) use ($startOfMonth, $endOfMonth) {
+                // Find all lessons that start within this month
+                $query->where(self::START_TIME_COLUMN, '>=', $startOfMonth)
+                      ->where(self::START_TIME_COLUMN, '<=', $endOfMonth);
+            })
+            ->get();
+        // Map the results into a calendar-friendly format
+        return $reservations->map(function ($reservation) {
+            
+            // Use your existing formatter to get all the details
+            $formattedLesson = $this->formatLesson($reservation);
+            
+            // Return a format ideal for FullCalendar.js
+            return [
+                'title' => $formattedLesson['teacher_name'],
+                'start' => $formattedLesson['datetime_utc'], // '2025-10-26T10:00:00.000000Z'
+                'end' => Carbon::parse($formattedLesson['end_time'])->toIso8601String(),
+                'status' => $formattedLesson['status'],
+                'allDay' => false,
+                
+                // 'extendedProps' is a standard FullCalendar property 
+                // to add any custom data you want.
+                'extendedProps' => [
+                    'reservation_id' => encryptId($formattedLesson['id']),
+                    'teacher_avatar' => $formattedLesson['teacher_avatar'],
+                    'user_formatted_time' => $formattedLesson['user_formatted_time'],
+                    'user_formatted_datetime' => $formattedLesson['user_formatted_datetime'],
+                    'status_badge' => $formattedLesson['status_badge'],
+                ]
+            ];
+        });
     }
 
     /**

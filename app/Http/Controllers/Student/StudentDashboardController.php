@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\UseCreditService;
 use App\Services\{UserSubscriptionService, DashboardService};
-
+use Illuminate\Support\Carbon;
 class StudentDashboardController extends Controller
 {   
     protected $creditService;
@@ -32,11 +32,37 @@ class StudentDashboardController extends Controller
             $currentCredits['consume_percentage'] = '0';
         }
         $dashbordDetails = $this->dashboardService->getStudentDashboardData(auth()->user());
+        // dd($dashbordDetails);
         $activeSubscription =  $this->subs->getActiveSubscriptionDetails($user);
         return view('student.dashboard', [
             'currentCredits' => $currentCredits,
             'activeSubscription' => $activeSubscription,
             'dashboardDetails' => $dashbordDetails
         ]);
+    }
+
+    public function getCalendarEvents(Request $request)
+    {
+        // Get the authenticated user
+        $user = $request->user();
+        // Validate the incoming 'date' query parameter
+        $validated = $request->validate([
+            'start' => 'nullable|date',
+            'end' => 'nullable|date',
+        ]);
+            $range = [
+                'start' => $request->start,
+                'end'   => $request->end
+            ];
+
+            $date = intelligentMonthStart($range);
+        // Get the date from the request, or default to today's date
+        $date = $validated['date'] ?? Carbon::now()->toDateString();
+    
+        // Call your new service method
+        $events = $this->dashboardService->getStudentReservationsForMonth($user, $date);
+        // dd($events);
+        // Return the data as JSON
+        return response()->json($events);
     }
 }

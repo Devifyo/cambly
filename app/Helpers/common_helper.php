@@ -1,5 +1,6 @@
 <?php
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Auth;
 
@@ -159,5 +160,68 @@ if (! function_exists('bookedBy')) {
         return $availability->reservation()
             ->where('student_id', $user->id)
             ->exists();
+    }
+}
+
+
+if (! function_exists('intelligentMonthStart')) {
+    function intelligentMonthStart($rangeOrStart, $maybeEnd = null): ?string
+    {
+        // Normalize inputs
+        if (is_array($rangeOrStart)) {
+            $startRaw = $rangeOrStart['start'] ?? null;
+            $endRaw   = $rangeOrStart['end'] ?? null;
+        } else {
+            $startRaw = $rangeOrStart;
+            $endRaw   = $maybeEnd;
+        }
+
+        if (empty($startRaw) || empty($endRaw)) {
+            return null;
+        }
+
+        try {
+            // Parse with Carbon (keeps timezone if provided)
+            $start = Carbon::parse($startRaw)->startOfDay();
+            $end   = Carbon::parse($endRaw)->startOfDay();
+        } catch (\Exception $e) {
+            // invalid date strings
+            return null;
+        }
+
+        // If user passed end before start, swap
+        if ($end->lt($start)) {
+            [$start, $end] = [$end, $start];
+        }
+
+        // Build period inclusive of both start and end
+        $period = CarbonPeriod::create($start, $end);
+
+        // Count days per month key "YYYY-MM"
+        $counts = [];
+        foreach ($period as $dt) {
+            $key = $dt->format('Y-m');
+            $counts[$key] = ($counts[$key] ?? 0) + 1;
+        }
+
+        if (empty($counts)) {
+            return null;
+        }
+
+        // Find the month with the maximum days
+        // If tie, arsort keeps the order by value but to tie-break explicitly choose earliest month:
+        //  - build array of (month => count), find max count, then choose earliest month among those with max count.
+        $max = max($counts);
+        $candidates = array_keys(array_filter($counts, function($c) use ($max) {
+            return $c === $max;
+        }));
+
+        sort($candidates, SORT_STRING); // earliest month first (YYYY-MM sorts lexicographically)
+        $winningMonth = $candidates[0]; // "YYYY-MM"
+
+        // return first day of that month in Y-m-d
+        $firstDay = Carbon::createFromFormat('Y-m', $winningMonth)->firstOfMonth()->toDateString();
+
+        return $firstDay;
     }
 }

@@ -12,7 +12,9 @@ Route::get('/students', function () {
 Route::middleware(['auth.custom','isStudent'])->group(function () {
 // Controller route
 Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
-
+Route::get('/dashboard/calendar-events', 
+        [StudentDashboardController::class, 'getCalendarEvents'])
+        ->name('dashboard.calendar.events');
 
 Route::get('/account/subscription', [SubscriptionController::class, 'index'])->name('account.subscription');
 Route::get('subscription/checkout/{slug}', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
