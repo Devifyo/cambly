@@ -33,34 +33,41 @@ class AuthController extends Controller
             //  3. Regenerate session (security best practice)
             $request->session()->regenerate();
             try {
-            $user = Auth::user();
-            $timezone = $request->tz; // Call your helper function
+                $user = Auth::user();
+                $timezone = $request->tz; // Call your helper function
 
-            $profile = null;
+                $profile = null;
 
-            // Find the correct profile based on the user's role
-            if ($user->isStudent() && $user->studentProfile) {
-                $profile = $user->studentProfile;
-            } elseif ($user->isTeacher() && $user->teacherProfile) {
-                $profile = $user->teacherProfile;
-            }
+                // Find the correct profile based on the user's role
+                if ($user->isStudent() && $user->studentProfile) {
+                    $profile = $user->studentProfile;
+                } elseif ($user->isTeacher() && $user->teacherProfile) {
+                    $profile = $user->teacherProfile;
+                }
 
-            // Update the timezone only if the profile exists AND
-            // the new timezone is different from the one in the database.
-            if ($profile && $profile->tz !== $timezone) {
-                $profile->tz = $timezone;
-                $profile->save();
-            }
+                // Update the timezone only if the profile exists AND
+                // the new timezone is different from the one in the database.
+                if ($profile && $profile->tz !== $timezone) {
+                    $profile->tz = $timezone;
+                    $profile->save();
+                }
             
-        } catch (\Exception $e) {
-            // Log any errors but do not block the login.
-            // This makes the feature robust.
-            Log::error('Failed to update timezone on login for user: ' . $user->id, [
-                'error' => $e->getMessage()
-            ]);
-        }
-            //  4. Redirect to intended page or dashboard
-            return redirect()->intended('/dashboard')->with('success', 'Welcome back!');
+            } catch (\Exception $e) {
+                // Log any errors but do not block the login.
+                // This makes the feature robust.
+                Log::error('Failed to update timezone on login for user: ' . $user->id, [
+                    'error' => $e->getMessage()
+                ]);
+            } 
+              
+            if($user->isStudent() && $user->hasActiveSubscription() ){
+                //  4. Redirect to intended page or dashboard
+                return redirect()->intended('/dashboard')->with('success', 'Welcome back!');
+            }elseif($user->isStudent() && !$user->hasActiveSubscription()){
+                 return redirect()->route('student.account.subscription')->with('success', 'Welcome back!');
+            }elseif($user->isTeacher()){
+                dd('will be cover in milestone 3');
+            }
         }
 
         //  5. Failed login
