@@ -138,8 +138,11 @@ class SubscriptionController extends Controller
 
     public function success(Request $request)
     {   
-        dd('success');
-        return view($this->view_path . '.success');
+        return redirect()
+            ->route('student.dashboard')
+            ->with('success', 'Your subscription was successful!');
+        // dd('success');
+        // return view($this->view_path . '.success');
     }
 
     public function cancel()
