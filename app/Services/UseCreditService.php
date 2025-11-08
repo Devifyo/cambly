@@ -25,10 +25,8 @@ class UseCreditService
         if (!$subscription) {
             return null;
         }
-
         // 2️⃣ Get cycle number from subscription
-        $cycleNumber = $subscription->current_cycle_number ?? 1;
-
+        $cycleNumber = $subscription->cycle_number ?? 1;
         // 3️⃣ Fetch matching ledger entry
         $ledger = TicketLedger::where('student_id', $user->id)
             ->where('cycle_number', $cycleNumber)
@@ -77,15 +75,14 @@ class UseCreditService
         });
     }
 
-        public function getCurrentTicketLedger($user)
+    public function getCurrentTicketLedger($user)
     {
         $subscription = $user->activeSubscription;
         if (!$subscription) {
             return null;
         }
-
                 // 2️⃣ Get cycle number from subscription
-        $cycleNumber = $subscription->current_cycle_number ?? 1;
+        $cycleNumber = $subscription->cycle_number ?? 1;
 
         // 3️⃣ Fetch matching ledger entry
         $ledger = TicketLedger::where('student_id', $user->id)
@@ -181,7 +178,6 @@ class UseCreditService
                 'student_id' => $reservation->student_id ?? null,
                 'result' => $result,
             ]);
-
             return $result;
         } catch (\Throwable $e) {
             Log::error('refundCreditsOnCancel error: '.$e->getMessage(), [

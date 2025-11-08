@@ -14,10 +14,11 @@ class BookingService
 {   
 
     protected UseCreditService $useCreditService;
-
-    public function __construct(UseCreditService $useCreditService)
+    protected CreditService $creditService;
+    public function __construct(UseCreditService $useCreditService, CreditService $creditService)
     {
         $this->useCreditService = $useCreditService;
+        $this->creditService = $creditService;
     }
     /**
      * Get available slots for a teacher on a given date, converted to viewer timezone.
@@ -112,8 +113,9 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
             return ['error' => 'Teacher mismatch for this availability', 'status' => 400];
         }
 
+        $creditsNeeded = config('app.ticket_per_meeting', 1);
         // If user has at least 1 available credit => confirmed booking flow
-        if ($available >= 1) {
+        if ($available >= $creditsNeeded) {
             $reservation = Reservation::updateOrCreate(
             [
             'student_id' => $student->id,
@@ -130,8 +132,21 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
             $availability->save();
 
             // consume 1 credit from current cycle
-            $this->consumeCredit($student, $creditInfo, config('app.ticket_per_meeting'));
-
+            $this->consumeCredit($student, $creditInfo, $creditsNeeded);
+            // Record transaction in CreditService
+            $this->creditService->recordCreditTransaction(
+                $student->id,
+                $creditInfo['cycle_number'] ?? 1,
+                $creditsNeeded,
+                'debit',
+                'booking_confirmed',
+                "Booking confirmed for reservation #{$reservation->id}",
+                "reservation_{$reservation->id}",
+                null, // plan
+                $creditInfo['ledger_id'] ?? null,
+                $reservation->id,
+                'reservation_confirm'
+            );
             DB::commit();
 
             $teacher = User::find($reservation->teacher_id);
@@ -165,8 +180,21 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
         $availability->save();
 
         // create a hold for next cycle (1 credit)
-        $hold = $this->createHoldForNextCycle($student, $creditInfo, config('app.ticket_per_meeting'));
-
+        $hold = $this->createHoldForNextCycle($student, $creditInfo, $creditsNeeded);
+                // Record hold transaction in CreditService
+        $this->creditService->recordCreditTransaction(
+            $student->id,
+            $creditInfo['cycle_number'] ?? 1,
+             $creditsNeeded,
+            'hold',
+            'booking_hold',
+            "Booking on hold for reservation #{$reservation->id} - will deduct from next cycle",
+            "reservation_{$reservation->id}",
+            null, // plan
+            $creditInfo['ledger_id'] ?? null,
+            $reservation->id,
+            'reservation_hold'
+        );
         DB::commit();
 
         $teacher = User::find($reservation->teacher_id);
@@ -275,8 +303,43 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
 
                 // Attempt refund (refundCreditsOnCancel enforces the 12-hour rule)
                 $refundResult = $this->useCreditService->refundCreditsOnCancel($reservation);
-                $response['refund'] = $refundResult;
+                $response['refund'] = $refundResult['refunded'];
+                 if ($refundResult && isset($refundResult['refunded']) && $refundResult['refunded']) {
+                    // Credits were refunded
+                    $creditInfo = $this->getCurrentMonthCreditInfo($reservation->student);
+                    $creditsRefunded = $refundResult['credits_refunded'] ?? config('app.ticket_per_meeting', 1);
+                    $this->creditService->recordCreditTransaction(
+                        $reservation->student_id,
+                        $creditInfo['cycle_number'] ?? 1,
+                        $creditsRefunded,
+                        'issued', // This is a credit (refund), not debit
+                        'booking_cancelled_refund',
+                        "Booking cancelled and refunded for reservation #{$reservation->id}",
+                        "reservation_cancel_{$reservation->id}",
+                        null, // plan
+                        $creditInfo['ledger_id'] ?? null,
+                        $reservation->id,
+                        'reservation_cancel'
+                    );
+            } else {
+                // No refund (past 12-hour window or other reason)
+                $creditInfo = $this->getCurrentMonthCreditInfo($reservation->student);
 
+                $this->creditService->recordCreditTransaction(
+                    $reservation->student_id,
+                    $creditInfo['cycle_number'] ?? 1,
+                    0, // No credits changed
+                    'no_refund',
+                    'booking_cancelled_no_refund',
+                    "Booking cancelled without refund for reservation #{$reservation->id} - " . 
+                    ($refundResult['reason'] ?? 'outside refund window'),
+                    "reservation_cancel_{$reservation->id}",
+                    null, // plan
+                    $creditInfo['ledger_id'] ?? null,
+                    $reservation->id,
+                    'reservation_cancel'
+                );
+            }
                 return $response;
             }, 5); // retry up to 5 times for deadlock safety
 

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
             $table->integer('cycle_number');
             $table->integer('credits'); // Positive for issued, negative for used
-            $table->enum('type', ['issued', 'used', 'hold', 'release'])->default('issued');
+            $table->enum('type', ['issued', 'debt', 'hold', 'release', 'no_refund'])->default('debt');
             $table->string('reason')->nullable(); // e.g., 'subscription', 'invoice_paid', 'checkout_payment'
             $table->string('reference')->nullable()->unique(); // Stripe invoice_id, payment_intent_id, etc.
             $table->text('description')->nullable();

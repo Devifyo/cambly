@@ -17,6 +17,9 @@ class CreditTransaction extends Model
         'reason',
         'reference',
         'description',
+        'ticket_ledger_id',
+        'action_id',
+        'action_type',
     ];
 
     public function student()

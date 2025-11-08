@@ -118,8 +118,8 @@ class User extends Authenticatable
                 $query->whereNull('ends_at')
                     ->orWhere('ends_at', '>', now());
             })
-            ->where('current_period_start', '<=', now()) // make sure period has started
-            ->where('current_period_end', '>=', now())   // and not expired yet
+            // ->where('current_period_start', '<=', now()) // make sure period has started
+            // ->where('current_period_end', '>=', now())   // and not expired yet
             ->latest('created_at');
     }
     /**

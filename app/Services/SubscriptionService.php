@@ -52,14 +52,14 @@ class SubscriptionService
             $periodStart = isset($stripeSubscription->current_period_start)
                 ? Carbon::createFromTimestamp($stripeSubscription->current_period_start)
                 : null;
-            $periodEnd = isset($stripeSubscription->current_period_end)
+            $periodEnd = isset($stripeSubscription->current_period_start)
                 ? Carbon::createFromTimestamp($stripeSubscription->current_period_end)
                 : null;
 
             $updateData = [
                 'plan_id' => $plan?->id,
                 'status' => $status,
-                'current_period_start' => $periodStart,
+                // 'current_period_start' => $periodStart,
                 'current_period_end' => $periodEnd,
             ];
             Log::info('Syncing subscription from Stripe', [
@@ -122,17 +122,17 @@ class SubscriptionService
             ->update(['status' => $status]);
     }
 
-        public function cancelSubscription(string $stripeSubscriptionId): void
-        {
-            $subscription = Subscription::where('stripe_subscription_id', $stripeSubscriptionId)->first();
-            if ($subscription) {
-                $subscription->update([
-                    'status' => 'cancelled',
-                    'ends_at' => now(),
-                ]);
-            }
-            $subscription = Subscription::where('stripe_subscription_id', $stripeSubscriptionId)->first();
+    public function cancelSubscription(string $stripeSubscriptionId): void
+    {
+        $subscription = Subscription::where('stripe_subscription_id', $stripeSubscriptionId)->first();
+        if ($subscription) {
+            $subscription->update([
+                'status' => 'cancelled',
+                'ends_at' => now(),
+            ]);
         }
+        $subscription = Subscription::where('stripe_subscription_id', $stripeSubscriptionId)->first();
+    }
 
     public function markSubscriptionsPastDue(string $stripeCustomerId): void
     {

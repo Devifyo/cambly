@@ -47,25 +47,38 @@ class CreditService
         ?int $cycleNumber = null,
         ?string $stripeSubscriptionId = null
     ): bool {
+        // Skip if no credits need to be issued
         if ($credits <= 0) {
-            Log::debug('Skipping credit issuance: zero credits', ['user_id' => $user->id]);
+            Log::debug('Skipping credit issuance: zero credits', [
+                'user_id' => $user->id,
+            ]);
+
             return false;
         }
 
-        // Idempotency check
+        // Prevent duplicate issuance using reference idempotency
         if ($reference && $this->isInvoiceProcessed($reference, $user->id)) {
             Log::warning('Credit issuance skipped: reference already processed', [
-                'user_id' => $user->id,
-                'reference' => $reference
+                'user_id'   => $user->id,
+                'reference' => $reference,
             ]);
+
             return false;
         }
 
         return DB::transaction(function () use (
-            $user, $credits, $reason, $reference, $plan, $cycleNumber, $stripeSubscriptionId
+            $user,
+            $credits,
+            $reason,
+            $reference,
+            $plan,
+            $cycleNumber,
+            $stripeSubscriptionId,
         ) {
+            // Resolve current billing cycle
             $cycle = $cycleNumber ?? $this->resolveCycleNumber($user);
-            
+
+            // Find or create user ledger for this cycle
             $ledger = $this->findOrCreateLedger(
                 $user->id,
                 $cycle,
@@ -73,40 +86,148 @@ class CreditService
                 $reference
             );
 
-            // Additional idempotency check within transaction
-            if ($reference && $ledger->stripe_invoice_id === $reference && $ledger->issued_credits > 0) {
+            // Double-check within transaction for safety
+            if (
+                $reference &&
+                $ledger->stripe_invoice_id === $reference &&
+                $ledger->issued_credits > 0
+            ) {
                 Log::warning('Credits already issued for this invoice in ledger', [
-                    'user_id' => $user->id,
+                    'user_id'   => $user->id,
                     'ledger_id' => $ledger->id,
-                    'reference' => $reference
+                    'reference' => $reference,
                 ]);
+
                 return false;
             }
 
-            // Update ledger
+            // Update issued credits
             $ledger->issued_credits += $credits;
+
+            // Settle any hold credits from previous cycles
+            $settlementResult = $this->settleHoldCredits($user->id, $ledger);
+            $holdCreditsSettled = $settlementResult['total_settled'];
+            $settlements = $settlementResult['settlements'];
+
+            // Update used credits with settled amount
+            $ledger->used_credits += $holdCreditsSettled;
             $ledger->save();
 
-            // Record transaction if table exists
+            // Record issuance transaction
             $this->recordCreditTransaction(
                 $user->id,
                 $cycle,
                 $credits,
+                'issued',
+                'issueCredit_function',
                 $reason,
                 $reference,
-                $plan
+                $plan,
+                $ledger->id,
+                ''
             );
 
+            // Record each hold credit settlement as separate transaction
+            foreach ($settlements as $settlement) {
+                $this->recordCreditTransaction(
+                    $user->id,
+                    $cycle,
+                    -$settlement['settled'],
+                    'hold',
+                    'hold_credits_settled',
+                    "Settlement from cycle {$settlement['previous_cycle']}",
+                    "previous_ledger_{$settlement['previous_ledger_id']}",
+                    $plan,
+                    $ledger->id,
+                    null, // action_id
+                    null  // action_type
+                );
+            }
+
+            // Final success log
             Log::info('Credits issued successfully', [
-                'user_id' => $user->id,
-                'credits' => $credits,
-                'ledger_id' => $ledger->id,
-                'reference' => $reference,
-                'reason' => $reason
+                'user_id'              => $user->id,
+                'credits'              => $credits,
+                'ledger_id'            => $ledger->id,
+                'hold_credits_settled' => $holdCreditsSettled,
+                'settlements_count'    => count($settlements),
+                'available_credits'    => $ledger->issued_credits - $ledger->used_credits,
             ]);
 
             return true;
         });
+    }
+
+
+
+    /**
+     * Settle hold credits from ALL previous ledgers with outstanding holds (FIFO)
+     * 
+     * @param int $userId
+     * @param TicketLedger $currentLedger
+     * @return array ['total_settled' => int, 'settlements' => array]
+     */
+    private function settleHoldCredits(int $userId, $currentLedger): array
+    {
+        // Find ALL previous ledgers with hold_credits (oldest first for FIFO)
+        $previousLedgers = DB::table('ticket_ledgers')
+            ->select(['id', 'cycle_number', 'hold_credits'])
+            ->where('student_id', $userId)
+            ->where('id', '<', $currentLedger->id)
+            ->where('hold_credits', '>', 0)
+            ->orderBy('id') // FIFO: oldest debts first
+            ->lockForUpdate()
+            ->get();
+
+        if ($previousLedgers->isEmpty()) {
+            return ['total_settled' => 0, 'settlements' => []];
+        }
+
+        $availableCredits = $currentLedger->issued_credits;
+        $totalSettled = 0;
+        $settlements = [];
+
+        // Process each ledger with hold credits (FIFO)
+        foreach ($previousLedgers as $ledger) {
+            if ($availableCredits <= 0) {
+                break; // No more credits to settle
+            }
+
+            $holdCredits = (int) $ledger->hold_credits;
+            $creditsToSettle = min($holdCredits, $availableCredits);
+            $remainingHoldCredits = $holdCredits - $creditsToSettle;
+
+            // Update the previous ledger (atomic operation)
+            DB::table('ticket_ledgers')
+                ->where('id', $ledger->id)
+                ->update(['hold_credits' => $remainingHoldCredits]);
+
+            $availableCredits -= $creditsToSettle;
+            $totalSettled += $creditsToSettle;
+
+            $settlements[] = [
+                'previous_ledger_id' => $ledger->id,
+                'previous_cycle' => $ledger->cycle_number,
+                'hold_credits' => $holdCredits,
+                'settled' => $creditsToSettle,
+                'remaining' => $remainingHoldCredits,
+            ];
+        }
+
+        // Single comprehensive log entry
+        Log::info('Hold credits settlement completed', [
+            'user_id' => $userId,
+            'current_ledger_id' => $currentLedger->id,
+            'current_cycle' => $currentLedger->cycle_number,
+            'ledgers_processed' => count($settlements),
+            'total_settled' => $totalSettled,
+            'details' => $settlements,
+        ]);
+
+        return [
+            'total_settled' => $totalSettled,
+            'settlements' => $settlements
+        ];
     }
 
     private function findOrCreateLedger(
@@ -135,28 +256,57 @@ class CreditService
         ]);
     }
 
-    private function recordCreditTransaction(
+    /**
+     * Record credit transaction with full audit trail
+     * 
+     * @param int $userId
+     * @param int $cycleNumber
+     * @param int $credits (positive for credit, negative for debit)
+     * @param string $type ('credit' or 'debit')
+     * @param string $reason
+     * @param string|null $description
+     * @param string|null $reference
+     * @param Plan|null $plan
+     * @param int|null $ticketLedgerId
+     * @param int|null $actionId (ID of the action that used credits)
+     * @param string|null $actionType (e.g., 'exam_attempt', 'resource_download', 'ai_query')
+     */
+    public function recordCreditTransaction(
         int $userId,
         int $cycleNumber,
         int $credits,
+        string $type,
         string $reason,
-        ?string $reference,
-        ?Plan $plan
+        ?string $description = null,
+        ?string $reference = null,
+        ?Plan $plan = null,
+        ?int $ticketLedgerId = null,
+        ?int $actionId = null,
+        ?string $actionType = null
     ): void {
         if (!$this->creditTransactionsTableExists()) {
             return;
         }
 
         try {
-            CreditTransaction::create([
+            $transactionData = [
+                'ticket_ledger_id' => $ticketLedgerId,
                 'student_id' => $userId,
                 'cycle_number' => $cycleNumber,
                 'credits' => $credits,
-                'type' => 'issued',
+                'type' => $type, // 'credit' or 'debit'
                 'reason' => $reason,
                 'reference' => $reference,
-                'description' => $plan ? "Credits issued for plan {$plan->name}" : "Credits issued",
-            ]);
+                'description' => $description ?? ($plan ? "Credits issued for plan {$plan->name}" : "Credits transaction"),
+            ];
+
+            // Add action tracking if provided
+            if ($actionId && $actionType) {
+                $transactionData['action_id'] = $actionId;
+                $transactionData['action_type'] = $actionType;
+            }
+
+            CreditTransaction::create($transactionData);
         } catch (\Throwable $e) {
             Log::warning('Failed to create credit transaction', [
                 'user_id' => $userId,
@@ -167,7 +317,7 @@ class CreditService
 
     private function resolveCycleNumber(User $user): int
     {
-        $subscription = $this->subscriptionService->getActiveSubscription($user->id);
+        $subscription =  $user->activeSubscription;
         if ($subscription) {
             return $subscription->cycle_number;
         }

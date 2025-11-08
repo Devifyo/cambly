@@ -220,41 +220,46 @@ class StripeWebhookController extends Controller
         });
     }
 
-    private function processSubscriptionInvoice($user, $plan, $credits, $invoice, $subscriptionId): void
-    {
-        $periodStart = isset($invoice->lines->data[0]->period->start)
-            ? Carbon::createFromTimestamp($invoice->lines->data[0]->period->start)
-            : null;
-        $periodEnd = isset($invoice->lines->data[0]->period->end)
-            ? Carbon::createFromTimestamp($invoice->lines->data[0]->period->end)
-            : null;
+private function processSubscriptionInvoice($user, $plan, $credits, $invoice, $subscriptionId): void
+{
+    $periodStart = isset($invoice->lines->data[0]->period->start)
+        ? Carbon::createFromTimestamp($invoice->lines->data[0]->period->start)
+        : null;
+    $periodEnd = isset($invoice->lines->data[0]->period->end)
+        ? Carbon::createFromTimestamp($invoice->lines->data[0]->period->end)
+        : null;
 
+    // Update subscription
+    $subscription = $this->subscriptionService->updateSubscriptionPeriod(
+        $subscriptionId,
+        $plan?->id,
+        'active',
+        $periodStart,
+        $periodEnd
+    );
 
-        // Update subscription
-        $subscription = $this->subscriptionService->updateSubscriptionPeriod(
-            $subscriptionId,
-            $plan?->id,
-            'active',
-            $periodStart,
-            $periodEnd
-        );
-
-        // Issue credits
-        $applied = $this->creditService->issueCredits(
-            $user,
-            $credits,
-            'invoice_paid',
-            $invoice->id,
-            $plan,
-            $subscription->cycle_number,
-            $subscriptionId
-        );
-
-        // Increment cycle if credits applied
-        if ($applied) {
-            $this->subscriptionService->incrementCycle($subscription->id);
-        }
+    // Determine if this is a renewal (not initial subscription)
+    $isRenewal = ($invoice->billing_reason ?? '') === 'subscription_cycle';
+    
+    // If it's a renewal, increment cycle BEFORE issuing credits
+    // so the credits are tagged with the correct (new) cycle number
+    if ($isRenewal) {
+        $this->subscriptionService->incrementCycle($subscription->id);
+        // Refresh subscription to get updated cycle_number
+        $subscription->refresh();
     }
+
+    // Issue credits with the current (correct) cycle number
+    $this->creditService->issueCredits(
+        $user,
+        $credits,
+        'invoice_paid',
+        $invoice->id,
+        $plan,
+        $subscription->cycle_number,
+        $subscriptionId
+    );
+}
 
     private function handleInvoicePaymentFailed($invoice): void
     {
