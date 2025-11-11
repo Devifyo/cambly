@@ -22,4 +22,6 @@ Route::controller(CmsController::class)->group(function () {
     
     // The "Privacy" page (I've added this for you)
     Route::get('privacy-policy', 'privacy')->name('cms.privacy');
+    // how-it-works
+    Route::get('how-it-works','howItWorks')->name('cms.how.works');
 });

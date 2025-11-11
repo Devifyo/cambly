@@ -10,16 +10,16 @@
                                 <strong>{{ config('app.name') }}</strong> is your platform for 1-to-1 learning. We connect you with expert tutors, so you can book lessons tailored to your schedule and goals.
                             </p>
                         </div>
-                        <div class="social-icon">
+                        {{-- <div class="social-icon">
                             <h6 class="mb-3 mt-3">Follow Us</h6>
                             <ul>
-                                <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
-                                <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
-                                <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-                                <li><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></li>
-                                <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="fa-brands fa-x-twitter"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="fa-brands fa-instagram"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="fa-brands fa-youtube"></i></a></li>
                             </ul>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 
@@ -30,9 +30,11 @@
                                 <h6 class="footer-title">For Students</h6>
                                 <ul>
                                     <li><a href="#">Find Tutors</a></li>
-                                    <li><a href="#">How It Works</a></li>
+                                    <li><a href="{{ route('cms.how.works') }}">How It Works</a></li>
                                     <li><a href="#">Pricing</a></li> {{-- Added --}}
+                                    @auth
                                     <li><a href="#">Student Dashboard</a></li>
+                                    @endauth
                                 </ul>
                             </div>
                         </div>
@@ -43,15 +45,15 @@
                                 <ul>
                                     <li><a href="{{ route('cms.about') }}">About Us</a></li> {{-- Added --}}
                                     <li><a href="{{ route('cms.contact') }}">Contact Us</a></li> {{-- Added --}}
-                                    <li><a href="#">Terms and Conditions</a></li> {{-- Added --}}
-                                    <li><a href="#">Privacy Policy</a></li> {{-- Added --}}
+                                    <li><a href="{{ route('cms.terms') }}">Terms and Conditions</a></li> {{-- Added --}}
+                                    <li><a href="{{ route('cms.privacy') }}">Privacy Policy</a></li> {{-- Added --}}
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4 col-md-6">
+                {{-- <div class="col-lg-4 col-md-6">
                     <div class="footer-widget">
                         <h6 class="footer-title">Stay Connected</h6>
                         <p class="mb-2">Subscribe to get learning tips, updates & special offers.</p>
@@ -64,7 +66,7 @@
                             </form>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
 
@@ -85,15 +87,15 @@
                 <div class="copyright-menu">
                     <ul class="policy-menu">
                         {{-- I've kept these here as it's common to have them in both places --}}
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="{{ route('cms.terms') }}">Terms of Service</a></li>
+                        <li><a href="{{ route('cms.privacy') }}">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <ul class="payment-method">
-                    <li><a href="#"><img src="{{ asset('assets/img/icons/card-01.svg') }}" alt="Visa"></a></li>
-                    <li><a href="#"><img src="{{ asset('assets/img/icons/card-02.svg') }}" alt="MasterCard"></a></li>
-                    <li><a href="#"><img src="{{ asset('assets/img/icons/card-04.svg') }}" alt="PayPal"></a></li>
-                    <li><a href="#"><img src="{{ asset('assets/img/icons/card-05.svg') }}" alt="Stripe"></a></li>
+                    <li><a href="javascript:void(0)"><img src="{{ asset('assets/img/icons/card-01.svg') }}" alt="Visa"></a></li>
+                    <li><a href="javascript:void(0)"><img src="{{ asset('assets/img/icons/card-02.svg') }}" alt="MasterCard"></a></li>
+                    <li><a href="javascript:void(0)"><img src="{{ asset('assets/img/icons/card-04.svg') }}" alt="PayPal"></a></li>
+                    <li><a href="javascript:void(0)"><img src="{{ asset('assets/img/icons/card-05.svg') }}" alt="Stripe"></a></li>
                 </ul>
             </div>
         </div>

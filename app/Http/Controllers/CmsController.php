@@ -51,6 +51,10 @@ class CmsController extends Controller
         return view('student.cms.privacy');
     }
 
+    public function howItWorks(){
+        return view('student.cms.how-work');
+    }
+
 
 public function storeContact(ContactFormRequest $request): RedirectResponse
     {
