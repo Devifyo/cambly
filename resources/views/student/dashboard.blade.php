@@ -134,6 +134,41 @@
                 height: 500px;
             }
         }
+
+.cancel-lesson {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #dc3545;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    text-decoration: none;
+    
+    /* Circle outline */
+    border: 2px solid #dc3545 !important;
+
+    /* Center the icon inside */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cancel-lesson:hover {
+    color: #fff !important;
+    background-color: #dc3545 !important;  /* fill red on hover */
+    border-color: #dc3545 !important;
+}
+
+.cancel-lesson i {
+    font-size: 14px;
+    line-height: 1;
+}
+
+        
     </style>
 @endpush
 
@@ -204,7 +239,7 @@
                                     <div class="header-title">
                                         <h6>Upcoming Lessons</h6>
                                     </div>
-                                    <div class="card-view-link"><a href="#">View All</a></div>
+                                    <div class="card-view-link"><a href="{{ route('student.lessons.list') }}">View All</a></div>
                                 </div>
                                 <div class="dashboard-card-body pt-2">
                                     <div class="table-responsive">
@@ -233,13 +268,17 @@
                                                         </td>
                                                         <td>
                                                             <div class="apponiment-actions d-flex align-items-center">
+                                                                {{-- Join Lesson (commented out) --}}
                                                                 {{-- <a href="#" class="text-success-icon me-2" title="Join Lesson">
                                                                     <i class="fa-solid fa-video"></i>
                                                                 </a> --}}
-                                                                <a href="{{ route('student.booking.cancel',['reservation' => encryptId($lesson['id'])]) }}" class="text-danger-icon" title="Cancel Lesson" 
-                                                               >
-                                                                    <i class="fa-solid fa-xmark"></i>
-                                                                </a>
+
+                                                                <form action="{{ route('student.booking.cancel', ['reservation' => encryptId($lesson['id'])]) }}" method="POST" class="cancel-lesson-form d-inline">
+                                                                    @csrf
+                                                                    <button type="submit" class="btn btn-link text-danger-icon p-0 border-0 bg-transparent cancel-lesson" title="Cancel Lesson">
+                                                                        <i class="fa-solid fa-xmark"></i>
+                                                                    </button>
+                                                                </form>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -429,6 +468,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
     calendar.render();  
 });
+
+
+    (function () {
+        let isSubmitting = false;
+
+        $(document).on('submit', '.cancel-lesson-form', function (ev) {
+            const $form = $(this);
+            const $btn = $form.find('.cancel-lesson');
+
+            // If already confirmed, allow the form to submit naturally
+            if (isSubmitting) {
+                return;
+            }
+
+            // Stop first submit
+            ev.preventDefault();
+
+            Swal.fire({
+                title: 'Cancel this lesson?',
+                html: '<p>Are you sure you want to cancel this lesson?<br>Cancellation policies may apply.</p>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, cancel it',
+                cancelButtonText: 'Keep lesson',
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    isSubmitting = true;           // Mark as confirmed
+                    $btn.prop('disabled', true);   // Prevent button spam
+                    $form.submit();                // Submit again (allowed this time)
+                }
+            });
+        });
+    })();
+
+
+
 </script>
 
 @endpush

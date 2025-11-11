@@ -26,19 +26,8 @@
                     <a href="{{ route('student.dashboard') }}">Dashboard</a>
                 </li>
 
-                    <li class="has-submenu ">
-                        <a href="javascript:void(0);">Manage Meetings <i class="fas fa-chevron-down"></i></a>
-                        <ul class="submenu">
-                            <li class=""><a href="#">Meetings</a></li>
-                            <li class="has-submenu">
-                                <a href="javascript:void(0);">Your Meetings</a>
-                                <ul class="submenu inner-submenu">
-                                    <li><a href="#">Upcoming</a></li>
-                                    <li><a href="#">Completed</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Favourites</a></li>
-                        </ul>
+                    <li class="main-nav">
+                        <a href="{{ route('student.lessons.list') }}">Manage Lessons </a>
                     </li>
 
                     <li class="{{ request()->routeIs('student.tutors.search') ? 'active' : '' }}"><a href="{{ route('student.tutors.search') }}">Search Teacher</a></li>

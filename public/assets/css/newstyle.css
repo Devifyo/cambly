@@ -42,3 +42,21 @@
   color:#0E82FD !important;
 }
 
+.cancel-lesson {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #dc3545; /* same as .text-danger-icon */
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.cancel-lesson:hover {
+    color: #b02a37 !important; /* darker red on hover */
+}
+
+.cancel-lesson i {
+    font-size: 16px; /* match your icon size */
+    line-height: 1;
+}

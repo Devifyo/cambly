@@ -14,6 +14,10 @@ class Availability extends Model
         'end_utc',
         'is_booked'
     ];
+        protected $casts = [
+        'start_utc' => 'datetime',
+        'end_utc'   => 'datetime',
+    ];
 
     public function teacher()
     {

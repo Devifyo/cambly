@@ -19,9 +19,6 @@
             font-weight: 600;
         }
     </style>
-
-    <!-- SweetAlert2 CSS (CDN) -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -145,9 +142,6 @@
 
     <!-- Feather icons -->
     <script src="{{ asset('assets/js/feather.min.js') }}"></script>
-
-    <!-- SweetAlert2 (CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     feather.replace();

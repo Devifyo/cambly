@@ -22,22 +22,15 @@
     <!-- Iconsax CSS-->
     <link rel="stylesheet" href="{{asset('assets/css/iconsax.css')}}">
 
-    <!-- Feathericon CSS -->
-    {{-- <link rel="stylesheet" href="{{asset('assets/css/feather.css')}}"> --}}
-
-    <!-- Owl carousel CSS -->
-    {{-- <link rel="stylesheet" href="{{asset('assets/css/owl.carousel.min.css')}}"> --}}
-
     <!-- select CSS -->
     <link rel="stylesheet" href="{{asset('assets/plugins/select2/css/select2.min.css')}}">
-
-    <!-- Datepicker CSS -->
-    {{-- <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datetimepicker.min.css')}}"> --}}
 
     <!-- Apex Css -->
     {{-- <link rel="stylesheet" href="{{asset('assets/plugins/apex/apexcharts.css')}}"> --}}
     <link rel="stylesheet" href="{{asset('assets/css/feather.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/bootstrap-datetimepicker.min.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{asset('assets/css/custom.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/newstyle.css')}}">
@@ -101,7 +94,7 @@
 
     <!-- Custom JS -->
     <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('assets/js/script.js')}}"></script>
 
     @stack('scripts')

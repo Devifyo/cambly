@@ -303,7 +303,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
 
                 // Attempt refund (refundCreditsOnCancel enforces the 12-hour rule)
                 $refundResult = $this->useCreditService->refundCreditsOnCancel($reservation);
-                $response['refund'] = $refundResult['refunded'];
+                $response['refund'] = isset($refundResult['refunded']) ? $refundResult['refunded'] : null;
                  if ($refundResult && isset($refundResult['refunded']) && $refundResult['refunded']) {
                     // Credits were refunded
                     $creditInfo = $this->getCurrentMonthCreditInfo($reservation->student);
