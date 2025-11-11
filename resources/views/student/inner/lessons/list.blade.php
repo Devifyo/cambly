@@ -299,7 +299,7 @@
                 @php
                     // *** UPDATED LINE ***
                     // Use the pre-formatted, localized date from the service
-                    $startDisplay = $item->start_at_local ? $item->start_at_local->format('D, M j, Y • g:i A') : '—';
+                    $startDisplay = formatLessonDateTime($item->start_at_local);
                     
                     // These are the same as before
                     $durationText = $item->duration ? $item->duration . ' min' : 'N/A';
@@ -316,7 +316,7 @@
                 <div class="lesson-card">
                     <div class="lesson-header">
                         <div>
-                            <div class="lesson-title">1-1 Lesson</div>
+                            <div class="lesson-title">{{ $startDisplay }}</div>
                             <div class="lesson-teacher">with {{ $item->teacher_name }}</div>
                         </div>
                         <span class="status-badge {{ $statusClass }}">

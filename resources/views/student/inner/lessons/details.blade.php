@@ -166,7 +166,7 @@
                         <label>Starts (Your Time)</label>
                         <p>
                             @if($lesson->start_at_local)
-                                {{ $lesson->start_at_local->format('D, M j, Y • g:i A') }}
+                                {{ formatLessonDateTime($lesson->start_at_local) }}
                                 <small class="d-block text-muted">({{ $userTimezone }})</small>
                             @else
                                 —
@@ -177,7 +177,7 @@
                         <label>Ends (Your Time)</label>
                         <p>
                             @if($lesson->end_at_local)
-                                {{ $lesson->end_at_local->format('D, M j, Y • g:i A') }}
+                                {{ formatLessonDateTime($lesson->end_at_local) }}
                             @else
                                 —
                             @endif

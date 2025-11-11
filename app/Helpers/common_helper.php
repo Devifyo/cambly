@@ -225,3 +225,19 @@ if (! function_exists('intelligentMonthStart')) {
         return $firstDay;
     }
 }
+
+
+if (! function_exists('formatLessonDateTime')) {
+    function formatLessonDateTime($dateTime, bool $showYear = false){
+        if (!$dateTime) {
+                return '—';
+            }
+
+        $carbon = $dateTime instanceof Carbon ? $dateTime : Carbon::parse($dateTime);
+
+        return $showYear
+            ? $carbon->format('Y M j (D) g:i a')   // e.g. 2025 Nov 19 (Thu) 4:30 pm
+            : $carbon->format('M j (D) g:i a');    // e.g. Nov 19 (Thu) 4:30 pm
+    }
+
+}

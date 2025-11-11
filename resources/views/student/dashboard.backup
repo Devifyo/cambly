@@ -458,61 +458,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 info.el.style.color = info.event.textColor || '#fff';
             }
         },
-        
+
         eventClick: function(info) {
-            // 1. Stop the browser from navigating
-            info.jsEvent.preventDefault(); 
-            
-            // 2. Get the event data
-            const event = info.event;
-            const status = event.extendedProps?.status || 'No status';
-            
-            // --- THIS IS THE FIX ---
-            let timeString = '';
-            if (event.start) {
-                // Get the calendar instance from the 'info' object
-                const calendarInstance = info.view.calendar;
-
-                // Define the format we want (same as your eventTimeFormat)
-                const timeFormat = {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    meridiem: 'short'
-                };
-
-                // Use the calendar's built-in formatter
-                const startTime = calendarInstance.formatDate(event.start, timeFormat);
-                
-                let endTime = '';
-                if(event.end) {
-                    endTime = calendarInstance.formatDate(event.end, timeFormat);
-                }
-                timeString = endTime ? `${startTime} - ${endTime}` : startTime;
+            const reservationId = info.event.extendedProps?.reservation_id || info.event.id;
+            if (reservationId) {
+                window.location = 'lessons/details/' + reservationId;
+            } else {
+                console.error('Reservation ID not found for this event');
             }
-            // --- END OF FIX ---
-
-            // 4. Show the SweetAlert!
-            Swal.fire({
-                title: event.title,
-                html: `
-                    <div style="text-align: left; padding: 0 1rem;">
-                        <p><strong>Time:</strong> ${timeString}</p>
-                        <p><strong>Status:</strong> <span style="text-transform: capitalize;">${status}</span></p>
-                    </div>
-                `,
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonText: 'Go to Details',
-                cancelButtonText: 'Close',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // 5. If they click "Go to Details", navigate
-                    const reservationId = event.extendedProps?.reservation_id || event.id;
-                    if (reservationId) {
-                        window.location = 'lessons/details/' + reservationId;
-                    }
-                }
-            });
         }
     });
 
