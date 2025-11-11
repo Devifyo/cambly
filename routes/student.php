@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Student\{StudentDashboardController,SubscriptionController, TeacherController, BookingController, LessonController};
+use App\Http\Controllers\Student\{StudentDashboardController,SubscriptionController, TeacherController, BookingController, LessonController, StudentAccountController};
 use App\Http\Controllers\{StripeWebhookController };
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +10,20 @@ Route::get('/students', function () {
 });
 
 Route::middleware(['auth.custom','isStudent'])->group(function () {
+    /************** AccountSetting Routes ********/
+    // GET - Show the settings page
+        Route::get('/account/settings', [StudentAccountController::class, 'show'])
+             ->name('account.show');
+
+        // PATCH - Handle the profile (name, email, avatar) update
+        Route::patch('/account/profile', [StudentAccountController::class, 'updateProfile'])
+             ->name('profile.update');
+
+        // PUT - Handle the password update
+        Route::put('/account/password', [StudentAccountController::class, 'updatePassword'])
+             ->name('password.update');
+        
+    /********* END ACCOUNT SETTING ROUTES *******/
     // Controller route
     Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/calendar-events', 

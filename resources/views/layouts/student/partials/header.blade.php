@@ -26,11 +26,11 @@
                     <a href="{{ route('student.dashboard') }}">Dashboard</a>
                 </li>
 
-                    <li class="main-nav">
+                    <li class="{{ request()->routeIs('student.lessons.*') ? 'active' : '' }}">
                         <a href="{{ route('student.lessons.list') }}">Manage Lessons </a>
                     </li>
 
-                    <li class="{{ request()->routeIs('student.tutors.search') ? 'active' : '' }}"><a href="{{ route('student.tutors.search') }}">Search Teacher</a></li>
+                    <li class="{{ request()->routeIs('student.tutors.*')  || request()->routeIs('student.booking.*') ? 'active' : '' }}"><a href="{{ route('student.tutors.search') }}">Search Teacher</a></li>
                     <li class="has-submenu {{ request()->routeIs('student.account.subscription') ? 'active' : '' }}">
                         <a href="#">Account <i class="fas fa-chevron-down"></i> </a>
                         <ul class="submenu">

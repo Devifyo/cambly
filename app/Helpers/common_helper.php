@@ -3,7 +3,9 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 if (!function_exists('encryptId')) {
     function encryptId(int $id): string
     {
@@ -240,4 +242,41 @@ if (! function_exists('formatLessonDateTime')) {
             : $carbon->format('M j (D) g:i a');    // e.g. Nov 19 (Thu) 4:30 pm
     }
 
+}
+
+if (! function_exists('uploadProfile')) {
+    function uploadProfile(User $user, UploadedFile $newImage): string
+    {
+        // Get the old image path from the profile
+        $oldPath = $user->studentProfile?->avatar_url;
+        $disk = config('filesystems.default');
+
+        // 1. Store the new file with a unique name
+        $fileName = $user->id . '_' . time() . '.' . $newImage->getClientOriginalExtension();
+        $newPath = $newImage->storeAs('avatars', $fileName, $disk);
+
+        // 2. Delete the old file *after* the new one is stored
+        if ($oldPath && $newPath) {
+            Storage::disk($disk)->delete($oldPath);
+        }
+
+        // 3. Return the path of the new file
+        return $newPath;
+    }
+
+}
+
+/**
+ * Remove user's profile avatar from storage (if exists).
+ *
+ * @param User $user
+ * @return void
+ */
+if (! function_exists('removeProfileAvatar')) {
+    function removeProfileAvatar(User $user): void
+    {
+        if (!empty($user->profile_picture)) {
+            Storage::disk(config('filesystems.default'))->delete($user->profile_picture);
+        }
+    }
 }

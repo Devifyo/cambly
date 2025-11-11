@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Storage;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, Billable, HasRoles;
@@ -20,7 +22,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password', 'status',
-        'stripe_id', 'pm_type', 'pm_last_four', 'trial_ends_at'
+        'stripe_id', 'pm_type', 'pm_last_four', 'trial_ends_at',   'profile_picture','gender'
     ];
 
 
@@ -43,6 +45,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected $appends = ['profile_link'];
 
      public function studentProfile() {
         return $this->hasOne(StudentProfile::class);
@@ -143,6 +147,17 @@ class User extends Authenticatable
         return $this->subscriptions()
             ->whereNotNull('plan_id')
             ->exists();
+    }
+
+    public function getProfileLinkAttribute(): string
+    {
+        if ($this->profile_picture) {
+            // If you’re storing using Laravel Storage (e.g. 'public' disk)
+            return Storage::url($this->profile_picture);
+        }
+
+        // Default placeholder image    
+        return asset('assets/img/dashboard/profile-06.jpg');
     }
 
 
