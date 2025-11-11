@@ -3,3 +3,38 @@
 [11-Nov-2025 07:27:22 UTC] PHP Parse error:  syntax error, unexpected variable "$dateTime" in /home/deviytwg/projects/laravel/cambly/app/Helpers/common_helper.php on line 231
 [11-Nov-2025 07:28:22 UTC] PHP Parse error:  syntax error, unexpected variable "$dateTime" in /home/deviytwg/projects/laravel/cambly/app/Helpers/common_helper.php on line 231
 [11-Nov-2025 07:28:22 UTC] PHP Parse error:  syntax error, unexpected variable "$dateTime" in /home/deviytwg/projects/laravel/cambly/app/Helpers/common_helper.php on line 231
+[11-Nov-2025 12:10:24 UTC] PHP Fatal error:  Uncaught Error: __VSCODE_LARAVEL_STARTUP_ERROR__: syntax error, unexpected single-quoted string "env", expecting "]" in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php:33
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php(62): LaravelVsCode::startupError()
+#1 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php on line 33
+[11-Nov-2025 12:10:27 UTC] PHP Fatal error:  Uncaught Error: __VSCODE_LARAVEL_STARTUP_ERROR__: syntax error, unexpected token "=>", expecting "]" in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-5802e590a92e23606bb54d2909564178.php:33
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-5802e590a92e23606bb54d2909564178.php(62): LaravelVsCode::startupError()
+#1 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-5802e590a92e23606bb54d2909564178.php on line 33
+[11-Nov-2025 12:10:27 UTC] PHP Fatal error:  Uncaught Error: __VSCODE_LARAVEL_STARTUP_ERROR__: syntax error, unexpected token "=>", expecting "]" in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php:33
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php(62): LaravelVsCode::startupError()
+#1 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php on line 33
+[11-Nov-2025 12:10:31 UTC] PHP Fatal error:  Uncaught Error: __VSCODE_LARAVEL_STARTUP_ERROR__: syntax error, unexpected single-quoted string "env", expecting "]" in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php:33
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php(62): LaravelVsCode::startupError()
+#1 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php on line 33
+[11-Nov-2025 12:10:31 UTC] PHP Fatal error:  Uncaught Error: __VSCODE_LARAVEL_STARTUP_ERROR__: syntax error, unexpected single-quoted string "env", expecting "]" in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-5802e590a92e23606bb54d2909564178.php:33
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-5802e590a92e23606bb54d2909564178.php(62): LaravelVsCode::startupError()
+#1 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-5802e590a92e23606bb54d2909564178.php on line 33
+[11-Nov-2025 12:10:37 UTC] PHP Fatal error:  Uncaught Error: __VSCODE_LARAVEL_STARTUP_ERROR__: syntax error, unexpected single-quoted string "env", expecting "]" in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-5802e590a92e23606bb54d2909564178.php:33
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-5802e590a92e23606bb54d2909564178.php(62): LaravelVsCode::startupError()
+#1 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-5802e590a92e23606bb54d2909564178.php on line 33
+[11-Nov-2025 12:10:37 UTC] PHP Fatal error:  Uncaught Error: __VSCODE_LARAVEL_STARTUP_ERROR__: syntax error, unexpected single-quoted string "env", expecting "]" in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php:33
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php(62): LaravelVsCode::startupError()
+#1 {main}
+  thrown in /home/deviytwg/projects/laravel/cambly/vendor/_laravel_ide/discover-6d96201ad95cad12367117063c707ebf.php on line 33

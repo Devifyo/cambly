@@ -267,20 +267,6 @@
         // Render all feather icons
         feather.replace();
 
-        // Set global defaults for jQuery Validation
-        $.validator.setDefaults({
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                error.addClass('error');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function (element, errorClass, validClass) {
-                $(element).addClass('error').removeClass(validClass);
-            },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).removeClass('error').addClass(validClass);
-            }
-        });
 
         // Handle tab switching for server-side errors
         $(function() {

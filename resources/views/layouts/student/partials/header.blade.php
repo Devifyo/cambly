@@ -31,11 +31,11 @@
                     </li>
 
                     <li class="{{ request()->routeIs('student.tutors.*')  || request()->routeIs('student.booking.*') ? 'active' : '' }}"><a href="{{ route('student.tutors.search') }}">Search Teacher</a></li>
-                    <li class="has-submenu {{ request()->routeIs('student.account.subscription') ? 'active' : '' }}">
+                    <li class="has-submenu {{ request()->routeIs('student.account.subscription') || request()->routeIs('student.account.show') ? 'active' : '' }}">
                         <a href="#">Account <i class="fas fa-chevron-down"></i> </a>
                         <ul class="submenu">
                             <li class="{{ request()->routeIs('student.account.subscription') ? 'active' : '' }}"><a href="{{ route('student.account.subscription') }}">Subscription</a></li>
-                            <li class=""><a href="">Profile settings</a></li>
+                            <li class="{{ request()->routeIs('student.account.show') ? 'active' : '' }}"><a href="{{ route('student.account.show') }}">Profile settings</a></li>
                         </ul>
                     </li>
                 </ul>

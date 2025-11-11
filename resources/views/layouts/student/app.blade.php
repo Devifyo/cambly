@@ -97,6 +97,24 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('assets/js/script.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/additional-methods.min.js"></script>    @stack('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/additional-methods.min.js"></script>
+    <script>
+                // Set global defaults for jQuery Validation
+        $.validator.setDefaults({
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('error');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('error').removeClass(validClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('error').addClass(validClass);
+            }
+        });
+
+    </script>    
+    @stack('scripts')
 </body>
 </html>

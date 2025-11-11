@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             DemoSeeder::class,
+            EmailTemplateSeeder::class,
         ]);
     }
 }
