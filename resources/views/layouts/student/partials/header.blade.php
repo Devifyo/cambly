@@ -37,6 +37,7 @@
                             <li class="{{ request()->routeIs('student.account.subscription') ? 'active' : '' }}"><a href="{{ route('student.account.subscription') }}">Subscription</a></li>
                             <li class="{{ request()->routeIs('student.account.show') ? 'active' : '' }}"><a href="{{ route('student.account.show') }}">Profile settings</a></li>
                             <li class="{{ request()->routeIs('student.account.ticket-history') ? 'active' : '' }}"><a href="{{ route('student.account.ticket-history') }}">Ticket History</a></li>
+                            <li class="{{ request()->routeIs('student.account.payment-history') ? 'active' : '' }}"><a href="{{ route('student.account.payment-history') }}">Payment History</a></li>
 
                         </ul>
                     </li>

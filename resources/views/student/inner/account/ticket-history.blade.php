@@ -195,11 +195,14 @@
                 <p>No ticket transactions found.</p>
             </div>
         @endforelse
+        <div class="col-md-12">
+            <x-pagination :paginator="$ticketHistory" />
+        </div>
     </div>
     
-    <div style="margin-top: 2rem;">
+    {{-- <div style="margin-top: 2rem;">
         {{ $ticketHistory->links() }}
-    </div>
+    </div> --}}
 
 </div>
 @endsection

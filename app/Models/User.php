@@ -149,6 +149,11 @@ class User extends Authenticatable
             ->exists();
     }
 
+    public function webhookEvents()
+    {
+        return $this->hasMany(\App\Models\WebhookEvent::class);
+    }
+
     public function getProfileLinkAttribute(): string
     {
         if ($this->profile_picture) {

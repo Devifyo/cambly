@@ -44,10 +44,18 @@ class StripeWebhookService
         return WebhookEvent::where('event_id', $eventId)->exists();
     }
 
-    public function recordEvent($event): void
+    public function recordEvent($event, $stripeCustomerId = null): void
     {
         try {
+            if($stripeCustomerId){
+                $user = $this->findUserByStripeId($stripeCustomerId);
+                $user_id = $user->id;
+            }else{
+                $user_id = null;
+            }
+
             WebhookEvent::create([
+                'user_id' => $user_id,
                 'event_id' => $event->id,
                 'type' => $event->type,
                 'payload' => json_encode($event),

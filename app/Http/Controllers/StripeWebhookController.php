@@ -49,9 +49,13 @@ class StripeWebhookController extends Controller
                 
                 return response()->json(['status' => 'ignored_already_processed']);
             }
-
+              $stripeCustomerId = data_get($event, 'data.object.customer');
+               Log::info('Stripe User', [
+                'stripe_id' => $stripeCustomerId,
+                'type' => $event->type,
+               ]);
             // Record event for idempotency before processing
-            $this->webhookService->recordEvent($event);
+            $this->webhookService->recordEvent($event, $stripeCustomerId);
 
             // Process the event
             $this->routeEventToHandler($event);
