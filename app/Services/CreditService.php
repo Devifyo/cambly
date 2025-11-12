@@ -124,7 +124,8 @@ class CreditService
                 $reference,
                 $plan,
                 $ledger->id,
-                ''
+                $ledger->id,
+                'issueCredits'
             );
 
             // Record each hold credit settlement as separate transaction
@@ -139,8 +140,8 @@ class CreditService
                     "previous_ledger_{$settlement['previous_ledger_id']}",
                     $plan,
                     $ledger->id,
-                    null, // action_id
-                    null  // action_type
+                    $ledger->id, // action_id
+                   'issueCredits'
                 );
             }
 
@@ -284,9 +285,9 @@ class CreditService
         ?int $actionId = null,
         ?string $actionType = null
     ): void {
-        if (!$this->creditTransactionsTableExists()) {
-            return;
-        }
+        // if (!$this->creditTransactionsTableExists()) {
+        //     return;
+        // }
 
         try {
             $transactionData = [
@@ -299,14 +300,13 @@ class CreditService
                 'reference' => $reference,
                 'description' => $description ?? ($plan ? "Credits issued for plan {$plan->name}" : "Credits transaction"),
             ];
-
             // Add action tracking if provided
             if ($actionId && $actionType) {
                 $transactionData['action_id'] = $actionId;
                 $transactionData['action_type'] = $actionType;
             }
-
-            CreditTransaction::create($transactionData);
+            
+            $cred  = CreditTransaction::create($transactionData);
         } catch (\Throwable $e) {
             Log::warning('Failed to create credit transaction', [
                 'user_id' => $userId,

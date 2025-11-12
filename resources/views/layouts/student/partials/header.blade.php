@@ -31,11 +31,13 @@
                     </li>
 
                     <li class="{{ request()->routeIs('student.tutors.*')  || request()->routeIs('student.booking.*') ? 'active' : '' }}"><a href="{{ route('student.tutors.search') }}">Search Teacher</a></li>
-                    <li class="has-submenu {{ request()->routeIs('student.account.subscription') || request()->routeIs('student.account.show') ? 'active' : '' }}">
+                    <li class="has-submenu {{ request()->routeIs('student.account.*') || request()->routeIs('student.account.show') ? 'active' : '' }}">
                         <a href="#">Account <i class="fas fa-chevron-down"></i> </a>
                         <ul class="submenu">
                             <li class="{{ request()->routeIs('student.account.subscription') ? 'active' : '' }}"><a href="{{ route('student.account.subscription') }}">Subscription</a></li>
                             <li class="{{ request()->routeIs('student.account.show') ? 'active' : '' }}"><a href="{{ route('student.account.show') }}">Profile settings</a></li>
+                            <li class="{{ request()->routeIs('student.account.ticket-history') ? 'active' : '' }}"><a href="{{ route('student.account.ticket-history') }}">Ticket History</a></li>
+
                         </ul>
                     </li>
                 </ul>
@@ -150,8 +152,8 @@
                                     <p class="text-muted mb-0">Student</p>
                                 </div>
                             </div>
-                            <a class="dropdown-item" href="#">Dashboard</a>
-                            <a class="dropdown-item" href="#">Profile Settings</a>
+                            <a class="dropdown-item" href="{{ route('student.dashboard') }}">Dashboard</a>
+                            <a class="dropdown-item" href="{{ route('student.account.show') }}">Profile Settings</a>
                             <form method="POST" action="{{route('auth.logout')}}">
                                 @csrf
                                 <button type="submit" class="dropdown-item">Logout</button>

@@ -29,11 +29,13 @@
                             <div class="footer-widget footer-menu">
                                 <h6 class="footer-title">For Students</h6>
                                 <ul>
-                                    <li><a href="#">Find Tutors</a></li>
+                                    @auth
+                                    <li><a href="{{ route('student.tutors.search') }}">Find Teachers</a></li>
+                                    @endauth
                                     <li><a href="{{ route('cms.how.works') }}">How It Works</a></li>
                                     <li><a href="#">Pricing</a></li> {{-- Added --}}
                                     @auth
-                                    <li><a href="#">Student Dashboard</a></li>
+                                    <li><a href="{{ route('student.dashboard') }}">Student Dashboard</a></li>
                                     @endauth
                                 </ul>
                             </div>

@@ -14,8 +14,8 @@
                 <p class="text-muted mb-0">Student</p>
             </div>
         </div>
-        <a class="dropdown-item" href="">Dashboard</a>
-        <a class="dropdown-item" href="">Profile Settings</a>
+        <a class="dropdown-item" href="{ route('student.dashboard') }}">Dashboard</a>
+        <a class="dropdown-item" href="{{ route('student.account.show') }}">Profile Settings</a>
         <a class="dropdown-item" href="">My Sessions</a>
         <a class="dropdown-item" href="">Payment History</a>
         <form method="POST" action="{{route('auth.logout')}}">

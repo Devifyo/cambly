@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Builder;
 class CreditTransaction extends Model
 {
     use HasFactory;
@@ -58,5 +58,35 @@ class CreditTransaction extends Model
     public function scopeUsed($query)
     {
         return $query->where('type', 'used');
+    }
+
+    /**
+     * Apply dynamic filters to the credit transaction query.
+     *
+     * @param Builder $query   The Eloquent query builder instance.
+     * @param array   $filters An array of validated filters from the request.
+     * @return Builder
+     */
+    public function scopeApplyFilters(Builder $query, array $filters): Builder
+    {
+        // A) Apply the 'q' (search) filter
+        // We use data_get to safely get the 'q' value.
+        // The `when` closure will only run if $filters['q'] is present and not empty.
+        $query->when(data_get($filters, 'q'), function ($q, $searchTerm) {
+            // Group the 'or' statements to avoid interfering with other `where` clauses
+            $q->where(function ($subQuery) use ($searchTerm) {
+                $subQuery->where('description', 'like', '%' . $searchTerm . '%')
+                         ->orWhere('reference', 'like', '%' . $searchTerm . '%')
+                         ->orWhere('reason', 'like', '%' . $searchTerm . '%');
+            });
+        });
+
+        // B) Apply the 'date' filter
+        $query->when(data_get($filters, 'date'), function ($q, $date) {
+            $q->whereDate('created_at', $date);
+        });
+
+        // Always return the query builder to allow for chaining
+        return $query;
     }
 }

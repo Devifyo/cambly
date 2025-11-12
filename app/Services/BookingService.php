@@ -134,14 +134,15 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
             // consume 1 credit from current cycle
             $this->consumeCredit($student, $creditInfo, $creditsNeeded);
             // Record transaction in CreditService
+            $encryptedReservationId = encryptId($reservation->id);
             $this->creditService->recordCreditTransaction(
                 $student->id,
                 $creditInfo['cycle_number'] ?? 1,
                 $creditsNeeded,
-                'debit',
+                'debt',
                 'booking_confirmed',
-                "Booking confirmed for reservation #{$reservation->id}",
-                "reservation_{$reservation->id}",
+                "Booking confirmed for reservation #{$encryptedReservationId}",
+                "reservation_{$encryptedReservationId}",
                 null, // plan
                 $creditInfo['ledger_id'] ?? null,
                 $reservation->id,
@@ -303,6 +304,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
 
                 // Attempt refund (refundCreditsOnCancel enforces the 12-hour rule)
                 $refundResult = $this->useCreditService->refundCreditsOnCancel($reservation);
+                $encryptedReservationId = encryptId($reservation->id);
                 $response['refund'] = isset($refundResult['refunded']) ? $refundResult['refunded'] : null;
                  if ($refundResult && isset($refundResult['refunded']) && $refundResult['refunded']) {
                     // Credits were refunded
@@ -312,10 +314,10 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
                         $reservation->student_id,
                         $creditInfo['cycle_number'] ?? 1,
                         $creditsRefunded,
-                        'issued', // This is a credit (refund), not debit
+                        'refund', // This is a credit (refund), not debit
                         'booking_cancelled_refund',
-                        "Booking cancelled and refunded for reservation #{$reservation->id}",
-                        "reservation_cancel_{$reservation->id}",
+                        "Booking cancelled and refunded for reservation #{$encryptedReservationId}",
+                        "reservation_cancel_{$encryptedReservationId}",
                         null, // plan
                         $creditInfo['ledger_id'] ?? null,
                         $reservation->id,
@@ -331,9 +333,9 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
                     0, // No credits changed
                     'no_refund',
                     'booking_cancelled_no_refund',
-                    "Booking cancelled without refund for reservation #{$reservation->id} - " . 
+                    "Booking cancelled without refund for reservation #{$encryptedReservationId} - " . 
                     ($refundResult['reason'] ?? 'outside refund window'),
-                    "reservation_cancel_{$reservation->id}",
+                    "reservation_cancel_{$encryptedReservationId}",
                     null, // plan
                     $creditInfo['ledger_id'] ?? null,
                     $reservation->id,

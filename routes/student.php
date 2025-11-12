@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Student\{StudentDashboardController,SubscriptionController, TeacherController, BookingController, LessonController, StudentAccountController};
+use App\Http\Controllers\Student\{StudentDashboardController,SubscriptionController, TeacherController, BookingController, LessonController, StudentAccountController, TicketHistoryController};
 use App\Http\Controllers\{StripeWebhookController };
 use Illuminate\Support\Facades\Route;
 
@@ -53,7 +53,8 @@ Route::middleware(['auth.custom','isStudent'])->group(function () {
     Route::get('lessons/upcoming',[LessonController::class,'index'])->name('lessons.upcoming');
     Route::get('lessons/completed',[LessonController::class,'index'])->name('lessons.completed');
     Route::get('lessons/details/{id}',[LessonController::class,'lessonDetails'])->name('lessons.details');
-
+    /**************** Ticket History *********************/
+    Route::get('ticket-history',[TicketHistoryController::class, 'index'])->name('account.ticket-history');
 
 
 });
