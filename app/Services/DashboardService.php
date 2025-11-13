@@ -38,7 +38,7 @@ class DashboardService
         return Reservation::with(['teacher.teacherProfile', 'availability'])
             ->where('student_id', $user->id)
             ->where('status', 'booked')
-            ->where('is_hold', false)
+            // ->where('is_hold', false)
             ->whereHas('availability', function ($query) use ($now) {
                 $query->where('start_utc', '>', $now);
             })
@@ -278,6 +278,7 @@ class DashboardService
             'is_upcoming' => Carbon::parse($startTime)->isFuture(),
             'is_today' => Carbon::parse($startTime)->isToday(),
             'status' => $reservation->status,
+            'is_hold' => $reservation->is_hold,
             'status_badge' => $this->getStatusBadgeClass($reservation->status),
         ];
     }

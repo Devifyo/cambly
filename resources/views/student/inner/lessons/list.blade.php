@@ -314,15 +314,22 @@
                 @endphp
 
                 <div class="lesson-card">
-                    <div class="lesson-header">
+                   <div class="lesson-header">
                         <div>
                             <div class="lesson-title">{{ $startDisplay }}</div>
                             <div class="lesson-teacher">with {{ $item->teacher_name }}</div>
                         </div>
-                        <span class="status-badge {{ $statusClass }}">
-                            {{ ucfirst($statusDisplay) }}
+
+                        <span class="status-badge {{ $item->is_hold ? 'bg-warning text-dark' : $statusClass }}">
+                            @if($item->is_hold)
+                                <i class="fa-solid fa-pause-circle me-1"></i>
+                                Hold — Insufficient Credits
+                            @else
+                                {{ ucfirst($statusDisplay) }}
+                            @endif
                         </span>
                     </div>
+
 
                     <div class="lesson-meta">
                         <div class="lesson-meta-item">

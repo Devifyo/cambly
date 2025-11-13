@@ -249,11 +249,11 @@
                                                     <tr>
                                                         <td>
                                                             <div class="patient-info-profile">
-                                                                <a href="#" class="table-avatar">
+                                                                <a href="{{ route('student.lessons.details', ['id' => encryptId($lesson['id'])]) }}" class="table-avatar">
                                                                     <img src="{{ $lesson['teacher_avatar'] }}" alt="{{ $lesson['teacher_name'] }}">
                                                                 </a>
                                                                 <div class="patient-name-info">
-                                                                    <h5><a href="#">{{ $lesson['teacher_name'] }}</a></h5>
+                                                                    <h5><a href="{{ route('student.lessons.details', ['id' => encryptId($lesson['id'])]) }}">{{ $lesson['teacher_name'] }}</a></h5>
                                                                     <span>{{ $lesson['teacher_title'] }}</span>
                                                                 </div>
                                                             </div>
@@ -261,9 +261,16 @@
                                                         <td>
                                                             <div class="appointment-date-created">
                                                                 <h6>{{ $lesson['user_formatted_datetime'] }}</h6>
-                                                                <span class="badge table-badge {{ $lesson['is_today'] ? 'bg-warning' : 'bg-success' }}">
-                                                                    {{ $lesson['time_from_now'] }}
-                                                                </span>
+                                                                    @if($lesson['is_hold'])
+                                                                        <span class="badge table-badge bg-warning text-dark">
+                                                                            <i class="fa-solid fa-pause-circle me-1"></i>
+                                                                            On Hold — Insufficient Credits
+                                                                        </span>
+                                                                    @else
+                                                                        <span class="badge table-badge {{ $lesson['is_today'] ? 'bg-warning' : 'bg-success' }}">
+                                                                            {{ $lesson['time_from_now'] }}
+                                                                        </span>
+                                                                    @endif
                                                             </div>
                                                         </td>
                                                         <td>
