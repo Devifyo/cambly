@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\WebhookEvent;
+use App\Models\{WebhookEvent,User};
 use Carbon\Carbon;
 
 class PaymentHistoryController extends Controller
@@ -23,7 +23,7 @@ class PaymentHistoryController extends Controller
         ]);
 
         // 2. Get the all-time stats (unfiltered)
-        $stats = $this->calculateStats($user->id);
+        $stats = $this->calculateStats($user);
 
         // 3. Get the paginated AND filtered list of payments
         $payments = WebhookEvent::where('user_id', $user->id)
@@ -43,12 +43,12 @@ class PaymentHistoryController extends Controller
      * @param int $userId
      * @return array
      */
-    private function calculateStats(int $userId): array
-    {
-        $allEvents = WebhookEvent::where('user_id', $userId)
+    private function calculateStats( $user): array
+    {   
+        $allEvents = WebhookEvent::where('user_id', $user->id)
             ->where('type', 'invoice.paid')
             ->get();
-
+        
         $totalBilledAmount = 0;
         $currency = 'jpy'; // Default
         $plan = 'No Active Plan';
@@ -69,7 +69,6 @@ class PaymentHistoryController extends Controller
                 $currency
             );
         }
-
         return [
             'plan'         => $plan,
             'total_billed' => WebhookEvent::getCurrencySymbol($currency) . number_format($totalBilledAmount, 2),
