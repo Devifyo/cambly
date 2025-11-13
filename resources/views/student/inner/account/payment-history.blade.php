@@ -43,8 +43,8 @@
                 </nav>
             </div>
         </div>
-
-        <div class="bg-primary-gradient rounded-pill doctors-search-box">
+        {{-- search filter --}}
+        {{-- <div class="bg-primary-gradient rounded-pill doctors-search-box">
             <div class="search-box-one rounded-pill">
                 <form method="GET" action="{{ route('student.account.payment-history') }}" id="searchForm">
                     <div class="search-input search-line">
@@ -80,7 +80,8 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> --}}
+        {{-- end search filter --}}
     </div>
 
     <div class="breadcrumb-bg">
@@ -90,7 +91,8 @@
 </div>
 
 <div class="container-max">
-    <div class="summary-row">
+    {{-- summary --}}
+    {{-- <div class="summary-row">
         <div class="stat-card">
             <div style="font-size:.85rem; color:#6b7280;">Active Plan</div>
             <div class="credits-number" style="font-size: 1.4rem;">{{ $stats['plan'] ?? '—' }}</div>
@@ -103,13 +105,15 @@
             <div style="font-size:.85rem; color:#6b7280;">Total Billed</div>
             <div class="credits-number" style="color:#111827;">{{ $stats['total_billed'] ?? '—' }}</div>
         </div>
-    </div>
-
-    <div class="filter-pills" id="filterPills">
+    </div> --}}
+    {{-- end summary --}}
+    {{-- filter pills --}}
+    {{-- <div class="filter-pills" id="filterPills">
         <div class="filter-pill active" data-filter="all">All</div>
         <div class="filter-pill" data-filter="subscription">Subscription</div>
         <div class="filter-pill" data-filter="refund">Refunds</div>
-    </div>
+    </div> --}}
+    {{-- end filter pills --}}
 
     <div class="tx-list" id="txList">
         
@@ -146,8 +150,8 @@
                         Billed on: {{ $tx->formatted_date }}
                     </div>
                 </div>
-
-                <div>
+                {{-- view invoice --}}
+                {{-- <div>
                     @if($tx->invoice_pdf)
                         <a href="{{ $tx->invoice_pdf }}" target="_blank" class="btn btn-ghost" style="white-space:nowrap;">
                             View Invoice
@@ -157,7 +161,7 @@
                             No Invoice
                         </a>
                     @endif
-                </div>
+                </div> --}}
             </div>
         @empty
             <div class="empty-state">

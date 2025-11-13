@@ -229,7 +229,7 @@
             <div class="how-it-works-grid">
                 <div class="step-card">
                     <div class="step-icon"><i class="isax isax-search-normal-1"></i></div>
-                    <h3>Find Your Tutor</h3>
+                    <h3>Find Your Tutor</h3>*
                     <p>Search our global network of verified tutors. Filter by subject, price, and availability to find the perfect match.</p>
                 </div>
                 <div class="step-card">
@@ -262,7 +262,7 @@
                     </ul>
                 </div>
                 <div class="why-us-image">
-                    <img src="{{ asset('assets/img/about-placeholder.jpg') }}" alt="Student learning online">
+                    <img src="{{ asset('assets/img/banner/about.jpeg') }}" alt="Student learning online">
                     {{-- Tip: A great image here would be a smiling student on a laptop. --}}
                 </div>
             </div>

@@ -306,7 +306,7 @@ class CreditService
                 $transactionData['action_type'] = $actionType;
             }
             
-            $cred  = CreditTransaction::create($transactionData);
+            $cred  = CreditTransaction::updateOrCreate(['reference' => $reference], $transactionData);
         } catch (\Throwable $e) {
             Log::warning('Failed to create credit transaction', [
                 'user_id' => $userId,

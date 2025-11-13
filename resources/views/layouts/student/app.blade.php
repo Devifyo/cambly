@@ -34,7 +34,35 @@
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{asset('assets/css/custom.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/newstyle.css')}}">
+    <style>
+        .header-navbar-rht .logged-item .user-img {
+            width: 3rem; /* Adjust as needed */
+            height: 3rem; /* Adjust as needed */
+            display: inline-block;
+            vertical-align: middle;
+        }
 
+        .header-navbar-rht .logged-item .user-img img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover; /* Ensures the image covers the circle without distortion */
+        }
+
+        .user-header .avatar {
+            width: 3rem; /* Adjust as needed */
+            height: 3rem; /* Adjust as needed */
+            margin-right: 10px; /* Adjust spacing as needed */
+        }
+
+        .user-header .avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+    </style>
     @stack('styles')
 </head>
 <body>

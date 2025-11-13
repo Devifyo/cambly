@@ -140,13 +140,13 @@
                     <li class="nav-item dropdown has-arrow logged-item">
                         <a href="#" class="nav-link ps-0" data-bs-toggle="dropdown">
                             <span class="user-img">
-                                <img class="rounded-circle" src="{{ asset('assets/img/dashboard/profile-06.jpg') }}" width="31" alt="User">
+                                <img class="rounded-circle" src="{{ $authUser->profile_link }}" width="31" alt="User">
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
                             <div class="user-header">
                                 <div class="avatar avatar-sm">
-                                    <img src="{{ asset('assets/img/dashboard/profile-06.jpg') }}" alt="User Image" class="avatar-img rounded-circle">
+                                    <img src="{{ $authUser->profile_link }}" alt="User Image" class="avatar-img rounded-circle">
                                 </div>
                                 <div class="user-text">
                                     <h6>Hendrita Hayes</h6>

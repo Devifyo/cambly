@@ -84,9 +84,9 @@
     <div class="cms-container">
         <div class="cms-card">
 
-            <div class="disclaimer-box">
+            {{-- <div class="disclaimer-box">
                 <strong>Disclaimer:</strong> This is a template and not legal advice. You must consult with a legal professional to ensure this policy is complete and compliant with all relevant laws.
-            </div>
+            </div> --}}
 
             <p class="last-updated">Last Updated: {{ date('F j, Y') }}</p>
 

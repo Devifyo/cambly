@@ -25,25 +25,47 @@ class UseCreditService
         if (!$subscription) {
             return null;
         }
+
+        $now = Carbon::now();
+        $startOfMonth = $now->copy()->startOfMonth()->startOfDay();
+        $endOfMonth   = $now->copy()->endOfMonth()->endOfDay();
         // 2️⃣ Get cycle number from subscription
         $cycleNumber = $subscription->cycle_number ?? 1;
-        // 3️⃣ Fetch matching ledger entry
-        $ledger = TicketLedger::where('student_id', $user->id)
+        // fetch current ledger
+        $CurrentCycleledger = TicketLedger::where('student_id', $user->id)
             ->where('cycle_number', $cycleNumber)
             ->latest()
             ->first();
-        if (!$ledger) {
+            
+        // 3️⃣ Fetch matching ledger entry
+        $ledgers = TicketLedger::where('student_id', $user->id)
+        ->where(function ($query) use ($cycleNumber, $startOfMonth, $endOfMonth) {
+
+            // OR logic grouped properly
+            $query->where('cycle_number', $cycleNumber)
+                  ->orWhereBetween('created_at', [$startOfMonth, $endOfMonth]);
+
+        })
+        ->orderBy('created_at', 'asc')
+        ->get();
+
+        if (!$ledgers) {
             return null;
         }
 
+        $issued = (int) $ledgers->sum('issued_credits');
+        $used   = (int) $ledgers->sum('used_credits');
+        $hold   = (int) $ledgers->sum('hold_credits');
+
         return [
-            'ledger_id' => $ledger->id,
-            'cycle_number' => $ledger->cycle_number,
-            'issued' => $ledger->issued_credits,
-            'used' => $ledger->used_credits,
-            'hold' => $ledger->hold_credits,
-            'available' => $ledger->issued_credits - $ledger->used_credits - $ledger->hold_credits,
-            'subscription_id' => $subscription->id,
+            'ledger_id' => $CurrentCycleledger->id,
+            'subscription_id' => $subscription->id ?? null,
+            'cycle_number'    => $cycleNumber,
+            'issued'          => $issued,
+            'used'            => $used,
+            'hold'            => $hold,
+            'available'       => $issued - $used - $hold,
+            'ledgers'         => $ledgers,
         ];
     }
 

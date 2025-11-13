@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\TicketLedger;
-
+use Illuminate\Support\Collection;
 class BookingService
 {   
 
@@ -130,7 +130,6 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
 
             $availability->is_booked = true;
             $availability->save();
-
             // consume 1 credit from current cycle
             $this->consumeCredit($student, $creditInfo, $creditsNeeded);
             // Record transaction in CreditService
@@ -167,10 +166,11 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
         }
 
         // No available credits: create reservation on-hold + schedule 1 hold credit for next cycle
-        $reservation = Reservation::create([
+        $reservation = Reservation::updateOrCreate(           [
             'student_id' => $student->id,
             'teacher_id' => $availability->teacher_id,
             'availability_id' => $availability->id,
+            ],[
             'is_hold' => true,
             'cycle_start_utc' => $availability->start_utc,
             'status' => 'booked',
@@ -439,31 +439,111 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
      * @param int $count
      * @return bool
      */
+
     protected function consumeCredit(User $student, array $currentCreditInfo, int $count = 1): bool
     {
         try {
-            $ledger = TicketLedger::where('id', $currentCreditInfo['ledger_id'])->first();
+                if ($count <= 0) {
+                    return false;
+                }
 
-            if (!$ledger) {
-                Log::warning('BookingService::consumeCredit ledger not found', [
-                    'ledger_id' => $currentCreditInfo['ledger_id'],
-                    'student' => $student->id ?? null,
+                $studentId = $student->id;
+                $currentLedgerId = $currentCreditInfo['ledger_id'] ?? null;
+
+                // 1) Try the provided ledger id first (atomic)
+                if ($currentLedgerId) {
+                    $affected = \App\Models\TicketLedger::where('id', $currentLedgerId)
+                        ->where('student_id', $studentId)
+                        ->whereRaw('(issued_credits - used_credits - hold_credits) >= ?', [$count])
+                        ->increment('used_credits', $count);
+
+                    if ($affected) {
+                        Log::info('consumeCredit: consumed from current ledger', [
+                            'student_id' => $studentId,
+                            'ledger_id'  => $currentLedgerId,
+                            'needed'     => $count,
+                        ]);
+                        return true;
+                    }
+
+                    Log::info('consumeCredit: current ledger insufficient or unavailable, will try other ledgers', [
+                        'student_id' => $studentId,
+                        'ledger_id'  => $currentLedgerId,
+                        'needed'     => $count,
+                    ]);
+                }
+
+                // 2) Use the ledgers collection supplied in $currentCreditInfo if available
+                $candidateLedgers = collect();
+
+                if (!empty($currentCreditInfo['ledgers'])) {
+                    $raw = $currentCreditInfo['ledgers'];
+
+                    // Normalize to a Collection of models
+                    if ($raw instanceof Collection) {
+                        $candidateLedgers = $raw;
+                    } elseif (is_array($raw)) {
+                        $candidateLedgers = collect($raw);
+                    }
+
+                    // keep only ledgers that belong to this student and have an id
+                    $candidateLedgers = $candidateLedgers->filter(function ($l) use ($studentId) {
+                        // handle both model and array shapes
+                        $lid = data_get($l, 'id');
+                        $sid = data_get($l, 'student_id');
+                        return $lid && ((int)$sid === (int)$studentId);
+                    })->sortBy(function ($l) {
+                        return data_get($l, 'created_at') ?? null;
+                    })->values();
+                }
+
+                // 3) Iterate and try atomic increment on each candidate ledger
+                foreach ($candidateLedgers as $ledger) {
+                    $ledgerId = data_get($ledger, 'id');
+
+                    // skip already attempted current ledger id
+                    if ($currentLedgerId && (int)$ledgerId === (int)$currentLedgerId) {
+                        continue;
+                    }
+
+                    $affected = \App\Models\TicketLedger::where('id', $ledgerId)
+                        ->where('student_id', $studentId)
+                        ->whereRaw('(issued_credits - used_credits - hold_credits) >= ?', [$count])
+                        ->increment('used_credits', $count);
+
+                    if ($affected) {
+                        Log::info('consumeCredit: consumed from fallback ledger', [
+                            'student_id' => $studentId,
+                            'ledger_id'  => $ledgerId,
+                            'needed'     => $count,
+                        ]);
+                        return true;
+                    }
+
+                    // concurrent consumption may have happened — try next ledger
+                    Log::info('consumeCredit: candidate ledger had insufficient credits at increment time, trying next', [
+                        'student_id' => $studentId,
+                        'ledger_id'  => $ledgerId,
+                        'needed'     => $count,
+                    ]);
+                }
+
+                // 4) Nothing consumed
+                Log::warning('consumeCredit: no ledger could be consumed (all insufficient)', [
+                    'student_id' => $studentId,
+                    'needed'     => $count,
+                    'candidate_count' => $candidateLedgers->count(),
+                ]);
+
+                return false;
+
+            } catch (\Throwable $e) {
+                Log::error('consumeCredit error: ' . $e->getMessage(), [
+                    'student_id' => $student->id ?? null,
+                    'trace' => $e->getTraceAsString(),
                 ]);
                 return false;
             }
-
-            // This is the line you asked about. 
-            // It handles the database increment and returns the number of affected rows (usually 1).
-            $affected = $ledger->increment('used_credits', $count);
-
-            return (bool) $affected;
-
-        } catch (\Throwable $e) {
-            // ... your existing catch block ...
-            Log::error('BookingService::consumeCredit error: '.$e->getMessage(), [
-                'student' => $student->id ?? null,
-            ]);
-            return false;
-        }
     }
+
 }

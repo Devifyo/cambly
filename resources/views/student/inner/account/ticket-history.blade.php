@@ -48,7 +48,7 @@
 @endpush
 
 @section('content')
-
+{{-- breadcrumb start --}}
 <div class="breadcrumb-bar overflow-visible">
     <div class="container">
         <div class="row align-items-center inner-banner">
@@ -64,7 +64,8 @@
                 </nav>
             </div>
         </div>
-        <div class="bg-primary-gradient rounded-pill doctors-search-box">
+        {{--  --}}
+        {{-- <div class="bg-primary-gradient rounded-pill doctors-search-box">
             <div class="search-box-one rounded-pill">
                 
                 <form method="GET" action="{{ route('student.account.ticket-history') }}" id="searchForm">
@@ -87,7 +88,7 @@
                             <input 
                                 type="text" 
                                 name="date" 
-                                id="ticket_datepicker"  {{-- This ID matches your JS --}}
+                                id="ticket_datepicker"  
                                 class="form-control datetimepicker" 
                                 placeholder="Filter by date (YYYY-MM-DD)"
                                 autocomplete="off"
@@ -103,16 +104,19 @@
                     </div>
                 </form>
                 </div>
-        </div>
+        </div> --}}
+        {{--  --}}
     </div>
     <div class="breadcrumb-bg">
         <img src="{{asset('assets/img/bg/breadcrumb-bg-01.png')}}" alt="img" class="breadcrumb-bg-01">
         <img src="{{asset('assets/img/bg/breadcrumb-bg-02.png')}}" alt="img" class="breadcrumb-bg-02">
     </div>
 </div>
+{{-- breadcrumb end --}}
+
 <div class="container-max">
 
-    <div class="summary-row">
+    {{-- <div class="summary-row">
         <div class="stat-card">
             <div style="font-size:.85rem; color:#6b7280;">Total Earned</div>
             <div class="credits-number" style="color:#10b981;">+{{ $stats['earned'] }}</div>
@@ -125,7 +129,7 @@
             <div style="font-size:.85rem; color:#6b7280;">Remaining</div>
             <div class="credits-number">{{ $stats['remaining'] }}</div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="filter-pills" id="filterPills">
         <div class="filter-pill active" data-filter="all">All</div>
