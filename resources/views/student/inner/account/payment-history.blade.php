@@ -177,13 +177,7 @@
 @endsection
 
 @push('scripts')
-    <!-- All scripts are unchanged and will work perfectly -->
-    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
-    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/feather.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
