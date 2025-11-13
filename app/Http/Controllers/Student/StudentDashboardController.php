@@ -33,7 +33,7 @@ class StudentDashboardController extends Controller
         }
         $dashbordDetails = $this->dashboardService->getStudentDashboardData(auth()->user());
         // dd($dashbordDetails);
-        $activeSubscription =  $this->subs->activeSubscription($user);
+        $activeSubscription =  $this->subs->getActiveSubscriptionDetails($user);
         return view('student.dashboard', [
             'currentCredits' => $currentCredits,
             'activeSubscription' => $activeSubscription,
