@@ -337,13 +337,15 @@
                             @else
                                 {{ ucfirst($statusDisplay) }}
                             @endif --}}
-                            {{-- @if(!$meetingLink && in_array($statusDisplay, ['booked', 'upcoming']))
-                                <i class="fa-solid fa-pause-circle me-1"></i>
-                                      Meeting link - missing.
-                                
-                            @endif --}}
-                             {{ ucfirst($statusDisplay) }}
+                            {{ ucfirst($statusDisplay) }}
                         </span>
+                        {{-- <span class ="status-badge bg-warning text-dark">
+                            @if(!$meetingLink && in_array($statusDisplay, ['booked', 'upcoming']))
+                                <i class="fa-solid fa-pause-circle me-1"></i>
+                                    Meeting link - missing.
+                                
+                            @endif
+                        </span> --}}
                     </div>
 
 
