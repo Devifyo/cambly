@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Student;
+namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -14,16 +14,16 @@ use Illuminate\View\View;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\PasswordUpdateRequest;
 
-class StudentAccountController extends Controller
+class TeacherAccountController extends Controller
 {
-    /**
+        /**
      * Display the account settings view.
      */
     public function show(Request $request): View
     {
-        // The view path you provided was 'student.inner.account.account.blade.php'
-        // This corresponds to the view name 'student.inner.account.account'
-        return view('student.inner.account.account', [
+        // The view path you provided was 'teacher.account.account.blade.php'
+        // This corresponds to the view name 'teacher.account.account'
+        return view('teacher.account.account', [
             'user' => $request->user()
         ]);
     }
@@ -65,7 +65,7 @@ class StudentAccountController extends Controller
                 'discord_id'
         ]);
 
-        $user->studentProfile()->updateOrCreate(
+        $user->teacherProfile()->updateOrCreate(
             ['user_id' => $user->id], // Find profile by user_id
             $profileData                 // Update with all new data
         );

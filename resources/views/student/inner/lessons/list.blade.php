@@ -321,12 +321,13 @@
                         </div>
 
                         <span class="status-badge {{ $item->is_hold ? 'bg-warning text-dark' : $statusClass }}">
-                            @if($item->is_hold)
+                            {{-- @if($item->is_hold)
                                 <i class="fa-solid fa-pause-circle me-1"></i>
                                 Hold — Insufficient Credits
                             @else
                                 {{ ucfirst($statusDisplay) }}
-                            @endif
+                            @endif --}}
+                             {{ ucfirst($statusDisplay) }}
                         </span>
                     </div>
 

@@ -1,9 +1,8 @@
-@extends('layouts.student.app')
+@extends('layouts.teacher.app')
 
-@section('title', 'Student Dashboard')
+@section('title', 'Teacher Dashboard')
 
 @push('styles')
-    <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css" rel="stylesheet" />
 
     <style>
@@ -135,50 +134,45 @@
             }
         }
 
-.cancel-lesson {
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    color: #dc3545;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    text-decoration: none;
-    
-    /* Circle outline */
-    border: 2px solid #dc3545 !important;
+        .cancel-lesson {
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            color: #dc3545;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-decoration: none;
+            
+            /* Circle outline */
+            border: 2px solid #dc3545 !important;
 
-    /* Center the icon inside */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+            /* Center the icon inside */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.cancel-lesson:hover {
-    color: #fff !important;
-    background-color: #dc3545 !important;  /* fill red on hover */
-    border-color: #dc3545 !important;
-}
+        .cancel-lesson:hover {
+            color: #fff !important;
+            background-color: #dc3545 !important;  /* fill red on hover */
+            border-color: #dc3545 !important;
+        }
 
-.cancel-lesson i {
-    font-size: 14px;
-    line-height: 1;
-}
-
-        
+        .cancel-lesson i {
+            font-size: 14px;
+            line-height: 1;
+        }    
     </style>
 @endpush
-
 @section('content')
 <div class="container py-4 py-md-5">
     <div class="row">
-        <!-- ===== LEFT COLUMN : Dashboard Widgets ===== -->
         <div class="col-xl-4 d-flex">
             <div class="dashboard-box-col w-100">
-                <!-- Total Sessions -->
                 <div class="dashboard-widget-box">
                     <div class="dashboard-content-info">
                         <h6>Total Lessons</h6>
@@ -189,7 +183,6 @@
                         <span class="dash-icon-box"><i class="fa-solid fa-calendar-days"></i></span>
                     </div>
                 </div>
-                <!-- Upcoming Sessions -->
                 <div class="dashboard-widget-box">
                     <div class="dashboard-content-info">
                         <h6>Upcoming Lessons</h6>
@@ -200,7 +193,6 @@
                         <span class="dash-icon-box"><i class="fa-solid fa-calendar-days"></i></span>
                     </div>
                 </div>
-                <!-- Completed Sessions -->
                 <div class="dashboard-widget-box">
                     <div class="dashboard-content-info">
                         <h6>Completed Lessons</h6>
@@ -215,26 +207,13 @@
             </div>
         </div>
 
-        <!-- ===== MIDDLE COLUMN : Book Tutor + Credits ===== -->
         <div class="col-xl-8 d-flex">
             <div class="dashboard-card w-100">
-                <div class="dashboard-card-head border-0">
-                    <div class="header-title">
-                        <h5>Account & {{ trans_choice('app.credits',2) }} Overview</h5>
-                    </div>
-                </div>
-                <div class="dashboard-card-body">
-                    <div class="row">
-                        <!-- Book Tutor -->
-                        <div class="col-sm-7">
-                            <div class="book-appointment-head mb-3 d-flex justify-content-between align-items-center">
-                                <h3><span>Book a new</span> Teacher</h3>
-                                <span class="add-icon"><a href="{{ route('student.tutors.search') }}"><i
-                                            class="fa-solid fa-circle-plus"></i></a></span>
-                            </div>
-
-                            <!-- Upcoming Lessons Table -->
-                            <div class="dashboard-card mt-2">
+                {{-- Removed the outer card head that said "Account & Credits Overview" --}}
+                <div class="dashboard-card-body h-100">
+                    <div class="row h-100">
+                        <div class="col-12">
+                            <div class="dashboard-card mt-2 h-100">
                                 <div class="dashboard-card-head d-flex justify-content-between align-items-center">
                                     <div class="header-title">
                                         <h6>Upcoming Lessons</h6>
@@ -271,7 +250,7 @@
                                                                             {{ $lesson['time_from_now'] }}
                                                                         </span>
                                                                     @endif --}}
-                                                                        <span class="badge table-badge {{ $lesson['is_today'] ? 'bg-warning' : 'bg-success' }}">
+                                                                      <span class="badge table-badge {{ $lesson['is_today'] ? 'bg-warning' : 'bg-success' }}">
                                                                             {{ $lesson['time_from_now'] }}
                                                                         </span>
                                                             </div>
@@ -298,9 +277,6 @@
                                                             <div class="text-muted">
                                                                 <i class="fa-solid fa-calendar-xmark fa-2x mb-2"></i>
                                                                 <p class="mb-0">No upcoming lessons scheduled</p>
-                                                                <a href="{{ route('student.tutors.search') }}" class="btn btn-primary btn-sm mt-2">
-                                                                    Book a Lesson
-                                                                </a>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -310,42 +286,14 @@
                                     </div>
                                 </div>
                             </div>
-
-
                             {{-- Upcoming meeting end --}}
                         </div>
 
-                        <!-- Credits Left -->
-                        <div class="col-sm-5">
-                            <div class="chart-over-all-report text-center">
-                                <h6>{{ trans_choice('app.credits',2) }} Left</h6>
-                                <div class="circle-bar circle-bar3 report-chart mb-2">
-                                    <div class="circle-graph3" data-percent="{{ isset($currentCredits['consume_percentage']) ? $currentCredits['consume_percentage'] : 0 }}">
-                                        <p>
-                                            {{ trans_choice('app.credits', 2) }} Left<br>
-                                            {{ $currentCredits['available'] ?? 0 }} / {{ $currentCredits['issued'] ?? 0 }}
-                                        </p>
-                                    </div>
-                                </div>
-                                <span class="health-percentage d-block mb-2">You have enough {{ trans_choice('app.credits_lower',2) }} for {{$currentCredits['available'] ?? 0}} more lessons</span>
-                                <a href="{{ route('student.account.subscription') }}" class="btn btn-dark w-100 rounded-pill">Manage Subscriptions<i
-                                        class="fa-solid fa-chevron-right ms-2"></i></a>
-                            </div>
                         </div>
-
-                    </div>
-
-                    <!-- Subscription Info -->
-                    {{-- @if($activeSubscription)
-                    <div class="report-gen-date mt-4">
-                        <p>Subscription valid till: <strong>{{formatDate($activeSubscription['current_period_start'])}}</strong> <span><i class="fa-solid fa-copy"></i></span></p>
-                    </div>
-                    @endif --}}
                 </div>
             </div>
         </div>
 
-        <!-- ===== CALENDAR ===== -->
         <div class="col-xl-12 mt-4">
             <div class="dashboard-card w-100">
                 <div class="dashboard-card-head">
@@ -366,6 +314,7 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('calendar');
@@ -394,7 +343,8 @@
                     console.log('Fetching events for range:', start, '->', end);
 
                     // call your endpoint with both start and end
-                    fetch(`/dashboard/calendar-events?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`)
+                    // This is the correct line, using the Laravel route() helper:
+                    fetch(`{{ route('teacher.dashboard.calendar.events') }}?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`)
                         .then(response => {
                             if (!response.ok) throw new Error('Network response was not ok');
                             return response.json();

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
+
 class Reservation extends Model
 {
     use HasFactory;
@@ -29,6 +31,33 @@ class Reservation extends Model
     public function availability()
     {
         return $this->belongsTo(Availability::class);
+    }
+
+    public function getStatusAttribute($originalStatus)
+    {
+        // 1. Check if status is 'booked'
+        if ($originalStatus === 'booked') {
+
+            // 2. Check if the availability start time is in the past
+            // We must have the 'availability' relation loaded to check this
+            if ($this->relationLoaded('availability') && $this->availability) {
+                
+                $startTime = Carbon::parse($this->availability->start_utc);
+
+                if ($startTime->isPast()) {
+                    // 3. Mark status as 'completed' (the update)
+                    // This is the "side effect" - it writes to the database
+                    $this->attributes['status'] = 'completed'; 
+                    $this->save();
+
+                    // 4. Pass status as 'completed' (the return)
+                    return 'completed';
+                }
+            }
+        }
+
+        // If the conditions are not met, return the original status
+        return $originalStatus;
     }
 
 

@@ -156,12 +156,13 @@
                     };
                 @endphp
                 <span class="status-badge {{ $lesson->is_hold ? 'bg-warning text-dark' : $statusClass }}">
-                    @if($lesson->is_hold)
+                    {{-- @if($lesson->is_hold)
                         <i class="fa-solid fa-pause-circle me-1"></i>
                         Hold — Insufficient Credits
                     @else
                         {{ ucfirst($lesson->display_status) }}
-                    @endif
+                    @endif --}}
+                     {{ ucfirst($lesson->display_status) }}
                 </span>
             </div>
 

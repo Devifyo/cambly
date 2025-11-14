@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Teacher;
 
 use App\Models\Reservation;
 use App\Models\User;
 use Carbon\Carbon;
 
-class DashboardService
-{
+class TeacherDashboardService
+{   
+
     // Column names from your Availability model
     private const START_TIME_COLUMN = 'start_utc';
     private const END_TIME_COLUMN = 'end_utc';
 
-    /**
+        /**
      * Get comprehensive dashboard data for a student
      */
     public function getStudentDashboardData(User $user): array
@@ -36,7 +37,7 @@ class DashboardService
         $now = Carbon::now();
         
         return Reservation::with(['teacher.teacherProfile', 'availability'])
-            ->where('student_id', $user->id)
+            ->where('teacher_id', $user->id)
             ->where('status', 'booked')
             // ->where('is_hold', false)
             ->whereHas('availability', function ($query) use ($now) {
@@ -58,7 +59,7 @@ class DashboardService
      */
     public function getTotalUpcomingLessons(User $user): int
     {
-        return Reservation::where('student_id', $user->id)
+        return Reservation::where('teacher_id', $user->id)
             ->where('status', 'booked')
             ->where('is_hold', false)
             ->whereHas('availability', function ($query) {
@@ -72,7 +73,7 @@ class DashboardService
      */
     public function getTotalLessons(User $user): int
     {
-        return Reservation::where('student_id', $user->id)
+        return Reservation::where('teacher_id', $user->id)
             ->whereIn('status', ['booked', 'completed', 'cancelled'])
             ->count();
     }
@@ -82,7 +83,7 @@ class DashboardService
      */
     public function getCompletedLessons(User $user): int
     {
-        return Reservation::where('student_id', $user->id)
+        return Reservation::where('teacher_id', $user->id)
             ->where('status', 'completed')
             ->count();
     }
@@ -92,7 +93,7 @@ class DashboardService
      */
     public function getCancelledLessons(User $user): int
     {
-        return Reservation::where('student_id', $user->id)
+        return Reservation::where('teacher_id', $user->id)
             ->where('status', 'cancelled')
             ->count();
     }
@@ -102,7 +103,7 @@ class DashboardService
      */
     public function getLessonStats(User $user): array
     {
-        $reservations = Reservation::where('student_id', $user->id)
+        $reservations = Reservation::where('teacher_id', $user->id)
             ->select('status')
             ->get();
         
@@ -133,7 +134,7 @@ class DashboardService
     {
         $startDate = Carbon::now()->subMonths($months);
         
-        return Reservation::where('student_id', $user->id)
+        return Reservation::where('teacher_id', $user->id)
             ->where('created_at', '>=', $startDate)
             ->get()
             ->groupBy(function ($reservation) {
@@ -159,7 +160,7 @@ class DashboardService
     public function getRecentActivity(User $user, int $limit = 10)
     {
         return Reservation::with(['teacher.teacherProfile', 'availability'])
-            ->where('student_id', $user->id)
+            ->where('teacher_id', $user->id)
             ->latest('created_at')
             ->limit($limit)
             ->get()
@@ -168,13 +169,17 @@ class DashboardService
             });
     }
 
+
+    /**
+     * Get lessons grouped by month
+     */
     /**
      * Get past lessons (completed or cancelled)
      */
     public function getPastLessons(User $user, int $limit = 10)
     {
         return Reservation::with(['teacher.teacherProfile', 'availability'])
-            ->where('student_id', $user->id)
+            ->where('teacher_id', $user->id)
             ->whereIn('status', ['completed', 'cancelled'])
             ->latest('created_at')
             ->limit($limit)
@@ -204,7 +209,7 @@ class DashboardService
         $startOfMonth = $date->copy()->startOfMonth();
         $endOfMonth = $date->copy()->endOfMonth();
         $reservations = Reservation::with(['teacher.teacherProfile', 'availability'])
-            ->where('student_id', $user->id)
+            ->where('teacher_id', $user->id)
             // Get all relevant statuses for a calendar
             ->whereIn('status', ['booked', 'completed', 'cancelled'])
             // Use whereHas to filter by the lesson's actual date in the availability table
@@ -319,4 +324,5 @@ class DashboardService
             default => 'badge-secondary',
         };
     }
+
 }

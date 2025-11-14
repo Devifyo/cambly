@@ -66,7 +66,7 @@ class AuthController extends Controller
             }elseif($user->isStudent() && !$user->hasActiveSubscription()){
                  return redirect()->route('student.account.subscription')->with('success', 'Welcome back!');
             }elseif($user->isTeacher()){
-                dd('will be cover in milestone 3');
+               return redirect()->route('teacher.dashboard')->with('success', 'Welcome back!');
             }
         }
 
