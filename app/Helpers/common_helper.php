@@ -281,3 +281,71 @@ if (! function_exists('removeProfileAvatar')) {
         }
     }
 }
+
+
+if (!function_exists('convertUtcToLocal')) {
+    /**
+     * Converts a UTC datetime string to a user's local timezone
+     * and returns a variety of formatted strings and Carbon objects.
+     *
+     * @param string|Carbon|null $utcDateTime The UTC datetime to convert.
+     * @param User|null $user The user object to get the timezone from.
+     * @return array|null
+     */
+    function convertUtcToLocal($utcDateTime, ?User $user): ?array
+    {
+        // 1. Handle null input
+        if (!$utcDateTime) {
+            return null;
+        }
+
+        // 2. Get the target timezone
+        // Default to the application's timezone (which itself defaults to 'UTC')
+        $targetTimezone = config('app.timezone', 'UTC');
+        
+        // If a user is provided, try to find their specific timezone
+        if ($user) {
+            $targetTimezone = optional($user->studentProfile)->tz
+                ?? optional($user->teacherProfile)->tz
+                ?? $targetTimezone; // <-- Fallback to app config if user has no tz
+        }
+
+        // 3. Validate the timezone
+        // If the timezone is invalid or null, default to UTC
+        if (!$targetTimezone || !in_array($targetTimezone, timezone_identifiers_list())) {
+            $targetTimezone = 'UTC';
+        }
+
+        // 4. Create Carbon objects
+        // Create the original object, ensuring it's interpreted as UTC
+        $original = Carbon::parse($utcDateTime, 'UTC');
+        
+        // Create the local object by converting the timezone
+        $local = $original->clone()->setTimezone($targetTimezone);
+
+        // 5. Return a comprehensive array
+        return [
+            // --- Carbon Objects (Most useful) ---
+            'original_carbon' => $original,
+            'local_carbon'    => $local,
+            
+            // --- Timezones ---
+            'original_timezone' => 'UTC',
+            'local_timezone'    => $targetTimezone,
+            
+            // --- Original (UTC) ---
+            'original_datetime' => $original->toDateTimeString(), // Y-m-d H:i:s
+            'original_date'     => $original->toDateString(),     // Y-m-d
+            'original_time'     => $original->format('H:i:s'),    // H:i:s
+            'original_time_12h' => $original->format('h:i A'),    // 12-hour format
+            'original_formatted_date' => $original->format('jS \of F Y'), // <-- NEW
+            
+            // --- Local (Converted) ---
+            'local_datetime'    => $local->toDateTimeString(), // Y-m-d H:i:s
+            'local_date'        => $local->toDateString(),     // Y-m-d
+            'local_time'        => $local->format('H:i:s'),    // H:i:s
+            'local_time_12h'    => $local->format('h:i A'),    // 12-hour format
+            'local_formatted_date' => $local->format('jS \of F Y'), // <-- NEW
+        ];
+    }
+}

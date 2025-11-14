@@ -13,7 +13,7 @@ public function searchTeachers(Request $request)
 {
     $request->validate([
         'name' => 'nullable|string|max:255',
-        'start_utc' => 'nullable|date_format:Y-m-d H:i',
+        'start_utc' => 'nullable|date_format:Y-m-d',
         'gender' => 'nullable|in:male,female',
         'languages' => 'nullable|array',
         'languages.*' => 'string',
@@ -29,7 +29,6 @@ public function searchTeachers(Request $request)
         ->withTeacherData($request->start_utc)
         ->paginate(5)
         ->appends($filters);
-        
     return view('student.inner.teacher.search', compact('teachers', 'filters'));
 }
 

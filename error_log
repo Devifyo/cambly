@@ -45,3 +45,5 @@ Stack trace:
 [12-Nov-2025 12:07:42 UTC] PHP Parse error:  syntax error, unexpected token ",", expecting "(" in /home/deviytwg/projects/laravel/cambly/app/Models/WebhookEvent.php on line 18
 [12-Nov-2025 12:26:49 UTC] PHP Parse error:  syntax error, unexpected single-quoted string "user_id", expecting "]" in /home/deviytwg/projects/laravel/cambly/app/Models/WebhookEvent.php on line 15
 [14-Nov-2025 06:58:05 UTC] PHP Fatal error:  Cannot use Illuminate\Database\Eloquent\Model as Model because the name is already in use in /home/deviytwg/projects/laravel/cambly/app/Models/Reservation.php on line 10
+[14-Nov-2025 11:56:58 UTC] PHP Fatal error:  Cannot redeclare App\Models\Reservation::scopeForStudent() in /home/deviytwg/projects/laravel/cambly/app/Models/Reservation.php on line 72
+[14-Nov-2025 11:57:02 UTC] PHP Fatal error:  Cannot redeclare App\Models\Reservation::scopeForStudent() in /home/deviytwg/projects/laravel/cambly/app/Models/Reservation.php on line 72

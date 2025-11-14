@@ -19,6 +19,8 @@ class TeacherProfile extends Model
         'bio',
         'started_at',
         'gender',
+        'experience',
+        'short_bio'
     ];
 
             public function user()

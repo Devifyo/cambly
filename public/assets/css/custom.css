@@ -19476,7 +19476,7 @@ header.inner-header .header-nav .header-navbar-rht li.noti-nav > a i {
   align-items: center;
 }
 .dashboard-table.table tbody tr {
-  border: 0;
+  /* border: 0; */
   border-radius: 10px;
 }
 .dashboard-table.table tbody tr:hover {

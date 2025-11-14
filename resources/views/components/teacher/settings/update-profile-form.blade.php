@@ -120,13 +120,33 @@
                             </select>
                         </div>
                     </div>
+                    {{-- expirence in years --}}
                     <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" for="experience">Teaching Experience (Years) <span class="text-danger">*</span></label>
+                            <input type="number" id="experience" name="experience" class="form-control" 
+                                   value="{{ old('experience', auth()->user()->teacherProfile?->experience) }}" 
+                                   placeholder="e.g., 5" min="0" max="60" required>
+                        </div>
+                    </div>
+                    {{-- end of expirence in years --}}
+                    <div class="col-lg-12">
                         <div class="form-group">
                             <label class="form-label" for="discord_id">Discord ID (Optional)</label>
                             <input id="discord_id" name="discord_id" type="text" class="form-control"
                                    value="{{ old('discord_id', auth()->user()->teacherProfile?->discord_id) }}" placeholder="myusername#1234">
                         </div>
                     </div>
+                    {{-- short bio --}}
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="form-label" for="short_description">Short Bio / Headline <span class="text-danger">*</span></label>
+                            <textarea id="short_description" name="short_bio" class="form-control" rows="3" 
+                                      placeholder="A short, catchy headline for your profile (e.g., 'Friendly Native Speaker Specializing in Business English')" required>{{ old('short_bio', auth()->user()->teacherProfile?->short_bio) }}</textarea>
+                            <small class="form-text text-muted">Max 50 characters.</small></br>
+                        </div>
+                    </div>
+                    {{-- end short bio --}}
                 </div>
             </div>
 
@@ -202,11 +222,24 @@
                 native_language: { required: true, minlength: 2 },
                 english_level: { required: true },
                 discord_id: { required: false },
-                avatar: { accept: "image/jpeg, image/png, image/jpg", filesize: 5242880 } // 5MB
+                avatar: { accept: "image/jpeg, image/png, image/jpg", filesize: 5242880 },
+                experience: { required: true, digits: true, min: 0, max: 60 },
+                short_bio: { required: true, minlength: 10, maxlength: 80 },
             },
             messages: {
                 age: { digits: "Please enter a valid age", min: "You must be at least 13" },
-                avatar: { accept: "Please use a JPG or PNG image." }
+                avatar: { accept: "Please use a JPG or PNG image." },
+                experience: {
+                    required: "Please enter your years of experience",
+                    digits: "Please enter a valid number",
+                    min: "Please enter a valid number (0 or more)",
+                    max: "Please enter a valid number (60 or less)"
+                },
+                short_bio: {
+                    required: "Please enter a short bio or headline",
+                    minlength: "Your bio must be at least 20 characters long",
+                    maxlength: "Your bio must be less than 80 characters"
+                }
             }
         });
     });

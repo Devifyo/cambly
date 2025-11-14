@@ -227,7 +227,7 @@ class TeacherDashboardService
             
             // Return a format ideal for FullCalendar.js
             return [
-                'title' => $formattedLesson['teacher_name'],
+                'title' => $formattedLesson['student_name'],
                 'start' => $formattedLesson['datetime_utc'], // '2025-10-26T10:00:00.000000Z'
                 'end' => Carbon::parse($formattedLesson['end_time'])->toIso8601String(),
                 'status' => $formattedLesson['status'],
@@ -237,7 +237,7 @@ class TeacherDashboardService
                 // to add any custom data you want.
                 'extendedProps' => [
                     'reservation_id' => encryptId($formattedLesson['id']),
-                    'teacher_avatar' => $formattedLesson['teacher_avatar'],
+                    'student_avatar' => $formattedLesson['student_avatar'],
                     'user_formatted_time' => $formattedLesson['user_formatted_time'],
                     'user_formatted_datetime' => $formattedLesson['user_formatted_datetime'],
                     'status_badge' => $formattedLesson['status_badge'],
@@ -265,11 +265,11 @@ class TeacherDashboardService
         $dtUser = $dtUtc->copy()->setTimezone($viewerTz);
         return [
             'id' => $reservation->id,
-            'teacher_name' => $reservation->teacher->teacherProfile->preferred_name 
-                ?? $reservation->teacher->name 
-                ?? 'Unknown Teacher',
-            'teacher_title' => $reservation->teacher->teacherProfile->title ?? '',
-            'teacher_avatar' => $reservation->teacher->avatar 
+            'student_name' => $reservation->student->studentProfile->name 
+                ?? $reservation->student->name 
+                ?? 'Unknown student',
+            'student_title' => $reservation->student->studentProfile->title ?? '',
+            'student_avatar' => $reservation->student->avatar 
                 ?? asset('assets/img/dashboard/profile-06.jpg'),
             'start_time' => $startTime,
             'end_time' => $endTime,
@@ -296,9 +296,9 @@ class TeacherDashboardService
         
         return [
             'id' => $reservation->id,
-            'teacher_name' => $reservation->teacher->name ?? 'Unknown Teacher',
-            'teacher_title' => '',
-            'teacher_avatar' => asset('assets/img/default-avatar.jpg'),
+            'student_name' => $reservation->student->name ?? 'Unknown student',
+            'student_title' => '',
+            'student_avatar' => asset('assets/img/default-avatar.jpg'),
             'start_time' => $reservation->created_at,
             'end_time' => $reservation->created_at,
             'formatted_date' => Carbon::parse($reservation->created_at)->format('M d, Y'),

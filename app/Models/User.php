@@ -179,18 +179,20 @@ class User extends Authenticatable
     }
 
     /**
-     * Filter teachers who have availabilities at specific datetime
+     * Filter teachers who have availabilities at specific date
      */
     public function scopeFilterByAvailability($query, $startUtc)
     {
         return $query->when($startUtc, function ($q) use ($startUtc) {
-            $start = \Carbon\Carbon::parse($startUtc);
+            // Parse the date and force it to the beginning of that day
+            $start = \Carbon\Carbon::parse($startUtc)->startOfDay();
             
             $q->whereHas('availabilities', function ($query) use ($start) {
                 $query->where('is_booked', false)
+                    // Look for slots between the start and end of that specific day
                     ->whereBetween('start_utc', [
-                        $start->copy()->startOfMinute(),
-                        $start->copy()->endOfMinute(),
+                        $start, // e.g., 2025-11-20 00:00:00
+                        $start->copy()->endOfDay(), // e.g., 2025-11-20 23:59:59
                     ]);
             });
         });
@@ -207,10 +209,13 @@ class User extends Authenticatable
                 $q->where('is_booked', false);
 
                 if ($startUtc) {
-                    $start = \Carbon\Carbon::parse($startUtc);
+                    // Parse the date and force it to the beginning of that day
+                    $start = \Carbon\Carbon::parse($startUtc)->startOfDay();
+
+                    // Look for slots between the start and end of that specific day
                     $q->whereBetween('start_utc', [
-                        $start->copy()->startOfMinute(),
-                        $start->copy()->endOfMinute(),
+                        $start, // e.g., 2025-11-20 00:00:00
+                        $start->copy()->endOfDay(), // e.g., 2025-11-20 23:59:59
                     ]);
                 }
 

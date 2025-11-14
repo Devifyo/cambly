@@ -240,28 +240,38 @@
                             <h3>Showing <span class="text-secondary">{{ $teachers->total() }}</span> Tutors For You</h3>
                         </div>
                     </div>
-
+                   
                     <!-- Tutor  -->
                     @forelse($teachers as $teacher)
+                        @php
+                            $nextSlot = $teacher->availabilities->where('is_booked', false)->sortBy('start_utc')->first();
+                        @endphp
                         <div class="col-lg-12 mb-4">
                             <div class="card doctor-list-card">
                                 <div class="d-md-flex align-items-center">
                                     {{-- Teacher image --}}
                                     <div class="card-img card-img-hover">
                                         {{-- <a href="{{ route('student.tutors.profile',['id' => encryptId($teacher->id)]) }}"> --}}
-                                            <img src="{{ asset('assets/img/profile-placeholder.jpg') }}" alt="{{ $teacher->name }}">
+                                            <img src="{{$teacher->profile_link }}" alt="{{ $teacher->name }}">
                                         {{-- </a> --}}
                                     </div>
-
                                     <div class="card-body p-0">
                                         {{-- Header --}}
                                         <div class="d-flex align-items-center justify-content-between border-bottom p-3">
                                             {{-- <a href="{{ route('student.tutors.profile',['id' => encryptId($teacher->id)]) }}" class="text-teal fw-medium fs-14"> --}}
-                                                {{ $teacher->teacherProfile->preferred_name ?? $teacher->name }}
+                                                {{ $teacher->name ?? $teacher->teacherProfile->preferred_name }}
                                             {{-- </a> --}}
-                                            <span class="badge bg-success-light d-inline-flex align-items-center">
-                                                <i class="fa-solid fa-circle fs-5 me-1"></i>Available
-                                            </span>
+                                           @if($nextSlot && !\Carbon\Carbon::parse($nextSlot->start_utc)->isPast())
+                                                {{-- Slot is available and in the future --}}
+                                                <span class="badge bg-success-light d-inline-flex align-items-center">
+                                                    <i class="fa-solid fa-circle fs-5 me-1"></i>Available
+                                                </span>
+                                            @else
+                                                {{-- No slot or slot is in the past --}}
+                                                <span class="badge bg-danger-light d-inline-flex align-items-center">
+                                                    <i class="fa-solid fa-circle-xmark fs-5 me-1"></i>Not Available
+                                                </span>
+                                            @endif
                                         </div>
 
                                         {{-- Body --}}
@@ -271,12 +281,12 @@
                                                     <div class="col-sm-6">
                                                         <h6 class="d-flex align-items-center mb-1">
                                                             {{-- <a href="{{ route('student.tutors.profile',['id' => encryptId($teacher->id)]) }}"> --}}
-                                                                {{ $teacher->teacherProfile->preferred_name ?? $teacher->name }}
+                                                                {{  $teacher->name ?? $teacher->teacherProfile->preferred_name }}
                                                             {{-- </a> --}}
                                                             <i class="isax isax-tick-circle5 text-success ms-2"></i>
                                                         </h6>
                                                         <p class="mb-2">
-                                                            {{ $teacher->teacherProfile->bio ?? 'Certified TESOL Tutor' }}
+                                                            {{ $teacher->teacherProfile->short_bio ?? 'Certified TESOL Tutor' }}
                                                         </p>
                                                         <p class="d-flex align-items-center mb-0 fs-14">
                                                             <i class="isax isax-location me-2"></i>
@@ -288,30 +298,26 @@
                                                             <i class="isax isax-language-circle text-dark me-2"></i>
                                                             {{ $teacher->teacherProfile->native_language ?? 'English' }}
                                                         </p>
-  
+
                                                         <p class="d-flex align-items-center mb-0 fs-14">
                                                             <i class="isax isax-archive-14 text-dark me-2"></i>
-                                                            5 Years Experience
+                                                             {{ $teacher?->teacherProfile?->experience ?? '**'}} Years Experience
                                                         </p>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             {{-- Availability section --}}
-                                            @php
-                                                $nextSlot = $teacher->availabilities->where('is_booked', false)->sortBy('start_utc')->first();
-                                            @endphp
-
                                             <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3 mt-3">
                                                 <div class="me-3">
                                                     <p class="mb-1">Lesson Rate</p>
-                                                    <h3 class="text-orange">1 Ticket / Lesson</h3>
+                                                    <h3 class="text-orange">{{ config('app.ticket_per_meeting') }} Ticket / Lesson</h3>
                                                 </div>
 
-                                                @if($nextSlot)
+                                                @if($nextSlot && !\Carbon\Carbon::parse($nextSlot->start_utc)->isPast())
                                                     <p class="mb-0">
                                                         Available at<br>
-                                                        {{ \Carbon\Carbon::parse($nextSlot->start_utc)->format('h:i A \\o\\n M j, Y') }}
+                                                        {{ convertUtcToLocal($nextSlot->start_utc, $authUser)['local_formatted_date'] }}
                                                     </p>
                                                 @else
                                                     <p class="mb-0 text-muted">No upcoming slots</p>
@@ -358,7 +364,8 @@
         });
         
         $('.datetimepicker').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm',
+            format: 'YYYY-MM-DD',
+            minDate: moment().startOf('day'),
             showClose: true,
             showClear: true,
             showTodayButton: true,

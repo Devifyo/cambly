@@ -62,9 +62,11 @@ class TeacherAccountController extends Controller
                 'age',
                 'native_language',
                 'english_level',
-                'discord_id'
+                'discord_id',
+                'experience',
+                'short_bio'
         ]);
-
+        
         $user->teacherProfile()->updateOrCreate(
             ['user_id' => $user->id], // Find profile by user_id
             $profileData                 // Update with all new data

@@ -165,7 +165,40 @@
         .cancel-lesson i {
             font-size: 14px;
             line-height: 1;
-        }    
+        }
+
+        .edit-lesson {
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            color: #4c6ef5 !important; /* Primary blue color */
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-decoration: none;
+            
+            /* Circle outline */
+            border: 2px solid #4c6ef5 !important;
+
+            /* Center the icon inside */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .edit-lesson:hover {
+            color: #fff !important;
+            background-color:#4c6ef5 !important;  /* fill blue on hover */
+            border-color:#4c6ef5 !important;
+        }
+
+        .edit-lesson i {
+            font-size: 14px;
+            line-height: 1;
+        }
     </style>
 @endpush
 @section('content')
@@ -225,21 +258,24 @@
                                         <table class="table dashboard-table appoint-table mb-0">
                                             <tbody>
                                                 @forelse ($dashboardDetails['top_upcoming_lessons'] as $lesson)
-                                                    <tr>
+                                                    <tr class="appointment-info">
                                                         <td>
                                                             <div class="patient-info-profile">
-                                                                <a href="{{ route('student.lessons.details', ['id' => encryptId($lesson['id'])]) }}" class="table-avatar">
-                                                                    <img src="{{ $lesson['teacher_avatar'] }}" alt="{{ $lesson['teacher_name'] }}">
-                                                                </a>
+                                                                <span class="table-avatar">
+                                                                    <img src="{{ $lesson['student_avatar'] }}" alt="{{ $lesson['student_name'] }}">
+                                                                </span>
                                                                 <div class="patient-name-info">
-                                                                    <h5><a href="{{ route('student.lessons.details', ['id' => encryptId($lesson['id'])]) }}">{{ $lesson['teacher_name'] }}</a></h5>
-                                                                    <span>{{ $lesson['teacher_title'] }}</span>
+                                                                    <h5>{{ $lesson['student_name'] }}</h5>
+                                                                    <span>{{ $lesson['student_title'] }}</span>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="appointment-date-created">
-                                                                <h6>{{ $lesson['user_formatted_datetime'] }}</h6>
+                                                                <h6>
+                                                                    {{ $lesson['user_formatted_datetime'] }}
+
+                                                                </h6>
                                                                     {{-- @if($lesson['is_hold'])
                                                                         <span class="badge table-badge bg-warning text-dark">
                                                                             <i class="fa-solid fa-pause-circle me-1"></i>
@@ -250,19 +286,20 @@
                                                                             {{ $lesson['time_from_now'] }}
                                                                         </span>
                                                                     @endif --}}
-                                                                      <span class="badge table-badge {{ $lesson['is_today'] ? 'bg-warning' : 'bg-success' }}">
+                                                                    <span class="badge table-badge {{ $lesson['is_today'] ? 'bg-warning' : 'bg-success' }}">
                                                                             {{ $lesson['time_from_now'] }}
-                                                                        </span>
+                                                                    </span>
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <div class="apponiment-actions d-flex align-items-center">
-                                                                {{-- Join Lesson (commented out) --}}
-                                                                {{-- <a href="#" class="text-success-icon me-2" title="Join Lesson">
-                                                                    <i class="fa-solid fa-video"></i>
-                                                                </a> --}}
-
-                                                                <form action="{{ route('student.booking.cancel', ['reservation' => encryptId($lesson['id'])]) }}" method="POST" class="cancel-lesson-form d-inline">
+                                                            <div class="apponiment-actions d-flex align-items:center gap-2">
+                                                                
+                                                                <a href="{{ route('teacher.lessons.details', ['id' => encryptId($lesson['id'])]) }}" 
+                                                                class="edit-lesson me-2" 
+                                                                title="Edit Lesson">
+                                                                    <i class="isax isax-eye4"></i>
+                                                                </a>
+                                                                <form action="{{ route('teacher.booking.cancel', ['reservation' => encryptId($lesson['id'])]) }}" method="POST" class="cancel-lesson-form d-inline">
                                                                     @csrf
                                                                     <button type="submit" class="btn btn-link text-danger-icon p-0 border-0 bg-transparent cancel-lesson" title="Cancel Lesson">
                                                                         <i class="fa-solid fa-xmark"></i>

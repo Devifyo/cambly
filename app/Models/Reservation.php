@@ -69,6 +69,11 @@ class Reservation extends Model
         $query->where('student_id', $user->id);
     }
 
+    public function scopeForTeacher(Builder $query, User $user)
+    {
+        $query->where('teacher_id', $user->id);
+    }
+
     /**
      * Scope query to upcoming lessons.
      */
