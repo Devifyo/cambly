@@ -207,7 +207,7 @@
                     </div>
                 </div>
 
-                @if($lesson->lesson_meeting_link && $lesson->display_status !== 'completed' && $lesson->display_status !== 'cancelled')
+                {{-- @if($lesson->lesson_meeting_link && $lesson->display_status !== 'completed' && $lesson->display_status !== 'cancelled')
                     <div class="details-grid mt-3">
                         <div class="detail-item" style="grid-column: 1 / -1;">
                             <label>Meeting Link</label>
@@ -218,7 +218,38 @@
                             </p>
                         </div>
                     </div>
-                @endif
+                @endif --}}
+                <div class="details-grid mt-3">
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <label>Meeting Link</label>
+                        
+                        <div id="meeting-link-wrapper-{{ encryptId($lesson->id) }}">
+                            @if($lesson->lesson_meeting_link)
+                                <p class="mb-0">
+                                    <a href="{{ $lesson->lesson_meeting_link }}" target="_blank" class="meeting-link-href">
+                                        {{ $lesson->lesson_meeting_link }}
+                                    </a>
+                                </p>
+                            @else
+                                <p class="mb-0 text-muted meeting-link-href">
+                                    No meeting link has been added.
+                                </p>
+                            @endif
+                        </div>
+
+                        @if($lesson->display_status !== 'completed' && $lesson->display_status !== 'cancelled')
+                            <button type="button" 
+                                class="btn btn-sm btn-outline-primary mt-2 btn-update-link" 
+                                data-url="{{ route('teacher.lessons.update-link', ['id' => encryptId($lesson->id)]) }}"
+                                data-current-link="{{ $lesson->lesson_meeting_link ?? '' }}"
+                                data-wrapper-id="meeting-link-wrapper-{{ encryptId($lesson->id) }}">
+                                <i class="fa-solid fa-pen-to-square me-1"></i>
+                                <span class="btn-text">{{ $lesson->lesson_meeting_link ? 'Edit Link' : 'Add Link' }}</span>
+                            </button>
+                        @endif
+                    </div>
+                </div>
+                {{--  --}}
             </div>
 
             <div class="card-footer d-flex flex-wrap gap-2" style="background: #f9fafb;">
@@ -291,5 +322,134 @@
             });
         });
     })();
+
+    $(document).ready(function() {
+
+            // Setup AJAX to automatically send the CSRF token
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            /**
+             * Parses a standard Laravel AJAX error response.
+             * @param {object} xhr - The jQuery XHR object.
+             * @returns {string} A human-readable error message.
+             */
+            function getErrorMessage(xhr) {
+                let errorMsg = 'An error occurred. Please try again.';
+                if (xhr.responseJSON) {
+                    if (xhr.responseJSON.errors && xhr.responseJSON.errors.lesson_meeting_link) {
+                        // Gets the first validation error
+                        errorMsg = xhr.responseJSON.errors.lesson_meeting_link[0];
+                    } else if (xhr.responseJSON.message) {
+                        // Gets a custom message from the controller
+                        errorMsg = xhr.responseJSON.message;
+                    }
+                }
+                return errorMsg;
+            }
+
+            // Use async function for event handler
+            $(document).on('click', '.btn-update-link', async function(e) {
+                e.preventDefault();
+
+                const $button = $(this);
+                const postUrl = $button.data('url');
+                const currentLink = $button.data('current-link');
+                const wrapperId = $button.data('wrapper-id');
+                const $btnText = $button.find('.btn-text');
+                const originalBtnText = $btnText.text(); // Store the original text
+
+                try {
+                    // 1. Show SweetAlert prompt and "await" the user's response
+                    const result = await Swal.fire({
+                        title: 'Update Meeting Link',
+                        text: 'Enter the new meeting URL (e.g., Zoom, Google Meet). Leave blank to remove.',
+                        input: 'url',
+                        inputValue: currentLink,
+                        inputPlaceholder: 'https://...',
+                        showCancelButton: true,
+                        confirmButtonText: 'Save Link',
+                        inputValidator: (value) => {
+                            if (value && !value.startsWith('http://') && !value.startsWith('https://')) {
+                                return 'Please enter a valid URL (starting with http:// or https://)';
+                            }
+                        }
+                    });
+
+                    // 2. Stop if the user clicked "Cancel"
+                    if (!result.isConfirmed) {
+                        return;
+                    }
+
+                    // 3. Set loading state
+                    $button.prop('disabled', true);
+                    $btnText.text('Saving...');
+
+                    const newLink = result.value || '';
+
+                    // 4. "await" the AJAX POST request
+                    const response = await $.ajax({
+                        type: 'POST',
+                        url: postUrl,
+                        data: {
+                            lesson_meeting_link: newLink
+                        }
+                    });
+
+                    // 5. Handle success
+                    if (!response.success) {
+                        // Throw an error to be caught by the 'catch' block
+                        throw new Error(response.message || 'Could not update the link.');
+                    }
+
+                    const $wrapper = $('#' + wrapperId);
+                    
+                    if (response.new_link) {
+                        // --- Link Added/Updated ---
+                        $wrapper.html(
+                            `<p class="mb-0">
+                                <a href="${response.new_link}" target="_blank" class="meeting-link-href">
+                                    ${response.new_link}
+                                </a>
+                            </p>`
+                        );
+                        $button.data('current-link', response.new_link);
+                        $btnText.text('Edit Link');
+                    } else {
+                        // --- Link Removed ---
+                        $wrapper.html(
+                            `<p class="mb-0 text-muted meeting-link-href">
+                                No meeting link has been added.
+                            </p>`
+                        );
+                        $button.data('current-link', '');
+                        $btnText.text('Add Link');
+                    }
+
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Meeting link has been updated.',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                } catch (error) {
+                    // 6. Handle ALL errors (AJAX, validation, thrown)
+                    const errorMessage = (error.responseJSON) ? getErrorMessage(error) : error.message;
+                    Swal.fire('Error', errorMessage, 'error');
+                    
+                    // Restore the original button text on failure
+                    $btnText.text(originalBtnText);
+
+                } finally {
+                    // 7. ALWAYS re-enable the button
+                    $button.prop('disabled', false);
+                }
+            });
+    });
 </script>
 @endpush

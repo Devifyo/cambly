@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\Teacher\TeacherLessonService;
 use App\Models\Reservation; // <-- Import the Reservation model
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Validator;
 class LessonController extends Controller
 {   
     public $view_path = 'teacher.lessons';
@@ -68,8 +69,46 @@ class LessonController extends Controller
         ]);
     }
 
-    public function updateLessonLink(Request $request, $id){
-           
+    public function updateLessonLink(Request $request, $id)
+    {
+        // 1. Validate the input
+        $validator = Validator::make($request->all(), [
+            // Allow an empty link (for removal) but if present, must be a valid URL
+            'lesson_meeting_link' => 'nullable|url|max:500',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false, 
+                'errors' => $validator->errors()
+            ], 422); // 422 Unprocessable Entity
+        }
         
+        // 2. Find the reservation
+        try {
+            // Find the lesson, ensuring it belongs to the authenticated teacher
+            $reservation = Reservation::where('id', decryptId($id))
+                ->where('teacher_id', auth()->id()) // <-- IMPORTANT security check
+                ->firstOrFail();
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(['success' => false, 'message' => 'Lesson not found.'], 404);
+        }
+
+        // 3. Check lesson status
+        if (in_array($reservation->status, ['completed', 'cancelled'])) {
+             return response()->json(['success' => false, 'message' => 'Cannot update a completed or cancelled lesson.'], 403);
+        }
+
+        // 4. Update the link (will be set to null if request input is empty)
+        $reservation->lesson_meeting_link = $request->input('lesson_meeting_link');
+        $reservation->save();
+
+        // 5. Return a success response
+        return response()->json([
+            'success'  => true,
+            'new_link' => $reservation->lesson_meeting_link,
+            'message'  => 'Meeting link updated successfully.'
+        ]);
     }
 }
