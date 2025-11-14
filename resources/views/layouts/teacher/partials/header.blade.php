@@ -26,8 +26,8 @@
                     <a href="{{ route('teacher.dashboard') }}">Dashboard</a>
                 </li>
 
-                    <li class="{{ request()->routeIs('student.lessons.*') ? 'active' : '' }}">
-                        <a href="{{ route('student.lessons.list') }}">Manage Lessons </a>
+                    <li class="{{ request()->routeIs('teacher.lessons.*') ? 'active' : '' }}">
+                        <a href="{{ route('teacher.lessons.list') }}">Manage Lessons </a>
                     </li>
 
                     <li class="has-submenu {{ request()->routeIs('teacher.account.*') || request()->routeIs('teacher.account.show') ? 'active' : '' }}">

@@ -66,12 +66,12 @@ class Reservation extends Model
      */
     public function scopeForStudent(Builder $query, User $user)
     {
-        $query->where('student_id', $user->id);
+        $query->where('reservations.student_id', $user->id);
     }
 
     public function scopeForTeacher(Builder $query, User $user)
     {
-        $query->where('teacher_id', $user->id);
+        $query->where('reservations.teacher_id', $user->id);
     }
 
     /**
@@ -124,6 +124,16 @@ class Reservation extends Model
             $q->where('name', 'like', '%' . $teacherName . '%')
               ->orWhereHas('teacherProfile', function ($sq) use ($teacherName) {
                   $sq->where('preferred_name', 'like', '%' . $teacherName . '%');
+              });
+        });
+    }
+
+        public function scopeFilterByStudent(Builder $query, string $studentName)
+    {
+        $query->whereHas('student', function ($q) use ($studentName) {
+            $q->where('name', 'like', '%' . $studentName . '%')
+              ->orWhereHas('studentProfile', function ($sq) use ($studentName) {
+                  $sq->where('preferred_name', 'like', '%' . $studentName . '%');
               });
         });
     }

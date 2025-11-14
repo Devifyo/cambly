@@ -26,7 +26,7 @@ class TeacherLessonService
             ])
             ->select([ // Ensure we select all necessary fields from reservations
                 'id',
-                'teacher_id',
+                'student_id',
                 'availability_id',
                 'status',
                 'is_hold',
@@ -35,14 +35,13 @@ class TeacherLessonService
                 'updated_at',
                 'lesson_meeting_link', // <-- Added meeting link
             ]);
-
         // Apply filters using our new scopes
         if (!empty($filters['date'])) {
             $query->filterByDate($filters['date']);
         }
 
-        if (!empty($filters['teacher'])) {
-            $query->filterByTeacher($filters['teacher']);
+        if (!empty($filters['student'])) {
+            $query->filterByStudent($filters['student']);
         }
 
         if (!empty($filters['filter'])) {
@@ -53,7 +52,6 @@ class TeacherLessonService
                 default => null,
             };
         }
-
         // Paginate results - sort by availability start time
         $reservations = $query
             ->join('availabilities', 'reservations.availability_id', '=', 'availabilities.id')
@@ -62,7 +60,6 @@ class TeacherLessonService
             ->select('reservations.*') // Re-select all from reservations after join
             ->paginate($perPage)
             ->withQueryString();
-
         // Transform the collection for view consumption
         $reservations->getCollection()->transform(
             // Pass the timezone to the transformer
@@ -78,9 +75,9 @@ class TeacherLessonService
     public function getLessonStats(User $user): array
     {
         return [
-            'upcoming' => Reservation::forStudent($user)->upcoming()->count(),
-            'completed' => Reservation::forStudent($user)->completed()->count(),
-            'cancelled' => Reservation::forStudent($user)->cancelled()->count(),
+            'upcoming' => Reservation::forTeacher($user)->upcoming()->count(),
+            'completed' => Reservation::forTeacher($user)->completed()->count(),
+            'cancelled' => Reservation::forTeacher($user)->cancelled()->count(),
         ];
     }
 
@@ -105,10 +102,8 @@ class TeacherLessonService
     {
         $viewerTimezone = $viewerTimezone ?? config('app.timezone', 'UTC');
 
-        $teacher = $res->teacher?->teacherProfile?->preferred_name
-            ?? $res->teacher?->name
-            ?? 'Unknown Teacher';
-        
+        $student =  $res->student?->name ?? $res->student?->studentProfile?->preferred_name ?? 'Unknown student';
+        $teacher =   $res->teacher?->name ?? $res->teacher?->teacherProfile?->preferred_name ?? 'Unknown teacher';
         $startTime = $res->availability?->start_utc;
         $endTime = $res->availability?->end_utc;
         
@@ -133,6 +128,7 @@ class TeacherLessonService
 
         return (object) [
             'id' => $res->id,
+            'student_name' => $student,
             'teacher_name' => $teacher,
             'start_at_utc' => $startTime, // Keep UTC for internal logic
             'end_at_utc' => $endTime,     // Keep UTC for internal logic

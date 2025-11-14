@@ -1,4 +1,4 @@
-@extends('layouts.student.app')
+@extends('layouts.teacher.app')
 
 @section('title', 'My Lessons')
 
@@ -217,7 +217,7 @@
             <div class="bg-primary-gradient rounded-pill doctors-search-box">
                 <div class="search-box-one rounded-pill">
                     
-                    <form method="GET" action="{{ route('student.lessons.list') }}" id="searchForm">
+                    <form method="GET" action="{{ route('teacher.lessons.list') }}" id="searchForm">
                         <input type="hidden" name="filter" value="{{ request('filter') }}">
 
                         <div class="search-input search-line">
@@ -225,10 +225,10 @@
                             <div class="mb-0">
                                 <input 
                                     type="text" 
-                                    name="teacher" 
+                                    name="student" 
                                     class="form-control" 
-                                    placeholder="Search by teacher name..."
-                                    value="{{ request('teacher') }}"
+                                    placeholder="Search by student name..."
+                                    value="{{ request('student') }}"
                                 >
                             </div>
                         </div>
@@ -265,22 +265,22 @@
 
 <div class="lessons-container">
     <div class="filter-pills">
-        <a href="{{ route('student.lessons.list') }}" 
+        <a href="{{ route('teacher.lessons.list') }}" 
            class="filter-pill {{ !request('filter') ? 'active' : '' }}">
             All Lessons
             <span class="filter-badge">{{ $stats['upcoming'] + $stats['completed'] + $stats['cancelled'] }}</span>
         </a>
-        <a href="{{ route('student.lessons.list', ['filter' => 'upcoming'] + request()->except('filter')) }}" 
+        <a href="{{ route('teacher.lessons.list', ['filter' => 'upcoming'] + request()->except('filter')) }}" 
            class="filter-pill {{ request('filter') === 'upcoming' ? 'active' : '' }}">
             📅 Upcoming
             <span class="filter-badge">{{ $stats['upcoming'] }}</span>
         </a>
-        <a href="{{ route('student.lessons.list', ['filter' => 'completed'] + request()->except('filter')) }}" 
+        <a href="{{ route('teacher.lessons.list', ['filter' => 'completed'] + request()->except('filter')) }}" 
            class="filter-pill {{ request('filter') === 'completed' ? 'active' : '' }}">
             ✅ Completed
             <span class="filter-badge">{{ $stats['completed'] }}</span>
         </a>
-        <a href="{{ route('student.lessons.list', ['filter' => 'cancelled'] + request()->except('filter')) }}" 
+        <a href="{{ route('teacher.lessons.list', ['filter' => 'cancelled'] + request()->except('filter')) }}" 
            class="filter-pill {{ request('filter') === 'cancelled' ? 'active' : '' }}">
             ❌ Cancelled
             <span class="filter-badge">{{ $stats['cancelled'] }}</span>
@@ -292,7 +292,7 @@
             <div class="empty-state">
                 <div class="empty-state-icon">📚</div>
                 <h3>No lessons found</h3>
-                <p>Try adjusting your filters or book a new lesson</p>
+                <p>Try adjusting your filters</p>
             </div>
         @else
             @foreach ($lessons as $item)
@@ -317,7 +317,7 @@
                    <div class="lesson-header">
                         <div>
                             <div class="lesson-title">{{ $startDisplay }}</div>
-                            <div class="lesson-teacher">with {{ $item->teacher_name }}</div>
+                            <div class="lesson-teacher">with {{ $item->student_name }}</div>
                         </div>
 
                         <span class="status-badge {{ $item->is_hold ? 'bg-warning text-dark' : $statusClass }}">
@@ -348,14 +348,14 @@
                     </div>
 
                     <div class="lesson-actions">
-                        <a href="{{ route('student.lessons.details', ['id' => encryptId($item->id)]) }}" 
+                        <a href="{{ route('teacher.lessons.details', ['id' => encryptId($item->id)]) }}" 
                            class="btn-action btn-view">
                             View Details
                         </a>
 
                         <form class="d-inline cancel-form" 
                               method="POST" 
-                              action="{{ route('student.booking.cancel', ['reservation' => encryptId($item->id)]) }}">
+                              action="{{ route('teacher.booking.cancel', ['reservation' => encryptId($item->id)]) }}">
                             @csrf
                             <input type="hidden" name="reservation_id" value="{{ encryptId($item->id) }}">
                             <button

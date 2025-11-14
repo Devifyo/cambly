@@ -1,4 +1,4 @@
-@extends('layouts.student.app')
+@extends('layouts.teacher.app')
 
 @section('title', 'Lesson Details')
 
@@ -121,7 +121,7 @@
                     <nav aria-label="breadcrumb" class="page-breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/"><i class="isax isax-home-15"></i></a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('student.lessons.list') }}">My Lessons</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('teacher.lessons.list') }}">My Lessons</a></li>
                             <li class="breadcrumb-item active">Lesson Details</li>
                         </ol>
                         <h2 class="breadcrumb-title">Lesson Details</h2>
@@ -138,7 +138,7 @@
     <div class="lessons-container">
         
         <div class="mb-3">
-            <a href="{{ route('student.lessons.list') }}" class="btn-action btn-view">
+            <a href="{{ route('teacher.lessons.list') }}" class="btn-action btn-view">
                 <i data-feather="arrow-left" style="width:16px; height:16px;"></i>
                 Back to All Lessons
             </a>
@@ -146,7 +146,7 @@
 
         <div class="lesson-details-card">
             <div class="card-header d-flex justify-content-between align-items-center flex-wrap" style="background: #f9fafb;">
-                <h4 class="card-title mb-0 me-3">Lesson with {{ $lesson->teacher_name }}</h4>
+                <h4 class="card-title mb-0 me-3">Lesson with {{ $lesson->student_name }}</h4>
                 @php
                     $statusClass = match($lesson->display_status) {
                         'cancelled' => 'status-cancelled',
@@ -231,7 +231,7 @@
 
                 <form class="d-inline cancel-form" 
                       method="POST" 
-                      action="{{ route('student.booking.cancel', ['reservation' => encryptId($lesson->id)]) }}">
+                      action="{{ route('teacher.booking.cancel', ['reservation' => encryptId($lesson->id)]) }}">
                     @csrf
                     <input type="hidden" name="reservation_id" value="{{ encryptId($lesson->id) }}">
                     <button

@@ -18,14 +18,14 @@ class LessonController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user();
-        
+            
         $validatedFilters = $request->validate([
             'date' => 'nullable|date_format:Y-m-d',
             'filter' => 'nullable|in:upcoming,cancelled,completed',
-            'teacher' => 'nullable|string|max:255',
+            'student' => 'nullable|string|max:255',
             'per_page' => 'nullable|integer|min:5|max:100',
         ]);
-
+        
         $lessons = $this->lessonService->getPaginatedLessons($user, $validatedFilters);
         $stats = $this->lessonService->getLessonStats($user);
 
@@ -51,7 +51,7 @@ class LessonController extends Controller
             ])
             ->find(decryptId($id));
             // 2. Authorize: Ensure the user owns this lesson or abort
-            if (!$reservation || (int)$reservation->student_id !== (int)$user->id) {
+            if (!$reservation || (int)$reservation->teacher_id !== (int)$user->id) {
                 abort(404, 'Lesson not found.');
             }
 
@@ -66,5 +66,10 @@ class LessonController extends Controller
             'lesson' => $lesson,
             'userTimezone' => $viewerTimezone // Pass the TZ for display
         ]);
+    }
+
+    public function updateLessonLink(Request $request, $id){
+           
+        
     }
 }

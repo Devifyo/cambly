@@ -22,5 +22,7 @@ Route::middleware(['auth.custom','isTeacher'])->group(function () {
         Route::get('lessons/upcoming',[LessonController::class,'index'])->name('lessons.upcoming');
         Route::get('lessons/completed',[LessonController::class,'index'])->name('lessons.completed');
         Route::get('lessons/details/{id}',[LessonController::class,'lessonDetails'])->name('lessons.details');
+        Route::post('lessons/update/link/{id}',[LessonController::class,'updateLessonLink'])->name('lessons.update-link');
+
 
 });
