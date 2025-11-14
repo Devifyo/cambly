@@ -196,6 +196,16 @@
                 justify-content: center;
             }
         }
+
+        .glowing-indicator {
+            width: 10px;
+            height: 10px;
+            background-color: #ffc107; /* Warning yellow */
+            border-radius: 50%;
+            animation: pulse-warning 1.5s infinite;
+            flex-shrink: 0; 
+            cursor: help; /* Show help cursor on hover */
+        }
     </style>
 @endpush
 
@@ -304,7 +314,7 @@
                     // These are the same as before
                     $durationText = $item->duration ? $item->duration . ' min' : 'N/A';
                     $statusDisplay = $item->display_status ?? $item->status;
-                    
+                    $meetingLink = $item?->lesson_meeting_link ? true : false;
                     $statusClass = match($statusDisplay) {
                         'cancelled' => 'status-cancelled',
                         'completed' => 'status-completed',
@@ -326,6 +336,11 @@
                                 Hold — Insufficient Credits
                             @else
                                 {{ ucfirst($statusDisplay) }}
+                            @endif --}}
+                            {{-- @if(!$meetingLink && in_array($statusDisplay, ['booked', 'upcoming']))
+                                <i class="fa-solid fa-pause-circle me-1"></i>
+                                      Meeting link - missing.
+                                
                             @endif --}}
                              {{ ucfirst($statusDisplay) }}
                         </span>
