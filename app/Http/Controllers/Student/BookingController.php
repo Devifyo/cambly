@@ -47,6 +47,10 @@ class BookingController extends Controller
         return response()->json($res);
     }
 
+    public function weeklySlots(Request $request, $teacherId){
+        
+    }
+
 
     /**
      * POST /student/booking/confirm

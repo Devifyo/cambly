@@ -28,44 +28,75 @@
             <div class="booking-header pb-0">
                 <div class="card mb-0">
                     <div class="card-body">
-                        <div class="d-flex align-items-center flex-wrap rpw-gap-2 mb-4 flex-wrap row-gap-2">
+                        
+                        {{-- Teacher Avatar and Name/Title --}}
+                        <div class="d-flex align-items-center flex-wrap row-gap-2 mb-4">
                             <span class="avatar avatar-xxxl avatar-rounded me-2 flex-shrink-0">
-                                <img src="{{ asset('assets/img/clients/client-15.jpg') }}" alt="">
+                                <img src="{{ $teacher->profile_link }}" alt="{{ $teacher->name ?? 'Teacher' }} Profile">
                             </span>
+                            
                             <div>
-                                <h4 class="mb-1">{{ $teacher->teacherProfile->preferred_name ?? $teacher->name ?? 'Dr. Michael Brown' }} 
-                                    {{-- <span class="badge bg-orange fs-12"><i class="fa-solid fa-star me-1"></i>5.0</span> --}}
+                                <h4 class="mb-1">
+                                    {{ $teacher->name ?? $teacher->teacherProfile->preferred_name ?? 'Dr. Michael Brown' }}
                                 </h4>
-                                <p class="text-indigo mb-3 fw-medium">{{ $teacher->teacherProfile->title ?? '' }}</p>
-                                {{-- <p class="mb-0"><i class="isax isax-location me-2"></i>{{ $teacher->teacherProfile->location ?? '5th Street - 1011 W 5th St, Austin, TX' }}</p> --}}
+                                {{-- <p class="text-indigo mb-1 fw-medium">{{ $teacher->teacherProfile->title ?? 'Language Tutor' }}</p> --}}
+                                
+                                {{-- ENCRYPTED TEACHER ID (Moved here, directly after name/title) --}}
+                                <p class="mb-0 text-muted small">
+                                    Teacher ID: {{ encryptId($teacher->id) }}
+                                </p>
                             </div>
                         </div>
+                        
+                        {{-- Teacher Description (Moved here, directly after the header block) --}}
+                        @if ($teacher->teacherProfile->bio ?? false)
+                            <div class="mb-4">
+                                <h6 class="mb-2">About the Teacher</h6>
+                                <p class="text-muted mb-0">{{ $teacher->teacherProfile->bio }}</p>
+                            </div>
+                            <hr class="my-3">
+                        @endif
+                        
+                        {{-- Booking Info --}}
                         <h6 class="mb-2">Booking Info</h6>
                         <div class="row gx-2 gy-3">
+                            
+                            {{-- Service --}}
                             <div class="col-lg-3 col-sm-6">
                                 <div>
                                     <h6 class="fs-14 fw-medium mb-1">Service</h6>
                                     <p class="mb-0">1-1 Lesson (25 Mins)</p>
                                 </div>
                             </div>
+                            
+                            {{-- Total Lessons --}}
                             <div class="col-lg-3 col-sm-6">
                                 <div>
                                     <h6 class="fs-14 fw-medium mb-1">Total Lessons</h6>
-                                    <p class="mb-0">1</p>
+                                    <p class="mb-0">{{ $teacher->reservationsAsTeacher()->where('status','completed')->count() }}</p>
                                 </div>
                             </div>
+                            
+                            {{-- Joined at (Using the teacher's creation date) --}}
                             <div class="col-lg-3 col-sm-6">
                                 <div>
                                     <h6 class="fs-14 fw-medium mb-1">Joined at</h6>
-                                    <p class="mb-0">20 Oct, 2025</p>
+                                    <p class="mb-0">
+                                        {{ $teacher->created_at ? $teacher->created_at->format('d M, Y') : 'N/A' }}
+                                    </p>
                                 </div>
                             </div>
+                            
+                            {{-- Total Experience (Using profile data) --}}
                             <div class="col-lg-3 col-sm-6">
                                 <div>
-                                    <h6 class="fs-14 fw-medium mb-1">Total Expirence</h6>
-                                    <p class="mb-0">5 years</p>
+                                    <h6 class="fs-14 fw-medium mb-1">Total Experience</h6>
+                                    <p class="mb-0">
+                                        {{ $teacher->teacherProfile->experience ?? 'N/A' }} years
+                                    </p>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -124,7 +155,7 @@
                     <i class="isax isax-arrow-left-2 me-1"></i> Back
                 </a>
                 <a id="confirmBtn" href="javascript:void(0);" class="btn btn-md btn-primary-gradient next_btns inline-flex align-items-center rounded-pill disabled">
-                    Confirm Date & Time <i class="isax isax-arrow-right-3 ms-1"></i>
+                    Book now <i class="isax isax-arrow-right-3 ms-1"></i>
                 </a>
             </div>
         </div>
