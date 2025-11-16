@@ -27,7 +27,7 @@
                                 <h6 class="footer-title">For Students</h6>
                                 <ul>
                                     @auth
-                                        <li><a href="{{ route('student.tutors.search') }}">Find Teachers</a></li>
+                                        <li><a href="{{ route('student.tutors.search') }}">Book a Lesson</a></li>
                                         <li><a href="{{ route('student.dashboard') }}">Student Dashboard</a></li>
                                     @endauth
                                     <li><a href="{{ route('cms.how.works') }}">How It Works</a></li>

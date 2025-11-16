@@ -16,10 +16,10 @@
                     <nav aria-label="breadcrumb" class="page-breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#"><i class="isax isax-home-15"></i></a></li>
-                            <li class="breadcrumb-item">Tutor</li>
+                            <li class="breadcrumb-item">Book a Lesson</li>
                             <li class="breadcrumb-item active">Tutor List</li>
                         </ol>
-                        <h2 class="breadcrumb-title">Find Your Tutor</h2>
+                        <h2 class="breadcrumb-title">Book a Lesson</h2>
                     </nav>
                 </div>
             </div>
@@ -91,7 +91,7 @@
                         <div class="card-body p-0">
 
                             <!-- Gender -->
-                            <div class="accordion-item border-bottom">
+                            <!-- <div class="accordion-item border-bottom">
                                 <div class="accordion-header" id="headingGender">
                                     <div class="accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseGender" aria-controls="collapseGender" role="button">
                                         <div class="d-flex align-items-center w-100">
@@ -139,7 +139,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <!-- Native Language -->
                             <div class="accordion-item border-bottom">

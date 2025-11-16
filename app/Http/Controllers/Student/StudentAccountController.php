@@ -32,7 +32,7 @@ class StudentAccountController extends Controller
      * Update the user's profile information.
      */
     public function updateProfile(ProfileUpdateRequest $request): RedirectResponse
-    {
+    {   
         $user = $request->user();
 
         // Update name/email on the model first
@@ -59,7 +59,8 @@ class StudentAccountController extends Controller
         $user->save(); // persists name/email/profile_picture on the existing user row
         
         $profileData = $request->only([
-                'age',
+                'date_of_birth',
+                'country_residence',
                 'native_language',
                 'english_level',
                 'discord_id'

@@ -60,7 +60,7 @@
                         <li class="breadcrumb-item active">Ticket History</li>
                     </ol>
                     <h2 class="breadcrumb-title">Ticket History</h2>
-                    <p class="text-muted" style="margin-top: 5px;">View your credit usage and transactions</p>
+                    <p class="text-muted" style="margin-top: 5px;">View your ticket usage and transactions</p>
                 </nav>
             </div>
         </div>
@@ -149,7 +149,7 @@
 
                 switch ($tx->type) {
                     case 'issued':
-                        $title = 'Monthly Credits Issued'; $iconClass = 'tx-issued';
+                        $title = 'Monthly Tickets Issued'; $iconClass = 'tx-issued';
                         $sign = '+'; $dataType = 'issued';
                         break;
                     case 'debt':

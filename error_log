@@ -48,3 +48,5 @@ Stack trace:
 [14-Nov-2025 11:56:58 UTC] PHP Fatal error:  Cannot redeclare App\Models\Reservation::scopeForStudent() in /home/deviytwg/projects/laravel/cambly/app/Models/Reservation.php on line 72
 [14-Nov-2025 11:57:02 UTC] PHP Fatal error:  Cannot redeclare App\Models\Reservation::scopeForStudent() in /home/deviytwg/projects/laravel/cambly/app/Models/Reservation.php on line 72
 [14-Nov-2025 12:48:49 UTC] PHP Fatal error:  Cannot redeclare App\Models\Reservation::scopeFilterByTeacher() in /home/deviytwg/projects/laravel/cambly/app/Models/Reservation.php on line 131
+[16-Nov-2025 21:51:08 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting "," or ";" in /home/deviytwg/projects/laravel/cambly/app/Models/StudentProfile.php on line 25
+[16-Nov-2025 22:00:06 UTC] PHP Parse error:  syntax error, unexpected token "}", expecting ";" in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 172

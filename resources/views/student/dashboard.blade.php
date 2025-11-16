@@ -228,7 +228,7 @@
                         <!-- Book Tutor -->
                         <div class="col-sm-7">
                             <div class="book-appointment-head mb-3 d-flex justify-content-between align-items-center">
-                                <h3><span>Book a new</span> Teacher</h3>
+                                <h3><span>Book a new</span> Lesson</h3>
                                 <span class="add-icon"><a href="{{ route('student.tutors.search') }}"><i
                                             class="fa-solid fa-circle-plus"></i></a></span>
                             </div>
@@ -327,7 +327,11 @@
                                         </p>
                                     </div>
                                 </div>
-                                <span class="health-percentage d-block mb-2">You have enough {{ trans_choice('app.credits_lower',2) }} for {{$currentCredits['available'] ?? 0}} more lessons</span>
+                                @if($currentCredits['available']  > 1 )
+                                    <span class="health-percentage d-block mb-2">You have enough {{ trans_choice('app.credits_lower',2) }} for {{$currentCredits['available'] ?? 0}} more lessons</span>
+                                    @else
+                                    <span class="health-percentage d-block mb-2">You have {{$currentCredits['available'] ?? 0}} tickets </span>
+                                @endif
                                 <a href="{{ route('student.account.subscription') }}" class="btn btn-dark w-100 rounded-pill">Manage Subscriptions<i
                                         class="fa-solid fa-chevron-right ms-2"></i></a>
                             </div>

@@ -48,9 +48,16 @@ class User extends Authenticatable
 
     protected $appends = ['profile_link'];
 
+
+    public function getRoleNameAttribute()
+    {
+        return $this->getRoleNames()->first() ?? 'No Role';
+    }
      public function studentProfile() {
         return $this->hasOne(StudentProfile::class);
     }
+
+
 
     public function teacherProfile() {
         return $this->hasOne(TeacherProfile::class);
@@ -160,7 +167,9 @@ class User extends Authenticatable
             // If you’re storing using Laravel Storage (e.g. 'public' disk)
             return Storage::url($this->profile_picture);
         }
-
+        if($this->isTeacher()){
+            return asset('assets/img/teacher/teacher-avatar.jpeg');
+        }
         // Default placeholder image    
         return asset('assets/img/dashboard/profile-06.jpg');
     }

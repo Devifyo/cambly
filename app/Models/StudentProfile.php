@@ -12,11 +12,21 @@ class StudentProfile extends Model
     protected $fillable = [
         'user_id',
         'preferred_name',
-        'age',
+        'date_of_birth',
         'tz',
         'native_language',
         'english_level',
         'discord_id',
-        'joined_at'
+        'joined_at',
+        'country_residence'
     ];
+
+    protected $casts = [
+        'date_of_birth' => 'date',
+    ];
+
+
+    public function getAgeAttribute() {
+    return $this->date_of_birth ? $this->date_of_birth->age : null;
+}
 }

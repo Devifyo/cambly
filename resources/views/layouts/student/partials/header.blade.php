@@ -22,20 +22,22 @@
                 </div>
 
                 <ul class="main-nav">
-                <li class="{{ request()->routeIs('student.dashboard') ? 'active' : '' }}">
-                    <a href="{{ route('student.dashboard') }}">Dashboard</a>
-                </li>
-
+                    <li class="{{ request()->routeIs('student.tutors.*')  || request()->routeIs('student.booking.*') ? 'active' : '' }}"><a href="{{ route('student.tutors.search') }}">Book a Lesson</a></li>
+                    
                     <li class="{{ request()->routeIs('student.lessons.*') ? 'active' : '' }}">
-                        <a href="{{ route('student.lessons.list') }}">Manage Lessons </a>
+                        <a href="{{ route('student.lessons.list') }}">My Lessons </a>
                     </li>
 
-                    <li class="{{ request()->routeIs('student.tutors.*')  || request()->routeIs('student.booking.*') ? 'active' : '' }}"><a href="{{ route('student.tutors.search') }}">Search Teacher</a></li>
+                    <li class="{{ request()->routeIs('student.dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('student.dashboard') }}">Dashboard</a>
+                    </li>
+
+
                     <li class="has-submenu {{ request()->routeIs('student.account.*') || request()->routeIs('student.account.show') ? 'active' : '' }}">
                         <a href="#">Account <i class="fas fa-chevron-down"></i> </a>
                         <ul class="submenu">
+                            <li class="{{ request()->routeIs('student.account.show') ? 'active' : '' }}"><a href="{{ route('student.account.show') }}">Account Settings</a></li>
                             <li class="{{ request()->routeIs('student.account.subscription') ? 'active' : '' }}"><a href="{{ route('student.account.subscription') }}">Subscription</a></li>
-                            <li class="{{ request()->routeIs('student.account.show') ? 'active' : '' }}"><a href="{{ route('student.account.show') }}">Profile settings</a></li>
                             <li class="{{ request()->routeIs('student.account.ticket-history') ? 'active' : '' }}"><a href="{{ route('student.account.ticket-history') }}">Ticket History</a></li>
                             <li class="{{ request()->routeIs('student.account.payment-history') ? 'active' : '' }}"><a href="{{ route('student.account.payment-history') }}">Payment History</a></li>
 
@@ -149,12 +151,12 @@
                                     <img src="{{ $authUser->profile_link }}" alt="User Image" class="avatar-img rounded-circle">
                                 </div>
                                 <div class="user-text">
-                                    <h6>Hendrita Hayes</h6>
-                                    <p class="text-muted mb-0">Student</p>
+                                    <h6>{{ ucfirst($authUser->name) }}</h6>
+                                    <p class="text-muted mb-0">{{ucfirst($authUser->role_name)}}</p>
                                 </div>
                             </div>
                             <a class="dropdown-item" href="{{ route('student.dashboard') }}">Dashboard</a>
-                            <a class="dropdown-item" href="{{ route('student.account.show') }}">Profile Settings</a>
+                            <a class="dropdown-item" href="{{ route('student.account.show') }}">Account Settings</a>
                             <form method="POST" action="{{route('auth.logout')}}">
                                 @csrf
                                 <button type="submit" class="dropdown-item">Logout</button>

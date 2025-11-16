@@ -13,10 +13,14 @@ class ProfileUpdateRequest extends FormRequest
     }
 
     public function rules(): array
-    {
+    {   
+        $minAge = 13;
+        
+        // Calculate the maximum allowed date of birth (Today minus 13 years)
+        $minDate = now()->subYears($minAge)->format('Y-m-d');
         return [
             'name' => 'required|string|max:255',
-            'gender' => 'required',
+            // 'gender' => 'required',
             'email' => [
                 'required',
                 'string',
@@ -28,10 +32,32 @@ class ProfileUpdateRequest extends FormRequest
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
 
              // Profile attributes (optional)
-            'age' => ['nullable', 'integer', 'min:1', 'max:120'],
+            // 'age' => ['nullable', 'integer', 'min:1', 'max:120'],
+            'date_of_birth' => [
+                'required',
+                'date',
+                'before_or_equal:' . now()->toDateString(), // Cannot be in the future
+                // Checks if the date of birth is at least 13 years ago
+                'before_or_equal:' . $minDate, 
+            ],
             'native_language' => ['nullable', 'string', 'max:100'],
-            'english_level' => ['nullable', 'string', 'max:60'],
+            'english_level' => [
+                'required', 
+                Rule::in(['beginner', 'intermediate', 'advanced', 'native']),
+            ],
+            'country_residence' => ['required', 'string', 'max:100'],
             'discord_id' => ['nullable', 'string', 'max:100'],
+        ];
+    }
+
+
+    public function messages(): array
+    {
+        return [
+            'date_of_birth.before_or_equal' => 'You must be at least 13 years old to register.',
+            'date_of_birth.date' => 'The date of birth must be a valid date format (YYYY-MM-DD).',
+            'english_level.in' => 'The selected English level is invalid.',
+            'avatar.max' => 'The profile photo cannot exceed 5MB.',
         ];
     }
 }
