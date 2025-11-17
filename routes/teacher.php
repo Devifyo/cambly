@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Teacher\{TeacherDashboardController, TeacherAccountController, BookingController, LessonController};
+use App\Http\Controllers\Teacher\{TeacherDashboardController, TeacherAccountController, BookingController, LessonController, ScheduleSlotController};
 
 Route::middleware(['auth.custom','isTeacher'])->group(function () {
     
@@ -23,6 +23,21 @@ Route::middleware(['auth.custom','isTeacher'])->group(function () {
         Route::get('lessons/completed',[LessonController::class,'index'])->name('lessons.completed');
         Route::get('lessons/details/{id}',[LessonController::class,'lessonDetails'])->name('lessons.details');
         Route::post('lessons/update/link/{id}',[LessonController::class,'updateLessonLink'])->name('lessons.update-link');
+        /*** Schedule slots ****/
+
+          Route::prefix('schedule')->name('schedule.')->group(function () {
+
+            // Main availability/slots page
+            Route::get('schedule-slots', [ScheduleSlotController::class, 'index'])->name('slots');
+
+            // Store / update / delete slots
+            Route::post('schedule-slots', [ScheduleSlotController::class, 'store'])->name('store');
+            // PUT /teacher/schedule-slots/{id} (Updates an existing slot)
+            Route::put('schedule-slots/{id}', [ScheduleSlotController::class, 'update'])
+                ->name('update');
+
+            Route::delete('schedule-slots/{id}', [ScheduleSlotController::class, 'destroy'])->name('destroy');
+          });
 
 
 });

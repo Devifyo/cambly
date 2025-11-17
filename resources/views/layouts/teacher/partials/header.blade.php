@@ -30,6 +30,10 @@
                         <a href="{{ route('teacher.lessons.list') }}">Manage Lessons </a>
                     </li>
 
+                     <li class="{{ request()->routeIs('teacher.schedule.*') ? 'active' : '' }}">
+                        <a href="{{ route('teacher.schedule.slots') }}">Manage Schedule </a>
+                    </li>
+
                     <li class="has-submenu {{ request()->routeIs('teacher.account.*') || request()->routeIs('teacher.account.show') ? 'active' : '' }}">
                         <a href="#">Account <i class="fas fa-chevron-down"></i> </a>
                         <ul class="submenu">

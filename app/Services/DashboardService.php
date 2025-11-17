@@ -60,7 +60,7 @@ class DashboardService
     {
         return Reservation::where('student_id', $user->id)
             ->where('status', 'booked')
-            ->where('is_hold', false)
+            // ->where('is_hold', false)
             ->whereHas('availability', function ($query) {
                 $query->where('start_utc', '>', Carbon::now());
             })

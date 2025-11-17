@@ -18,6 +18,7 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
     'ticket_per_meeting' => 1,
+        'max_meeting_duration' => 25, // minutes
     'admin_email' => env('ADMIN_EMAIL'),
     /*
     |--------------------------------------------------------------------------
