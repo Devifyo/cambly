@@ -6,87 +6,224 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
 
 <style>
-    /* Add this container to your HTML around #weeklyCalendar */
-    .calendar-container {
-        width: 100%;
-    }
+/* ---------------- CALENDAR CONTAINER ---------------- */
+.calendar-container {
+    width: 100%;
+}
 
-    /* Calendar Scroll Wrap for horizontal scrolling */
-    .calendar-scroll-wrap {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Set a MINIMUM width for the calendar itself, but allow it to grow */
-    #weeklyCalendar {
-        min-width: 900px; /* Base min width for desktop */
-        width: 100%;
-    }
+/* Horizontal scroll ONLY for the calendar grid */
+.calendar-scroll-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
 
-    /* FullCalendar Column Widths - Use MIN-WIDTH for flexibility */
-    /* Target both header and content columns together for consistency */
-    .fc .fc-timegrid-col,
-    .fc .fc-col-header-cell {
-        min-width: 180px !important; /* Force a consistent min-width using !important */
-        width: auto !important; /* Ensure FC can distribute space if needed */
-    }
+/* Calendar must auto-expand */
+#weeklyCalendar {
+    width: 100%;
+    min-width: 900px;
+    display: block;
+}
 
-    .fc .fc-timegrid-axis {
-        min-width: 60px; /* Minimum width for the time axis */
-    }
+/* Make ONLY view harness scroll horizontally */
+#weeklyCalendar .fc-view-harness,
+#weeklyCalendar .fc-view-harness-passive {
+    display: inline-block !important;
+    width: auto !important;
+    vertical-align: top;
+}
 
-    /* Fix Event Display (Kept as is) */
-    .fc-timegrid-event-harness { overflow: visible; }
-    .fc .fc-timegrid-event, .fc .fc-event { overflow: visible; min-height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
-    .fc .fc-event-main, .fc .fc-event-main-frame { display: flex; align-items: center; justify-content: center; padding: 2px 4px; overflow: visible; width: 100%; height: 100%; text-align: center; white-space: normal; }
-    .fc .fc-event-time { font-size: 0.8rem; font-weight: 600; line-height: 1.4; color: inherit; display: block; overflow: visible; white-space: nowrap; text-align: center; }
-    .fc .fc-event-title { display: none; }
-    .fc-event-time-short { font-size: 0.7rem; letter-spacing: -0.3px; }
-    .fc-event.past-event { opacity: 0.45; filter: grayscale(30%); }
+/* Column widths */
+.fc .fc-timegrid-col,
+.fc .fc-col-header-cell {
+    min-width: 180px !important;
+    width: auto !important;
+}
 
-    /* Legend, Right Panel Slots, Slot Pills, Footer (Kept as is) */
-    .slot-legend { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-top: 0.75rem; }
-    .legend-item { display: flex; gap: 0.5rem; align-items: center; font-size: 0.9rem; }
-    .legend-swatch { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
-    .booking-wizard-slots .card-body { max-height: 520px; overflow-y: auto; }
-    .slot-row { padding: 0.45rem; border-radius: 0.5rem; transition: all 0.2s ease; cursor: pointer; }
-    .slot-row:hover { background: rgba(0, 0, 0, 0.03); }
-    .slot-row.selected { box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15); background: rgba(13, 110, 253, 0.08); border: 1px solid rgba(13, 110, 253, 0.3); }
-    .slot-struck { text-decoration: line-through; opacity: 0.55; filter: grayscale(30%); }
-    .slot-btn-inline { display: inline-block; white-space: nowrap; margin: 0 0.4rem 0.5rem 0; padding: 0.35rem 0.75rem; border-radius: 999px; font-size: 0.85rem; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease; font-weight: 500; }
-    .slot-btn-inline:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); }
-    .slot-btn-inline.selected { border: 2px solid #0d6efd !important; box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15) !important; transform: scale(1.05); font-weight: 600; }
-    .token-slot { display: flex; flex-wrap: wrap; align-items: center; }
-    .right-card-footer { display: flex; justify-content: flex-end; gap: 0.5rem; padding: 0.75rem; border-top: 1px solid #eee; }
+.fc .fc-timegrid-axis {
+    min-width: 60px !important;
+}
 
-    /* Responsive adjustments using MIN-WIDTH in media queries */
-    @media (max-width: 992px) {
-        #weeklyCalendar { min-width: 800px; }
-        /* Grouped selectors again for consistency */
-        .fc .fc-timegrid-col, .fc .fc-col-header-cell {
-            min-width: 150px !important;
-        }
+/* ---------------- EVENT DISPLAY ---------------- */
+.fc-timegrid-event-harness { overflow: visible !important; }
+
+.fc .fc-timegrid-event,
+.fc .fc-event {
+    overflow: visible !important;
+    min-height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fc .fc-event-main,
+.fc .fc-event-main-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+    overflow: visible !important;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    white-space: nowrap !important;
+}
+
+.fc .fc-event-time {
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.4;
+    overflow: visible !important;
+    white-space: nowrap;
+}
+
+.fc .fc-event-title { display: none; }
+
+.fc-event.past-event {
+    opacity: 0.45;
+    filter: grayscale(30%);
+}
+
+/* ---------------- LEGEND & SIDEBAR ---------------- */
+.slot-legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.legend-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+}
+
+.booking-wizard-slots .card-body {
+    max-height: 520px;
+    overflow-y: auto;
+}
+
+/* ---------------- DAILY SLOT LIST ---------------- */
+.slot-row {
+    padding: 0.45rem;
+    border-radius: 0.5rem;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.slot-row:hover {
+    background: rgba(0,0,0,0.03);
+}
+
+.slot-row.selected {
+    box-shadow: 0 0 0 3px rgba(13,110,253,0.15);
+    background: rgba(13,110,253,0.08);
+    border: 1px solid rgba(13,110,253,0.3);
+}
+
+.slot-struck {
+    text-decoration: line-through;
+    opacity: 0.55;
+    filter: grayscale(30%);
+}
+
+.right-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-top: 1px solid #eee;
+}
+
+/* ---------------- TOKEN SLOT (2 BUTTONS PER ROW) ---------------- */
+.token-slot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    align-items: flex-start; /* prevent stretching height */
+    box-sizing: border-box;
+}
+
+/* Each button = 48% width → two per row */
+.token-slot .slot-btn-inline {
+    flex: 0 0 48% !important;
+    max-width: 48% !important;
+    box-sizing: border-box !important;
+
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+    white-space: nowrap !important;   /* KEEP text on single line */
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    padding: 0.25rem 0.6rem !important;
+    min-height: 36px !important;
+    line-height: 1 !important;
+
+    border-radius: 999px !important;
+    border: 2px solid transparent !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+/* Hover & selected */
+.token-slot .slot-btn-inline:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.token-slot .slot-btn-inline.selected {
+    border: 2px solid #0d6efd !important;
+    box-shadow: 0 0 0 3px rgba(13,110,253,0.12) !important;
+    transform: none !important;
+}
+
+/* Ultra-small screens can wrap text if needed */
+@media (max-width: 360px) {
+    .token-slot .slot-btn-inline {
+        white-space: normal !important;
+        min-height: 34px !important;
+        padding: 0.2rem 0.45rem !important;
     }
-    
-    @media (max-width: 768px) {
-        .fc .fc-event-time { font-size: 0.75rem; }
-        #weeklyCalendar { min-width: 700px; }
-         /* Grouped selectors again for consistency */
-        .fc .fc-timegrid-col, .fc .fc-col-header-cell {
-            min-width: 150px !important;
-            width: 150px !important; /* Use fixed width here for smaller screens if needed */
-        }
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 992px) {
+    #weeklyCalendar { min-width: 1090px; }
+    .fc .fc-timegrid-col, .fc .fc-col-header-cell {
+        min-width: 150px !important;
     }
-    
-    @media (max-width: 560px) {
-        #weeklyCalendar { min-width: 600px; }
-        .fc .fc-event-time { font-size: 0.7rem; }
-         /* Grouped selectors again for consistency */
-        .fc .fc-timegrid-col, .fc .fc-col-header-cell {
-            min-width: 150px !important;
-        }
+}
+
+@media (max-width: 768px) {
+    #weeklyCalendar { min-width: 1090px; }
+    .fc .fc-event-time { font-size: 0.75rem; }
+    .fc .fc-timegrid-col, .fc .fc-col-header-cell {
+        width: 150px !important;
     }
+}
+
+@media (max-width: 560px) {
+    #weeklyCalendar { min-width: 1090px; }
+    .fc .fc-event-time { font-size: 0.7rem; }
+    .fc .fc-timegrid-col, .fc .fc-col-header-cell {
+        min-width: 150px !important;
+    }
+}
+
 </style>
 
 
@@ -147,7 +284,7 @@
                 <div class="card-body pb-1">
                     <div class="row">
                         <!-- Calendar Column -->
-                        <div class="col-lg-7">
+                        <div class="col-lg-9" style="min-width:75%;">
                             <div class="card">
                                 <div class="card-body p-2 pt-3">
                                     <label class="form-label">Weekly Availability</label>
@@ -181,7 +318,7 @@
                         </div>
 
                         <!-- Slots Panel -->
-                        <div class="col-lg-5">
+                        <div class="col-lg-2" style="min-width:25%;">
                             <div class="card booking-wizard-slots">
                                 <div class="card-body">
                                     <h6 class="fs-14 mb-2">Slots for <span id="selectedDayLabel"></span></h6>
@@ -710,15 +847,30 @@
             Swal.fire('Select Slot', 'Please select an available slot.', 'warning');
             return;
         }
-        
-        const availabilityId = state.selectedSlot.extendedProps?.availability_id;
+
+        const ev = state.selectedSlot;
+        const availabilityId = ev.extendedProps?.availability_id;
         if (!availabilityId) {
             Swal.fire('Error', 'Selected slot has no availability ID.', 'error');
             return;
         }
-        
-        handlers.openModal(state.selectedSlot);
+
+        // Determine if the slot is bookable (not past, and status available/free)
+        const isPast = utils.isPastSlot(ev.start);
+        const status = ev.extendedProps?.status;
+        const bookable = !isPast && ['available', 'free'].includes(status);
+
+        if (bookable) {
+            // Directly run the single confirmation flow (SweetAlert inside confirmBooking)
+            // Use the same display time shown in modal (or compute from event)
+            const timeRange = utils.toTimeRange24(ev.start, ev.end);
+            handlers.confirmBooking(availabilityId, timeRange);
+        } else {
+            // Not bookable: open modal to show details / reason
+            handlers.openModal(ev);
+        }
     });
+
 
     // Expose helper function for debugging
     window.getPickedAvailabilityId = function() {
