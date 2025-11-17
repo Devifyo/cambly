@@ -175,47 +175,7 @@
 @section('content')
 <div class="container py-4 py-md-5">
     <div class="row">
-        <!-- ===== LEFT COLUMN : Dashboard Widgets ===== -->
-        <div class="col-xl-4 d-flex">
-            <div class="dashboard-box-col w-100">
-                <!-- Total Sessions -->
-                <div class="dashboard-widget-box">
-                    <div class="dashboard-content-info">
-                        <h6>Total Lessons</h6>
-                        <h4>{{$dashboardDetails['lesson_stats']['total']}}</h4>
-                        {{-- <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +2% From Last Week</span> --}}
-                    </div>
-                    <div class="dashboard-widget-icon">
-                        <span class="dash-icon-box"><i class="fa-solid fa-calendar-days"></i></span>
-                    </div>
-                </div>
-                <!-- Upcoming Sessions -->
-                <div class="dashboard-widget-box">
-                    <div class="dashboard-content-info">
-                        <h6>Upcoming Lessons</h6>
-                        <h4>{{$dashboardDetails['lesson_stats']['upcoming']}}</h4>
-                        {{-- <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +2% From Last Week</span> --}}
-                    </div>
-                    <div class="dashboard-widget-icon">
-                        <span class="dash-icon-box"><i class="fa-solid fa-calendar-days"></i></span>
-                    </div>
-                </div>
-                <!-- Completed Sessions -->
-                <div class="dashboard-widget-box">
-                    <div class="dashboard-content-info">
-                        <h6>Completed Lessons</h6>
-                        <h4>{{$dashboardDetails['lesson_stats']['completed']}}</h4>
-                        {{-- <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +10% From Last Week</span> --}}
-                    </div>
-                    <div class="dashboard-widget-icon">
-                        <span class="dash-icon-box"><i class="fa-solid fa-user-check"></i></span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- ===== MIDDLE COLUMN : Book Tutor + Credits ===== -->
+        <!-- ===== RIGHT COLUMN : Book Tutor + Credits ===== -->
         <div class="col-xl-8 d-flex">
             <div class="dashboard-card w-100">
                 <div class="dashboard-card-head border-0">
@@ -346,6 +306,46 @@
                     </div>
                     @endif --}}
                 </div>
+            </div>
+        </div>
+
+        <!-- ===== RIGHT COLUMN : Dashboard Widgets ===== -->
+        <div class="col-xl-4 d-flex">
+            <div class="dashboard-box-col w-100">
+                <!-- Total Sessions -->
+                <div class="dashboard-widget-box">
+                    <div class="dashboard-content-info">
+                        <h6>Total Lessons</h6>
+                        <h4>{{$dashboardDetails['lesson_stats']['total']}}</h4>
+                        {{-- <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +2% From Last Week</span> --}}
+                    </div>
+                    <div class="dashboard-widget-icon">
+                        <span class="dash-icon-box"><i class="fa-solid fa-calendar-days"></i></span>
+                    </div>
+                </div>
+                <!-- Upcoming Sessions -->
+                <div class="dashboard-widget-box">
+                    <div class="dashboard-content-info">
+                        <h6>Upcoming Lessons</h6>
+                        <h4>{{$dashboardDetails['lesson_stats']['upcoming']}}</h4>
+                        {{-- <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +2% From Last Week</span> --}}
+                    </div>
+                    <div class="dashboard-widget-icon">
+                        <span class="dash-icon-box"><i class="fa-solid fa-calendar-days"></i></span>
+                    </div>
+                </div>
+                <!-- Completed Sessions -->
+                <div class="dashboard-widget-box">
+                    <div class="dashboard-content-info">
+                        <h6>Completed Lessons</h6>
+                        <h4>{{$dashboardDetails['lesson_stats']['completed']}}</h4>
+                        {{-- <span class="text-success"><i class="fa-solid fa-arrow-up"></i> +10% From Last Week</span> --}}
+                    </div>
+                    <div class="dashboard-widget-icon">
+                        <span class="dash-icon-box"><i class="fa-solid fa-user-check"></i></span>
+                    </div>
+                </div>
+
             </div>
         </div>
 

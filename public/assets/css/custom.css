@@ -20511,7 +20511,7 @@ header.inner-header .header-nav .header-navbar-rht li.noti-nav > a i {
 
 .book-appointment-head {
   background: #3538CD;
-  padding: 15px;
+  padding: 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -20522,7 +20522,7 @@ header.inner-header .header-nav .header-navbar-rht li.noti-nav > a i {
   margin-bottom: 24px;
 }
 .book-appointment-head h3 {
-  font-size: 18px;
+  font-size: 25px;
   color: #ffffff;
   margin-bottom: 0;
 }
@@ -20539,7 +20539,7 @@ header.inner-header .header-nav .header-navbar-rht li.noti-nav > a i {
   }
 }
 .book-appointment-head .add-icon a {
-  font-size: 16px;
+  font-size: 30px;
   color: #ffffff;
 }
 
