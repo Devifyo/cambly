@@ -42,8 +42,8 @@ Route::middleware(['auth.custom','isStudent'])->group(function () {
     Route::get('booking/{teacherId}/datetime', [BookingController::class, 'showDateTime'])->name('tutors.booking.datetime');
     // fetch availabilities for a teacher on a date (AJAX)
     Route::get('booking/{teacherId}/slots', [BookingController::class, 'slots'])->name('booking.slots');
-        Route::get('booking/{teacherId}/weekly/slots', [BookingController::class, 'weeklySlots'])->name('booking.week_slots');
-
+   Route::get('student/booking/week-slots/{teacherId}', [BookingController::class, 'weekSlots'])
+        ->name('booking.week-slots');
     // confirm (create) a reservation
     Route::post('booking/confirm', [BookingController::class, 'confirm'])->name('booking.confirm');
     // cancel a reservation

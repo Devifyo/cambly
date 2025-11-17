@@ -10,15 +10,17 @@ use App\Models\User;
 use App\Models\Availability;
 use App\Models\Reservation;
 use App\Services\BookingService;
+use App\Services\SlotService;
 
 class BookingController extends Controller
 {   
 
     protected BookingService $bookingService;
-
-    public function __construct(BookingService $bookingService)
+     protected SlotService $slotService;
+    public function __construct(BookingService $bookingService, SlotService $slotService)
     {
         $this->bookingService = $bookingService;
+         $this->slotService = $slotService;
     }
 
        public function showDateTime(Request $request, $teacherId)
@@ -47,8 +49,29 @@ class BookingController extends Controller
         return response()->json($res);
     }
 
-    public function weeklySlots(Request $request, $teacherId){
-        
+    public function weekSlots(Request $request, $teacherId)
+    {
+        $user = $request->user();
+        // decrypt teacher id if you use encryptId helper (adjust as needed)
+        try {
+            $teacherRawId = function_exists('decryptId') ? decryptId($teacherId) : (int) $teacherId;
+        } catch (\Throwable $e) {
+            $teacherRawId = (int) $teacherId;
+        }
+        $start = $request->query('start');
+        $end = $request->query('end');
+
+        if (! $start || ! $end) {
+            return response()->json(['message' => 'Missing start or end'], 422);
+        }
+
+        try {
+            $events = $this->slotService->getWeekSlotsForTeacher($user, $teacherRawId, $start, $end);
+            return response()->json(['events' => $events], 200);
+        } catch (\Throwables $e) {
+            Log::error('slotService error: '.$e->getMessage());
+            return response()->json(['message' => 'Failed to fetch slots'], 500);
+        }
     }
 
 
@@ -57,14 +80,15 @@ class BookingController extends Controller
      * Body: { availability_id: int, teacher_id: (optional) }
      */
     public function confirm(Request $request)
-    {
+    {   
+
         $data = $request->validate([
             'availability_id' => ['required'],
             'teacher_id' => ['required'],
         ]);
 
         try {
-            $availabilityId = decryptId($data['availability_id']);
+            $availabilityId = $data['availability_id'];
             $teacherId = decryptId($data['teacher_id']);
         } catch (\Throwable $e) {
             return response()->json(['message' => 'Invalid identifiers.'], 422);
