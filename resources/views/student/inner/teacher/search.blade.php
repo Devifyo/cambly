@@ -296,7 +296,7 @@
                                                     <div class="col-sm-6">
                                                         <p class="d-flex align-items-center mb-2 fs-14">
                                                             <i class="isax isax-language-circle text-dark me-2"></i>
-                                                            {{ $teacher->teacherProfile->native_language ?? 'English' }}
+                                                                {{ ucfirst($teacher?->teacherProfile?->native_language  ?? 'English' )}}
                                                         </p>
 
                                                         <p class="d-flex align-items-center mb-0 fs-14">
@@ -324,7 +324,7 @@
                                                 @endif
 
                                                 <a href="{{ route('student.tutors.booking.datetime',['teacherId' => encryptId($teacher->id)]) }}" class="btn btn-md btn-primary-gradient rounded-pill">
-                                                    <i class="isax isax-calendar-1 me-2"></i>Book Lesson
+                                                    <i class="isax isax-calendar-1 me-2"></i>Book a Lesson
                                                 </a>
                                             </div>
                                         </div>
