@@ -85,6 +85,10 @@
                                     <i class="fa-solid fa-mouse-pointer me-1"></i> <strong>Click and drag</strong> on an empty time to create a new slot.
                                     <br>
                                     <i class="fa-solid fa-hand-pointer me-1"></i> <strong>Click an existing slot</strong> to edit or delete it.
+                                    <br>
+                                    <i class="fa-solid fa-clock me-1"></i> <strong>Note:</strong> Slots can only start at :00 or :30 minutes.
+                                    <br>
+                                    <i class="fa-solid fa-ban me-1"></i> <strong>Important:</strong> You cannot create slots in the past.
                                 </div>
                             </div>
                         </div>
@@ -110,10 +114,12 @@
                     
                     <div class="mb-3">
                         <label class="form-label" for="modalLocalStart">Your Local Start Time</label>
-                        <input type="datetime-local" class="form-control" id="modalLocalStart" required>
+                        <input type="datetime-local" class="form-control" id="modalLocalStart" step="1800" required>
+                        <small class="form-text text-muted">
+                            Slots can only start at :00 or :30 minutes.
+                        </small>
                     </div>
                     
-                    {{-- ========== UPDATED END TIME INPUT ========== --}}
                     <div class="mb-3">
                         <label class="form-label" for="modalLocalEnd">Your Local End Time</label>
                         <input type="datetime-local" class="form-control" id="modalLocalEnd" readonly required>
@@ -121,7 +127,6 @@
                             End time is automatically set to a {{ config('app.max_meeting_duration', 25) }} minute duration.
                         </small>
                     </div>
-                    {{-- ========================================== --}}
 
                     <div id="modalError" class="text-danger small"></div>
                 </div>
@@ -155,7 +160,6 @@
         updateUrl: "{{ url('teacher/schedule/schedule-slots') }}", // Base for PUT/DELETE
         csrf: "{{ csrf_token() }}",
         now: new Date(),
-        // ========== NEW DURATION CONSTANT ==========
         slotDuration: {{ config('app.max_meeting_duration', 25) }}
     };
 
@@ -168,7 +172,6 @@
 
     // Utility Functions
     const utils = {
-        // ... (toTimeRange24, getSlotStatus, isPastSlot functions are unchanged) ...
         toTimeRange24(start, end) {
             if (!start || !end) return '';
             const opts = { hour: '2-digit', minute: '2-digit', hour12: false };
@@ -192,13 +195,36 @@
             var localDate = new Date(date.getTime() - tzoffset);
             var localISO = localDate.toISOString().slice(0, 16);
             return localISO;
+        },
+        // ========== NEW: Snap time to nearest :00 or :30 ==========
+        snapToHalfHour(date) {
+            const snapped = new Date(date);
+            const minutes = snapped.getMinutes();
+            
+            // Round to nearest 30-minute interval
+            if (minutes < 15) {
+                snapped.setMinutes(0);
+            } else if (minutes < 45) {
+                snapped.setMinutes(30);
+            } else {
+                snapped.setMinutes(0);
+                snapped.setHours(snapped.getHours() + 1);
+            }
+            
+            snapped.setSeconds(0);
+            snapped.setMilliseconds(0);
+            return snapped;
+        },
+        // ========== NEW: Validate time is on :00 or :30 ==========
+        isValidHalfHourTime(date) {
+            const minutes = date.getMinutes();
+            return minutes === 0 || minutes === 30;
         }
     };
 
     // Event Handlers
     const handlers = {
         transformEvents(serverEvents) {
-            // ... (this function is unchanged, I've fixed the 'sv' typo) ...
             return serverEvents.map(ev => {
                 const { status, bg, border, text } = utils.getSlotStatus(ev);
                 const isPast = utils.isPastSlot(ev.start);
@@ -222,7 +248,6 @@
         },
 
         openCreateModal() {
-            // ... (this function is unchanged) ...
             const $modal = $('#slotModal');
             state.currentSlotId = null;
 
@@ -231,7 +256,7 @@
             $modal.find('#modalSlotId').val('');
             
             $modal.find('#modalLocalStart').val('');
-            $modal.find('#modalLocalEnd').val(''); // Clear end time
+            $modal.find('#modalLocalEnd').val('');
             
             $modal.find('#modalError').text('');
             $('#modalDeleteBtn').hide();
@@ -239,9 +264,6 @@
             slotModal.show();
         },
 
-        /**
-         * UPDATED to auto-calculate end time
-         */
         openSlotModal(info) {
             const $modal = $('#slotModal');
             const $deleteBtn = $('#modalDeleteBtn');
@@ -277,25 +299,30 @@
                 $modal.find('#modalDescription').text('Update the start and end time for this slot.');
                 $modal.find('#modalSlotId').val(ev.id);
                 
-                // Pre-fill times in user's local timezone
                 $modal.find('#modalLocalStart').val(utils.toLocalISOString(ev.start));
-                $modal.find('#modalLocalEnd').val(utils.toLocalISOString(ev.end)); // Pre-fill existing end
+                $modal.find('#modalLocalEnd').val(utils.toLocalISOString(ev.end));
 
             } else {
                 // --- CREATE MODE (from drag-select) ---
                 state.currentSlotId = null;
 
+                // ========== SNAP TO :00 OR :30 ==========
+                const snappedStart = utils.snapToHalfHour(info.start);
+                
+                // ========== PREVENT CREATING PAST SLOTS ==========
+                if (snappedStart <= CONFIG.now) {
+                    Swal.fire('Not Allowed', 'Cannot create slots in the past.', 'warning');
+                    return;
+                }
+
                 $modal.find('#modalTitle').text('Create New Availability Slot');
                 $modal.find('#modalDescription').text('Select the start and end time in your local timezone.');
                 $modal.find('#modalSlotId').val('');
                 
-                // === NEW DURATION LOGIC ===
-                const startDate = info.start;
-                // Calculate end time based on duration, *ignoring info.end*
-                const endDate = new Date(startDate.getTime() + CONFIG.slotDuration * 60000); 
+                const endDate = new Date(snappedStart.getTime() + CONFIG.slotDuration * 60000);
                 
-                $modal.find('#modalLocalStart').val(utils.toLocalISOString(startDate));
-                $modal.find('#modalLocalEnd').val(utils.toLocalISOString(endDate)); // Set calculated end
+                $modal.find('#modalLocalStart').val(utils.toLocalISOString(snappedStart));
+                $modal.find('#modalLocalEnd').val(utils.toLocalISOString(endDate));
             }
             
             $deleteBtn.toggle(canDelete);
@@ -312,7 +339,6 @@
             const slotId = $('#modalSlotId').val();
             const isEditing = !!slotId;
 
-            // 1. Get local start time
             const localStartString = $('#modalLocalStart').val();
             
             if (!localStartString) {
@@ -329,22 +355,27 @@
                 return;
             }
 
-            // 2. Convert to UTC
+            // ========== VALIDATE TIME IS :00 OR :30 ==========
+            if (!utils.isValidHalfHourTime(localStart)) {
+                $errorEl.text('Start time must be at :00 or :30 minutes.');
+                $btn.prop('disabled', false).text('Save Slot');
+                return;
+            }
+
+            // ========== VALIDATE NOT IN THE PAST ==========
+            if (localStart <= CONFIG.now) {
+                $errorEl.text('Cannot create or update slots in the past.');
+                $btn.prop('disabled', false).text('Save Slot');
+                return;
+            }
+
             const startUTC = localStart.toISOString();
-            
-            // NOTE: We no longer read end_time from the form.
-            // The controller will calculate it.
-            // We still need to send a valid end time for validation,
-            // but the controller will have the final say.
             const localEnd = new Date(localStart.getTime() + CONFIG.slotDuration * 60000);
             const endUTC = localEnd.toISOString();
 
-
-            // 3. Determine URL and Method
             const url = isEditing ? `${CONFIG.updateUrl}/${slotId}` : CONFIG.slotsUrl;
             const method = isEditing ? 'PUT' : 'POST';
 
-            // 4. Send AJAX request
             $.ajax({
                 url: url,
                 type: 'POST', 
@@ -352,8 +383,6 @@
                     _token: CONFIG.csrf,
                     _method: method,
                     start_time: startUTC,
-                    // Send the calculated end_time. The controller will re-calculate
-                    // to be secure, but this allows validation to pass.
                     end_time: endUTC 
                 }
             })
@@ -378,7 +407,6 @@
         },
 
         handleDeleteSlot() {
-            // ... (this function is unchanged) ...
             const slotId = $('#modalSlotId').val();
             if (!slotId) return;
 
@@ -415,13 +443,13 @@
 
     // Initialize Calendar
     state.calendar = new FullCalendar.Calendar(document.getElementById('weeklyCalendar'), {
-        // ... (all calendar settings are unchanged) ...
         initialView: 'timeGridWeek',
         nowIndicator: true,
         allDaySlot: false,
         slotMinTime: '00:00:00',
-        slotMaxTime: '24:00:00',
-        slotDuration: '00:25:00', // This matches your 25-min duration
+        // slotMaxTime: '24:00:00',
+        slotDuration: '00:30:00', // ========== CHANGED TO 30 MINUTES ==========
+        snapDuration: '00:30:00', // ========== NEW: SNAP TO 30-MIN INTERVALS ==========
         height: 'auto',
         headerToolbar: {
             left: 'prev,next today',
@@ -432,6 +460,14 @@
         slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
         selectable: true,
         selectMirror: true,
+        selectConstraint: { // ========== NEW: CONSTRAIN SELECTION ==========
+            start: '00:00',
+            end: '24:00'
+        },
+        // ========== PREVENT SELECTING PAST TIMES ==========
+        selectAllow: function(selectInfo) {
+            return selectInfo.start > CONFIG.now;
+        },
         select: handlers.openSlotModal,
         eventClick: handlers.openSlotModal,
         eventContent(arg) {
@@ -481,22 +517,41 @@
     $('#modalDeleteBtn').on('click', handlers.handleDeleteSlot);
     $('#addSlotManualBtn').on('click', handlers.openCreateModal);
     
-    // ========== NEW LISTENER TO AUTO-CALCULATE END TIME ==========
+    // ========== AUTO-CALCULATE END TIME & VALIDATE ==========
     $('#modalLocalStart').on('input change', function() {
         const localStartString = $(this).val();
+        const $errorEl = $('#modalError');
+        
         if (localStartString) {
             try {
                 const startDate = new Date(localStartString);
                 if (!isNaN(startDate)) {
-                    // Calculate end time based on duration
+                    // Check if time is in the past
+                    if (startDate <= CONFIG.now) {
+                        $errorEl.text('Cannot create slots in the past.');
+                        $('#modalLocalEnd').val('');
+                        return;
+                    }
+                    
+                    // Validate minutes are :00 or :30
+                    if (!utils.isValidHalfHourTime(startDate)) {
+                        $errorEl.text('Start time must be at :00 or :30 minutes.');
+                        $('#modalLocalEnd').val('');
+                        return;
+                    } else {
+                        $errorEl.text(''); // Clear error if valid
+                    }
+                    
+                    // Calculate end time
                     const endDate = new Date(startDate.getTime() + CONFIG.slotDuration * 60000);
                     $('#modalLocalEnd').val(utils.toLocalISOString(endDate));
                 }
             } catch (e) {
-                $('#modalLocalEnd').val(''); // Clear if invalid start
+                $('#modalLocalEnd').val('');
             }
         } else {
-            $('#modalLocalEnd').val(''); // Clear if empty start
+            $('#modalLocalEnd').val('');
+            $errorEl.text('');
         }
     });
 
