@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Plan extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $fillable = [
         'name',
         'credits_per_cycle',
@@ -32,4 +32,22 @@ class Plan extends Model
     {
         return $query->where('status', 'active');
     }
+    public function getIconLinkAttribute()
+    {
+        // If a custom icon path exists
+        if ($this->icon_path) {
+
+            // If path already starts with "assets", return as public asset
+            if (str_starts_with($this->icon_path, 'assets')) {
+                return asset($this->icon_path);
+            }
+
+            // Otherwise return storage URL
+            return Storage::url($this->icon_path);
+        }
+
+        // Default icon
+        return asset('assets/img/icons/price-icon1.svg');
+    }
+
 }

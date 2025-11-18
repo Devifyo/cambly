@@ -114,17 +114,17 @@ Version      : 1.3
 	
     // Datatable
 
-    if ($('.datatable').length > 0) {
-        $('.datatable').DataTable({
-            "bFilter": false,
-			"language": {
-			paginate: {
-				next: 'Next',
-				previous: 'Previous'
-			},
-		}
-        });
-    }
+    // if ($('.datatable').length > 0) {
+    //     $('.datatable').DataTable({
+    //         "bFilter": false,
+	// 		"language": {
+	// 		paginate: {
+	// 			next: 'Next',
+	// 			previous: 'Previous'
+	// 		},
+	// 	}
+    //     });
+    // }
 	// Email Inbox
 
 	if($('.clickable-row').length > 0 ){

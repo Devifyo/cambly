@@ -143,7 +143,7 @@
                             </li>
                             <li class="{{ request()->is('admin/subscriptions*') ? 'active' : '' }}"> 
                                 {{-- Update with your actual route --}}
-                                <a href="{{-- route('admin.subscriptions.index') --}}"><i class="fe fe-credit-card"></i> <span>Subscription Plans</span></a>
+                                <a href="{{route('admin.subscription.plan.index')}}"><i class="fe fe-credit-card"></i> <span>Subscription Plans</span></a>
                             </li>
                         </ul>
                     </div>
@@ -161,11 +161,12 @@
         <script src="{{ asset('admin/assets/js/bootstrap.bundle.min.js') }}"></script>
         
         <script src="{{ asset('admin/assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-        
+        {{-- <script src="{{ asset('admin/assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ asset('admin/assets/plugins/datatables/datatables.min.js') }}"></script> --}}
         {{-- These scripts are for the dashboard charts --}}
-        <script src="{{ asset('admin/assets/plugins/raphael/raphael.min.js') }}"></script>    
+        {{-- <script src="{{ asset('admin/assets/plugins/raphael/raphael.min.js') }}"></script>    
         <script src="{{ asset('admin/assets/plugins/morris/morris.min.js') }}"></script>  
-        <script src="{{ asset('admin/assets/js/chart.morris.js') }}"></script>
+        <script src="{{ asset('admin/assets/js/chart.morris.js') }}"></script> --}}
         
         <script  src="{{ asset('admin/assets/js/script.js') }}"></script>
 
