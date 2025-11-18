@@ -282,6 +282,31 @@ if (! function_exists('removeProfileAvatar')) {
     }
 }
 
+if (! function_exists('uploadFile')) {
+    /**
+     * Upload a new file and delete the old one if it exists.
+     *
+     * @param UploadedFile $file      The new file object.
+     * @param string       $folder    The folder to store the file in (e.g., 'plan_icons').
+     * @param string|null  $oldPath   The path of the old file to delete.
+     * @param string       $disk      The storage disk to use.
+     * @return string                 The path of the stored file.
+     */
+    function uploadFile(UploadedFile $file, string $folder, ?string $oldPath = null): string
+    {
+        $disk = config('filesystems.default');
+
+        $newPath = $file->store($folder, $disk);
+
+        // 2. Delete the old file if it exists and is different from the new one
+        if ($oldPath && $newPath !== $oldPath && Storage::disk($disk)->exists($oldPath)) {
+            Storage::disk($disk)->delete($oldPath);
+        }
+
+        return $newPath;
+    }
+}
+
 
 if (!function_exists('convertUtcToLocal')) {
     /**

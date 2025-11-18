@@ -33,7 +33,8 @@ class AdminManagePlansController extends Controller
 
 
     public function store(Request $request)
-    {
+    {   
+        dd($request->all());
         // Validate the request... (add your validation rules)
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -49,22 +50,39 @@ class AdminManagePlansController extends Controller
         return back()->with('success', 'Plan created successfully!');
     }
 
-    public function update(Request $request, $id)
-    {
+  public function update(Request $request, $id)
+
+    {   
+        $id = decryptId($id);
+
         $plan = Plan::findOrFail($id);
 
+        if( !$plan){
+
+             return back()->with('error', 'Plan not found!');
+
+        }
+
         // Validate the request...
+
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'duration' => 'required|string|in:Monthly,Yearly',
-            'status' => 'required|string|in:Active,Inactive',
-            'features' => 'nullable|string',
+
+            'name'              => 'required|max:255',
+            'price'             => 'required|min:0',
+            'credits_per_cycle' => 'required|min:0',
+            'subtitle'          => 'nullable|max:255',
+            'description'       => 'nullable',
+            'features'          => 'nullable', // Accepts the string from textarea
+            'is_popular'        => 'required',
+            'icon_path'         => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            // 'interval'       => 'required|string|in:month,year', 
+            'status'            => 'required|string|in:active,inactive',
+
         ]);
 
-        $plan->update($validatedData);
-
+        $this->planService->update($plan, $validatedData);
         return back()->with('success', 'Plan updated successfully!');
+
     }
 
 

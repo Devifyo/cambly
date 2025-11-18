@@ -34,17 +34,46 @@ class AdminPlanManagementService
      * }
      */
 
-    /**
-     * public function updatePlan(Plan $plan, array $data)
-     * {
-     * // Logic to update an existing plan
-     * }
-     */
+    
+    public function update(Plan $plan, array $data): Plan
+    {
+        // 1. Process Data (Convert features string to array)
+        $data = $this->prepareData($data);
 
-    /**
-     * public function deletePlan(Plan $plan)
-     * {
-     * // Logic to delete a plan
-     * }
-     */
+        // 2. Handle Icon Upload
+        if (isset($data['icon_path']) && $data['icon_path'] instanceof UploadedFile) {
+            // Pass the new file, the folder, and the OLD path from the model
+            $data['icon_path'] = uploadFile(
+                $data['icon_path'], 
+                'plan_icons', 
+                $plan->icon_path
+            );
+        }
+        // 3. Update Plan
+        $plan->update($data);
+
+        return $plan;
+    }
+
+    public function destroy(Plan $plan): bool
+    {
+        if ($plan->icon_path && Storage::disk('public')->exists($plan->icon_path)) {
+            Storage::disk('public')->delete($plan->icon_path);
+        }
+        return $plan->delete();
+    }
+
+
+     private function prepareData(array $data): array
+    {
+        // Convert new-line separated features string into an array
+        if (isset($data['features']) && is_string($data['features'])) {
+            // Split by any type of newline
+            $featuresArray = preg_split('/\r\n|\r|\n/', $data['features']);
+            // Trim whitespace and remove empty lines
+            $data['features'] = array_values(array_filter(array_map('trim', $featuresArray)));
+        }
+
+        return $data;
+    }
 }

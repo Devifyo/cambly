@@ -5,6 +5,7 @@
 
 {{-- Push page-specific CSS --}}
 @push('css')
+    <link rel="stylesheet" href="{{ asset('admin/assets/plugins/datatables/datatables.min.css') }}">
     <style>
         textarea {
         background-color: transparent;
@@ -12,22 +13,13 @@
         border-radius: 6px;
         margin-bottom: 20px;
         height: 100px;
-        /* width: 300px; */ /* Let bootstrap grid handle width */
         resize: none;
         font-family: monospace;
         }
 
-        textarea::placeholder {
-        color: rgba(0, 0, 0, 0.4);
-        }
-
-        textarea:focus {
-        outline: none;
-        }
-
-        textarea:focus::placeholder {
-        color: transparent;
-        }
+        textarea::placeholder { color: rgba(0, 0, 0, 0.4); }
+        textarea:focus { outline: none; }
+        textarea:focus::placeholder { color: transparent; }
     </style>
 @endpush
 
@@ -35,7 +27,7 @@
 @section('content')
 
 <div class="content container-fluid">
-                
+     <x-alert/>               
     <div class="page-header">
         <div class="row">
             <div class="col-sm-12 d-flex justify-content-between align-items-center">
@@ -54,6 +46,7 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
@@ -65,25 +58,22 @@
                                     <th>Plan Name</th>
                                     <th>Price</th>
                                     <th>Credits</th>
-                                    {{-- <th>Interval</th> --}}
                                     <th>Popular</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- This will be populated by DataTables AJAX --}}
                                 @forelse ($plans as $plan)
                                     <tr>
                                         <td>
-                                            @if($plan->icon_path)
+                                            @if($plan->icon_path || $plan->icon_link)
                                                 <img src="{{ $plan->icon_link }}" alt="icon" width="30" class="ms-2">
                                             @endif
                                             {{ $plan->name }}
                                         </td>
-                                        <td>{{ format_currency($plan->price) }} </td>
+                                        <td>${{ number_format($plan->price, 2) }}</td>
                                         <td>{{ $plan->credits_per_cycle }}</td>
-                                        {{-- <td>{{ $plan->interval }}</td> --}}
                                         <td>
                                             @if ($plan->is_popular)
                                                 <span class="badge rounded-pill bg-info inv-badge">Yes</span>
@@ -101,7 +91,6 @@
                                         <td>
                                             <div class="actions">
                                                 @php
-                                                    // Convert features array (from JSON) to a newline-separated string for the textarea
                                                     $featuresString = (is_array($plan->features) ? implode("\n", $plan->features) : $plan->features ?? '');
                                                 @endphp
                                                 <a href="#" class="btn btn-sm bg-success-light me-2 edit-btn"
@@ -112,18 +101,18 @@
                                                    data-credits="{{ $plan->credits_per_cycle }}"
                                                    data-subtitle="{{ $plan->subtitle }}"
                                                    data-description="{{ $plan->description }}"
-                                                   {{-- data-interval="{{ $plan->interval }}" --}}
                                                    data-status="{{ $plan->status }}"
                                                    data-is-popular="{{ $plan->is_popular ? 1 : 0 }}"
                                                    data-features="{{ $featuresString }}"
-                                                   data-icon-url="{{ $plan->icon_link ? asset($plan->icon_link) : '' }}"
-                                                   data-update-url="{{ route('admin.subscription.plan.update', $plan->id) }}">
+                                                   data-icon-path="{{ $plan->icon_path ?? '' }}"
+                                                   data-icon-link="{{ $plan->icon_link ?? '' }}"
+                                                   data-update-url="{{ route('admin.subscription.plan.update', encryptId($plan->id)) }}">
                                                     <i class="fe fe-pencil"></i> Edit
                                                 </a>
                                                 <a href="#" class="btn btn-sm bg-danger-light delete-btn" 
                                                    data-bs-toggle="modal" 
                                                    data-bs-target="#delete_modal"
-                                                   data-destroy-url="{{ route('admin.subscription.plan.destroy', $plan->id) }}">
+                                                   data-destroy-url="{{ route('admin.subscription.plan.destroy', encryptId($plan->id)) }}">
                                                     <i class="fe fe-trash"></i> Delete
                                                 </a>
                                             </div>
@@ -137,11 +126,10 @@
                             </tbody>
                         </table>
                     </div>
-                    {{-- pagaination --}}
+                    {{-- Pagination --}}
                     <div class="mt-3">
                         <x-admin-pagination :paginator="$plans" />
                     </div>
-                    {{-- end pagination --}}
                 </div>
             </div>
         </div>          
@@ -149,237 +137,34 @@
     
 </div>
 
-<!-- Add Modal -->
-<div class="modal fade" id="add_subscription_plan" aria-hidden="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document" >
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Subscription Plan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{{ route('admin.subscription.plan.store') }}" enctype="multipart/form-data">
-                    @csrf
-                    <div class="row">
-                        <div class="col-12 col-sm-6">
-                            <div class="mb-3">
-                                <label class="mb-2">Plan Name</label>
-                                <input type="text" name="name" class="form-control" placeholder="e.g., Pro Plan" required>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <div class="mb-3">
-                                <label class="mb-2">Price</label>
-                                <input type="text" name="price" class="form-control" placeholder="e.g., 29.99" required>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <div class="mb-3">
-                                <label class="mb-2">Credits per Cycle</label>
-                                <input type="number" name="credits_per_cycle" class="form-control" placeholder="e.g., 100" required>
-                            </div>
-                        </div>
-                         {{-- <div class="col-12 col-sm-6">
-                            <div class="mb-3">
-                                <label class="mb-2">Interval</label>
-                                <select class="form-select" name="interval">
-                                    <option value="month">Monthly</option>
-                                    <option value="year">Yearly</option>
-                                </select>
-                            </div>
-                        </div> --}}
-                         <div class="col-12 col-sm-6">
-                            <div class="mb-3">
-                                <label class="mb-2">Is Popular?</label>
-                                <select class="form-select" name="is_popular">
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <div class="mb-3">
-                                <label class="mb-2">Status</label>
-                                <select class="form-select" name="status">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="mb-2">Subtitle</label>
-                                <input type="text" name="subtitle" class="form-control" placeholder="e.g., Best for professionals">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="mb-2">Description</label>
-                                <textarea class="form-control" name="description" rows="3" placeholder="Full plan description..."></textarea>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="mb-2">Features</label>
-                                <textarea class="form-control" name="features" rows="3" placeholder="Enter features, one per line..."></textarea>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="mb-2">Icon (Optional)</label>
-                                <input type="file" name="icon_path" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Save</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Add Modal -->
+{{-- Include the separated modal files --}}
+@include('admin.subscription-plan.modals.add')
+@include('admin.subscription-plan.modals.edit')
+@include('admin.subscription-plan.modals.delete')
 
-<!-- Edit Modal -->
-<div class="modal fade" id="edit_subscription_plan" aria-hidden="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document" >
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Subscription Plan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editPlanForm" method="POST" action="" enctype="multipart/form-data">
-                    @csrf
-                    @method('PATCH')
-                    <div class="row">
-                         <div class="col-12 col-sm-6">
-                            <div class="mb-3">
-                                <label class="mb-2">Plan Name</label>
-                                <input type="text" id="edit_name" name="name" class="form-control" value="" required>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <div class="mb-3">
-                                <label class="mb-2">Price</label>
-                                <input type="text" id="edit_price" name="price" class="form-control" value="" required>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6">
-                            <div class="mb-3">
-                                <label class="mb-2">Credits per Cycle</label>
-                                <input type="number" id="edit_credits_per_cycle" name="credits_per_cycle" class="form-control" required>
-                            </div>
-                        </div>
-                         {{-- <div class="col-12 col-sm-6">
-                            <div class="mb-3">
-                                <label class="mb-2">Interval</label>
-                                <select id="edit_interval" name="interval" class="form-select">
-                                    <option value="month">Monthly</option>
-                                    <option value="year">Yearly</option>
-                                </select>
-                            </div>
-                        </div> --}}
-                         <div class="col-12 col-sm-6">
-                            <div class="mb-3">
-                                <label class="mb-2">Is Popular?</label>
-                                <select id="edit_is_popular" name="is_popular" class="form-select">
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="mb-2">Status</label>
-                                <select id="edit_status" name="status" class="form-select">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="mb-2">Subtitle</label>
-                                <input type="text" id="edit_subtitle" name="subtitle" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="mb-2">Description</label>
-                                <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="mb-2">Features</label>
-                                <textarea id="edit_features" name="features" class="form-control" rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="mb-2">Icon (Optional)</label>
-                                <input type="file" name="icon_path" class="form-control">
-                                <small class="form-text text-muted">Upload a new icon to replace the current one.</small>
-                                <div id="current_icon_preview" class="mt-2"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Edit Modal -->
-
-<!-- Delete Modal -->
-<div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document" >
-        <div class="modal-content">
-            <div class="modal-body">
-                 <form id="deletePlanForm" method="POST" action="">
-                    @csrf
-                    @method('DELETE')
-                    <div class="form-content p-2">
-                        <h4 class="modal-title">Delete</h4>
-                        <p class="mb-4">Are you sure you want to delete this plan?</p>
-                        <button type="submit" class="btn btn-primary">Delete</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Delete Modal -->
 @endsection
 
 @push('js')
-    {{-- This script now loads data via AJAX and handles the modals --}}
-    <script>
+<script>
         $(document).ready(function () {
             
-            // 1. Initialize DataTables on the pre-rendered HTML table
-            // This enables sorting, searching, and pagination
-            // var table = $('.datatable').DataTable();
-
-            // 2. Handle Edit Button Click (using event delegation)
-            // We use .datatable tbody as the static parent for the dynamic .edit-btn
-            $('.datatable tbody').on('click', '.edit-btn', function () {
+            // Handle Edit Button Click
+            $('.table tbody').on('click', '.edit-btn', function () {
                 var button = $(this);
                 
-                // Get data from button
+                // Get data from button data-attributes
                 var updateUrl = button.data('update-url');
                 var name = button.data('name');
                 var price = button.data('price');
                 var credits = button.data('credits');
                 var subtitle = button.data('subtitle');
                 var description = button.data('description');
-                var interval = button.data('interval');
                 var status = button.data('status');
                 var isPopular = button.data('is-popular');
                 var features = button.data('features');
-                var iconUrl = button.data('icon-url');
+                var iconUrl = button.data('icon-link');
+                var iconPath = button.data('icon-path'); 
+                var iconLink = button.data('icon-link');
 
                 // Populate the modal form
                 var modal = $('#edit_subscription_plan');
@@ -389,29 +174,98 @@
                 modal.find('#edit_credits_per_cycle').val(credits);
                 modal.find('#edit_subtitle').val(subtitle);
                 modal.find('#edit_description').val(description);
-                modal.find('#edit_interval').val(interval);
                 modal.find('#edit_status').val(status);
                 modal.find('#edit_is_popular').val(isPopular);
                 modal.find('#edit_features').val(features);
+                modal.find('#edit_icon_link').val(iconLink);
 
                 // Handle icon preview
                 var preview = modal.find('#current_icon_preview');
-                preview.empty(); // Clear old preview
-                if (iconUrl) {
+                console.log(iconUrl);
+                preview.empty(); 
+                if (iconPath || iconLink) {
                     preview.html('<img src="' + iconUrl + '" alt="Current Icon" width="50">');
                 } else {
                     preview.html('<small>No icon uploaded.</small>');
                 }
             });
 
-            // 3. Handle Delete Button Click (using event delegation)
-            $('.datatable tbody').on('click', '.delete-btn', function () {
+            // Handle Delete Button Click
+            $('.table tbody').on('click', '.delete-btn', function () {
                 var button = $(this);
                 var destroyUrl = button.data('destroy-url');
                 
                 // Set the form action
                 var modal = $('#delete_modal');
                 modal.find('#deletePlanForm').attr('action', destroyUrl);
+            });
+        });
+
+        $(document).ready(function() {
+        
+            // 1. Shared Validation Rules (Don't repeat code!)
+            var validationRules = {
+                name: { required: true, minlength: 3 },
+                price: { required: true, number: true, min: 0 },
+                credits_per_cycle: { required: true, digits: true, min: 1 },
+                is_popular: { required: true },
+                status: { required: true },
+                icon_link: { url: true }
+            };
+
+            var validationMessages = {
+                name: "Please enter a valid plan name",
+                price: "Please enter valid price",
+                credits_per_cycle: "Must be a whole number",
+                icon_link: "Please enter a valid URL (starting with http:// or https://)"
+            };
+
+            // Shared Styling Settings for Bootstrap 5
+            var validationSettings = {
+                errorElement: 'span',
+                errorClass: 'invalid-feedback',
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element);
+                },
+                highlight: function (element) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass('is-invalid');
+                }
+            };
+
+            // 2. Initialize Validation for ADD Form
+            $("#addPlanForm").validate({
+                rules: validationRules,
+                messages: validationMessages,
+                ...validationSettings
+            });
+
+            // 3. Initialize Validation for EDIT Form
+            $("#editPlanForm").validate({
+                rules: validationRules,
+                messages: validationMessages,
+                ...validationSettings
+            });
+
+
+            // --- Your Existing Data-Population Logic Below ---
+            
+            // Handle Edit Button Click
+            $('.table tbody').on('click', '.edit-btn', function () {
+                // Reset validation errors when opening the modal
+                var validator = $("#editPlanForm").validate();
+                validator.resetForm();
+                $("#editPlanForm").find('.is-invalid').removeClass('is-invalid');
+
+                var button = $(this);
+                // ... (Rest of your population logic) ...
+                var updateUrl = button.data('update-url');
+                // Assign values...
+                var modal = $('#edit_subscription_plan');
+                modal.find('#editPlanForm').attr('action', updateUrl);
+                // ... etc
             });
         });
     </script>

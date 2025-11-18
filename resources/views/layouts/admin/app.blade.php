@@ -177,7 +177,8 @@
         {{-- <script src="{{ asset('admin/assets/plugins/raphael/raphael.min.js') }}"></script>    
         <script src="{{ asset('admin/assets/plugins/morris/morris.min.js') }}"></script>  
         <script src="{{ asset('admin/assets/js/chart.morris.js') }}"></script> --}}
-        
+        <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/jquery.validate.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/additional-methods.min.js"></script>
         <script  src="{{ asset('admin/assets/js/script.js') }}"></script>
 
         {{-- Add a stack for page-specific JavaScript --}}
