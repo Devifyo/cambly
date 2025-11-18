@@ -22,7 +22,17 @@
         <link rel="stylesheet" href="{{ asset('admin/assets/plugins/morris/morris.css') }}">
         
         <link rel="stylesheet" href="{{ asset('admin/assets/css/custom.css') }}">
+        <style>
+            .logo-text {
+                background: linear-gradient(90deg, #0E82FD 0%, #06AED4 70%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: 700;
+                font-size: 24px; /* adjust as needed */
+                display: inline-block;
+            }
 
+        </style>
         {{-- Add a stack for page-specific CSS --}}
         @stack('css')
     </head>
@@ -35,10 +45,10 @@
                 <div class="header-left">
                     {{-- Use a named route for the dashboard --}}
                     <a href="{{ route('admin.dashboard') }}" class="logo">
-                        <img src="{{ asset('admin/assets/img/logo.png') }}" alt="Logo">
+                        <span class="logo-text">{{config('app.name')}}</span>
                     </a>
                     <a href="{{ route('admin.dashboard') }}" class="logo logo-small">
-                        <img src="{{ asset('admin/assets/img/logo-small.png') }}" alt="Logo" width="30" height="30">
+                        <span class="logo-text">{{config('app.name')}}</span>
                     </a>
                 </div>
                 <a href="javascript:void(0);" id="toggle_btn">
