@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Plan;
-use App\Services\StripeService;
 use App\Traits\StripeTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Services\StripeService;
 
 class SubscriptionController extends Controller
 {

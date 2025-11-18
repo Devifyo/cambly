@@ -182,6 +182,33 @@
         <script  src="{{ asset('admin/assets/js/script.js') }}"></script>
 
         {{-- Add a stack for page-specific JavaScript --}}
+        <script>
+            document.addEventListener('livewire:initialized', () => {
+                
+                // Open Modal
+                Livewire.on('open-modal', (event) => {
+                    // event.detail.name comes from the dispatch in PHP
+                    // If using Livewire 3, use event.name directly if passed as array, 
+                    // or event[0].name if passed as list. 
+                    // Based on my PHP code: dispatch('open-modal', name: 'xyz')
+                    var modalName = event.name; 
+                    $('#' + modalName).modal('show');
+                });
+
+                // Close Modal
+                Livewire.on('close-modal', (event) => {
+                    var modalName = event.name;
+                    $('#' + modalName).modal('hide');
+                });
+
+                // Alert (Optional Toastr/Alert)
+                // Livewire.on('alert', (event) => {
+                //     // Replace with your preferred toaster library
+                //     alert(event.message); 
+                // });
+            });
+        </script>
+        
         @stack('js')
         
     </body>

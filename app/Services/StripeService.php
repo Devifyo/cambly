@@ -7,8 +7,10 @@ use Stripe\Price;
 use Stripe\Product;
 use Stripe\StripeClient;
 use App\Traits\StripeTrait;
+use App\Models\Subscription;
+use Exception;
 
-class stripeService
+class StripeService
 {
     use StripeTrait;
 
@@ -257,6 +259,57 @@ class stripeService
             return ['error' => $e->getMessage()];
         }
     }
+
+    /**
+     * Migrates a single user's subscription to the plan's current price
+     * without charging them immediately (no proration).
+    */
+
+    public function syncSubscriptionPrice(Subscription $subscription)
+    {
+        // 1. Get the local plan to find the NEW Stripe Price ID
+        $plan = $subscription->plan;
+        
+        if (!$plan || !$plan->stripe_price_id) {
+            throw new Exception("Plan or Stripe Price ID not found for this subscription.");
+        }
+
+        // 2. Initialize Stripe
+        // Assuming you have the key in config, or inject StripeClient in constructor
+        $stripe = new StripeClient(config('cashier.secret'));
+
+        // 3. Retrieve the Stripe Subscription to get the Item ID
+        // We need the 'items' list to know which item to update.
+        $stripeSub = $stripe->subscriptions->retrieve($subscription->stripe_subscription_id);
+        
+        // Assuming the subscription only has ONE plan (standard logic)
+        $itemId = $stripeSub->items->data[0]->id;
+        $currentStripePrice = $stripeSub->items->data[0]->price->id;
+
+        // 4. Check if update is actually needed
+        if ($currentStripePrice === $plan->stripe_price_id) {
+            return "Already on the latest price.";
+        }
+
+        // 5. Update the Subscription at Stripe
+        $stripe->subscriptions->update(
+            $subscription->stripe_subscription_id,
+            [
+                'items' => [
+                    [
+                        'id' => $itemId,
+                        'price' => $plan->stripe_price_id, // The New Price (200)
+                    ],
+                ],
+                'proration_behavior' => 'none', // <--- CRITICAL: Prevents immediate charge
+            ]
+        );
+
+        return "Subscription updated to new price (effective next cycle).";
+    }
+
+
+
 
     
 }
