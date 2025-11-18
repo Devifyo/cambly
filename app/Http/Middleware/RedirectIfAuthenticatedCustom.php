@@ -26,6 +26,10 @@ class RedirectIfAuthenticatedCustom
                 return redirect()->route('teacher.dashboard');
             }
 
+            if($user->hasRole('admin')){
+                 return redirect()->route('admin.dashboard');
+            }
+
             // Default fallback for authenticated users
             return redirect()->route('home');
         }
