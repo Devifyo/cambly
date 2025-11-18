@@ -13,18 +13,25 @@ class TeacherProfile extends Model
         'preferred_name',
         'native_language',
         'english_level',
-        'age',
+        'date_of_birth',
         'tz',
         'discord_id',
         'bio',
         'started_at',
         'gender',
         'experience',
-        'short_bio'
+        'short_bio',
+        'country_residence'
     ];
-
+            protected $casts = [
+        'date_of_birth' => 'date',
+    ];
             public function user()
         {
             return $this->belongsTo(User::class);
+        }
+
+        public function getAgeAttribute() {
+        return $this->date_of_birth ? $this->date_of_birth->age : null;
         }
 }

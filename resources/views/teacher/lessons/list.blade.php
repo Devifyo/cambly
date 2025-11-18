@@ -1,6 +1,6 @@
 @extends('layouts.teacher.app')
 
-@section('title', 'My Lessons')
+@section('title', 'Manage Lessons')
 
 @push('styles')
     <style>
@@ -218,9 +218,9 @@
                     <nav aria-label="breadcrumb" class="page-breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/"><i class="isax isax-home-15"></i></a></li>
-                            <li class="breadcrumb-item active">My Lessons</li>
+                            <li class="breadcrumb-item active">Manage Lessons</li>
                         </ol>
-                        <h2 class="breadcrumb-title">My Lessons</h2>
+                        <h2 class="breadcrumb-title">Manage Lessons</h2>
                     </nav>
                 </div>
             </div>

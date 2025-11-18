@@ -7,7 +7,7 @@
         <div class="card-body">
             
             <div class="border-bottom pb-3 mb-3">
-                <h5>Profile Settings</h5>
+                <h5>Account Settings</h5>
             </div>
 
             {{-- Avatar Section --}}
@@ -48,7 +48,7 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="name">Full Name <span class="text-danger">*</span></label>
+                            <label class="form-label" for="name">Username <span class="text-danger">*</span></label>
                             <input id="name" name="name" type="text" class="form-control"
                                    value="{{ old('name', auth()->user()->name) }}" required>
                         </div>
@@ -81,15 +81,15 @@
 
                     <div class="col-lg-6 col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="age">Age <span class="text-danger">*</span></label>
-                            <input id="age" name="age" type="number" class="form-control"
-                                   value="{{ old('age', auth()->user()->teacherProfile?->age) }}" required>
+                            <label class="form-label" for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
+                            <input id="date_of_birth" name="date_of_birth" type="date" class="form-control"
+                                   value="{{ old('date_of_birth', auth()->user()->teacherProfile?->date_of_birth ? auth()->user()->teacherProfile->date_of_birth->format('Y-m-d') : null) }}" required>
                         </div>
                     </div>
                     <div class="col-lg-12 col-md-12">
                         <div class="form-group">
-                            <label class="form-label" for="native_language">Native Language <span class="text-danger">*</span></label>
-                            <input id="native_language" name="native_language" type="text" class="form-control"
+                            <label class="form-label" for="native_language">Mother Tongue <span class="text-danger">*</span></label>
+                            <input id="native_language" name="native_language" placeholder="Japanese" type="text" class="form-control"
                                    value="{{ old('native_language', auth()->user()->teacherProfile?->native_language) }}" required>
                         </div>
                     </div>
@@ -130,13 +130,34 @@
                         </div>
                     </div>
                     {{-- end of expirence in years --}}
-                    <div class="col-lg-12">
+                    {{-- Discord ID --}}
+                    <div class="col-lg-6 col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="discord_id">Discord ID (Optional)</label>
                             <input id="discord_id" name="discord_id" type="text" class="form-control"
                                    value="{{ old('discord_id', auth()->user()->teacherProfile?->discord_id) }}" placeholder="myusername#1234">
                         </div>
                     </div>
+                    {{-- end Discord ID --}}
+                    {{-- Country of residence --}}
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group" data-toggle-group="location">
+                            <label class="form-label" for="country_residence">Country of residence <span class="text-danger">*</span></label>
+                            <select
+                                id="country_residence"
+                                name="country_residence"
+                                class="form-control"
+                                data-toggle="country"
+                                data-country="{{ old('country_residence', auth()->user()->teacherProfile?->country_residence) }}"
+                                required
+                                aria-required="true"
+                            >
+                                <option value="" disabled selected>Please select your country</option>
+                            </select>
+                            {{-- <small class="form-text text-muted">Required for tax / regulatory purposes.</small> --}}
+                        </div>
+                    </div>
+                    {{-- end Country of residence --}}
                     {{-- short bio --}}
                     <div class="col-lg-12">
                         <div class="form-group">
@@ -159,7 +180,10 @@
 </form>
 
 @push('scripts')
+<script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js'></script>
+<script src="https://cdn.jsdelivr.net/gh/linuxguist/countries@main/script.js"></script>
 <script>
+    document.addEventListener("load", loadCountries()); // rquired to load countires
     // Avatar preview logic
     function previewAvatar(event) {
         const file = event.target.files && event.target.files[0];
@@ -213,21 +237,46 @@
             return this.optional(element) || (element.files[0].size <= param);
         }, 'File size must be less than 5MB');
 
+         $.validator.addMethod('futureDate', function(value, element) {
+                if (!value) return true;
+                const today = new Date().toISOString().split('T')[0];
+                return value <= today;
+            }, 'The date of birth cannot be in the future.');
+
+            $.validator.addMethod('notDefaultSelect', function(value, element) {
+            // Returns true (valid) if the value is NOT '-1'
+                return value !== '-1';
+            }, 'Please select a valid option.');
+
+            $.validator.addMethod('minAge', function(value, element, param) {
+                if (!value) return true;
+                const birthDate = new Date(value);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+                return age >= param;
+            }, 'You must be at least {0} years old.');
+
         // jQuery Validation for new form
         $("#profile-form").validate({
             rules: {
                 name: { required: true, minlength: 2 },
                 email: { required: true, email: true },
-                age: { required: true, digits: true, min: 13, max: 120 },
+                date_of_birth: { required: true, futureDate: true, minAge: 13 },
                 native_language: { required: true, minlength: 2 },
                 english_level: { required: true },
+                country_residence: { 
+                    required: true,
+                    notDefaultSelect: true // <-- NEW RULE APPLICATION
+                },
                 discord_id: { required: false },
                 avatar: { accept: "image/jpeg, image/png, image/jpg", filesize: 5242880 },
                 experience: { required: true, digits: true, min: 0, max: 60 },
                 short_bio: { required: true, minlength: 10, maxlength: 80 },
             },
             messages: {
-                age: { digits: "Please enter a valid age", min: "You must be at least 13" },
+                date_of_birth: { required: "Please enter your date of birth", futureDate: "The date of birth cannot be in the future.", minAge: "You must be at least 13 years old." },
                 avatar: { accept: "Please use a JPG or PNG image." },
                 experience: {
                     required: "Please enter your years of experience",
@@ -239,7 +288,11 @@
                     required: "Please enter a short bio or headline",
                     minlength: "Your bio must be at least 20 characters long",
                     maxlength: "Your bio must be less than 80 characters"
-                }
+                },
+                country_residence: { 
+                    required: "Please select your country of residence.",
+                    notDefaultSelect: "Please select your country of residence." // <-- NEW MESSAGE
+                },
             }
         });
     });

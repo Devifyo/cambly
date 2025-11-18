@@ -7,7 +7,7 @@
         <div class="card-body">
 
             <div class="border-bottom pb-3 mb-3">
-                <h5>Profile Settings</h5>
+                <h5>Account Settings</h5>
             </div>
 
             {{-- Avatar Section --}}
@@ -76,7 +76,7 @@
                     {{-- DATE OF BIRTH --}}
                     <div class="col-lg-6 col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="date_of_birth">Birthday <span class="text-danger">*</span></label>
+                            <label class="form-label" for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
                             <input id="date_of_birth" name="date_of_birth" type="date" class="form-control"
                                     value="{{ old('date_of_birth', auth()->user()->studentProfile?->date_of_birth ? auth()->user()->studentProfile->date_of_birth->format('Y-m-d') : null) }}"
                                     max="{{ now()->format('Y-m-d') }}"

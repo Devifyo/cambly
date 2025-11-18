@@ -264,7 +264,7 @@ class DashboardService
                 ?? $reservation->teacher->name 
                 ?? 'Unknown Teacher',
             'teacher_title' => $reservation->teacher->teacherProfile->title ?? '',
-            'teacher_avatar' => $reservation->teacher->avatar 
+            'teacher_avatar' => $reservation->teacher->profile_link 
                 ?? asset('assets/img/dashboard/profile-06.jpg'),
             'start_time' => $startTime,
             'end_time' => $endTime,

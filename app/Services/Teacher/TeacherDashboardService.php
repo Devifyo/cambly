@@ -269,7 +269,7 @@ class TeacherDashboardService
                 ?? $reservation->student->name 
                 ?? 'Unknown student',
             'student_title' => $reservation->student->studentProfile->title ?? '',
-            'student_avatar' => $reservation->student->avatar 
+            'student_avatar' => $reservation->student->profile_link 
                 ?? asset('assets/img/dashboard/profile-06.jpg'),
             'start_time' => $startTime,
             'end_time' => $endTime,

@@ -37,7 +37,7 @@
                     <li class="has-submenu {{ request()->routeIs('teacher.account.*') || request()->routeIs('teacher.account.show') ? 'active' : '' }}">
                         <a href="#">Account <i class="fas fa-chevron-down"></i> </a>
                         <ul class="submenu">
-                            <li class="{{ request()->routeIs('teacher.account.show') ? 'active' : '' }}"><a href="{{ route('teacher.account.show') }}">Profile settings</a></li>
+                            <li class="{{ request()->routeIs('teacher.account.show') ? 'active' : '' }}"><a href="{{ route('teacher.account.show') }}">Account settings</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -58,8 +58,8 @@
                                     <img src="{{ $authUser->profile_link }}" alt="User Image" class="avatar-img rounded-circle">
                                 </div>
                                 <div class="user-text">
-                                    <h6>Hendrita Hayes</h6>
-                                    <p class="text-muted mb-0">Student</p>
+                                    <h6>{{ucfirst($authUser->name)}}</h6>
+                                    <p class="text-muted mb-0">Teacher</p>
                                 </div>
                             </div>
                             <a class="dropdown-item" href="{{ route('teacher.dashboard') }}">Dashboard</a>

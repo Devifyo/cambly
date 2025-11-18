@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CmsController;
 
 Route::get('/', function () {
-    return 'Laravel is working!';
+    return redirect()->route('auth.login');
 });
 
 

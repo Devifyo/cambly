@@ -32,9 +32,9 @@ class TeacherAccountController extends Controller
      * Update the user's profile information.
      */
     public function updateProfile(ProfileUpdateRequest $request): RedirectResponse
-    {
+    {   
         $user = $request->user();
-
+        // dd($request->all());
         // Update name/email on the model first
         $user->fill($request->only('name', 'email', 'gender'));
 
@@ -59,12 +59,13 @@ class TeacherAccountController extends Controller
         $user->save(); // persists name/email/profile_picture on the existing user row
         
         $profileData = $request->only([
-                'age',
+                'date_of_birth',
                 'native_language',
                 'english_level',
                 'discord_id',
                 'experience',
-                'short_bio'
+                'short_bio',
+                'country_residence'
         ]);
         
         $user->teacherProfile()->updateOrCreate(
@@ -72,7 +73,7 @@ class TeacherAccountController extends Controller
             $profileData                 // Update with all new data
         );
 
-        return Redirect::route('student.account.show')->with('success', 'Your profile has been updated.');
+        return Redirect::route('teacher.account.show')->with('success', 'Your profile has been updated.');
     }
 
 
