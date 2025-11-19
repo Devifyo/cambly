@@ -30,10 +30,28 @@ class AuthController extends Controller
         ]);
         //  2. Attempt to log in
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+
+            $user = Auth::user(); // Get the authenticated user model instance
+
+            if ((int) $user->status !== 1) { 
+                
+                // Log the user out immediately
+                Auth::logout();
+                
+                // Invalidate the session and regenerate the token for security
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                // Redirect back with an error message
+              return back()->withErrors([
+    'email' => 'Your account is disabled. Please contact support for assistance. 
+    <a href="'.route('cms.contact').'">Contact Us</a>'
+])->onlyInput('email');
+
+            }
             //  3. Regenerate session (security best practice)
             $request->session()->regenerate();
             try {
-                $user = Auth::user();
                 $timezone = $request->tz; // Call your helper function
 
                 $profile = null;
