@@ -16,6 +16,8 @@ class TicketLedger extends Model
         'hold_credits',
         'stripe_invoice_id',
         'stripe_subscription_id',
+        'credit_by',
+        'reason',
 
     ];
 

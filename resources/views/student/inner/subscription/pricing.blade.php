@@ -137,7 +137,7 @@
                                 <div class="pricing-header-info">
                                     <div class="pricing-icon">
                                         <span>
-                                            <img src="{{ asset($plan->icon_path) }}" alt="icon">
+                                            <img src="{{ $plan->icon_link }}" alt="icon">
                                         </span>
                                     </div>
                                     <div class="pricing-title">

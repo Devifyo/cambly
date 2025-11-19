@@ -98,6 +98,11 @@ class User extends Authenticatable
         return $this->hasRole(config('roles.student'));
     }
 
+        public function isAdmin(): bool
+    {
+        return $this->hasRole(config('roles.admin'));
+    }
+
         /**
      * Scope a query to only include teachers.
      */

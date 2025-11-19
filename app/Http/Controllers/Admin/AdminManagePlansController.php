@@ -27,7 +27,8 @@ class AdminManagePlansController extends Controller
 
     public function index()
     {
-        $plans = $this->planService->list();    
+        $plans = $this->planService->list();   
+        // dd($plans[3]->icon_link); 
         return view($this->view_path.'index', compact('plans'));
     }
 

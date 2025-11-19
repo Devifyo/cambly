@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use App\Services\UseCreditService;
 
 if (!function_exists('encryptId')) {
     function encryptId(int $id): string
@@ -302,7 +303,6 @@ if (! function_exists('uploadFile')) {
         if ($oldPath && $newPath !== $oldPath && Storage::disk($disk)->exists($oldPath)) {
             Storage::disk($disk)->delete($oldPath);
         }
-
         return $newPath;
     }
 }
@@ -372,5 +372,41 @@ if (!function_exists('convertUtcToLocal')) {
             'local_time_12h'    => $local->format('h:i A'),    // 12-hour format
             'local_formatted_date' => $local->format('jS \of F Y'), // <-- NEW
         ];
+    }
+}
+
+if (!function_exists('get_current_month_credits')) {
+    /**
+     * Retrieves the current month's available credits by resolving and calling 
+     * the UseCreditService from the Laravel container.
+     *
+     * @param User $user
+     * @return int
+     */
+    function get_current_month_credits(User $user, $used_by = 'user'): int
+    {
+        // 1. Resolve the UseCreditService instance from the Laravel Container.
+        // This ensures all of the Service's internal dependencies are handled.
+        $creditService = app(UseCreditService::class); 
+
+        // 2. Call the service function
+        $currentCredits = $creditService->getCurrentMonthCredits($user, $used_by);
+        // 3. Return the calculated available credits, defaulting to 0.
+        return $currentCredits['available'] ?? 0;
+    }
+}
+
+if (!function_exists('getCurrentTicketLedger')) {
+    /**
+     * Retrieves the current ticket ledger for a user by resolving and calling 
+     * the UseCreditService from the Laravel container.
+     *
+     * @param User $user
+     * @return TicketLedger|null
+     */
+    function getCurrentTicketLedger($user, $used_by = 'user')
+    {
+        $creditService = app(UseCreditService::class); 
+        return $creditService->getCurrentTicketLedger($user, $used_by);
     }
 }

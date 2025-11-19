@@ -100,7 +100,6 @@ class Plan extends Model
     {
         // If a custom icon path exists
         if ($this->icon_path) {
-
             // If path already starts with "assets", return as public asset
             if (str_starts_with($this->icon_path, 'assets')) {
                 return asset($this->icon_path);

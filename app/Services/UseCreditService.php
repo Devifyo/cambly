@@ -18,11 +18,11 @@ class UseCreditService
      * @param int $userId
      * @return array|null
      */
-    public function getCurrentMonthCredits($user)
+    public function getCurrentMonthCredits($user, $used_by = 'user')
     {
         // 1️⃣ Find active subscription
         $subscription = $user->activeSubscription;
-        if (!$subscription) {
+        if (!$subscription && $used_by != 'admin') {
             return null;
         }
 
@@ -30,13 +30,18 @@ class UseCreditService
         $startOfMonth = $now->copy()->startOfMonth()->startOfDay();
         $endOfMonth   = $now->copy()->endOfMonth()->endOfDay();
         // 2️⃣ Get cycle number from subscription
-        $cycleNumber = $subscription->cycle_number ?? 1;
+        $cycleNumber = $subscription->cycle_number ?? null;
         // fetch current ledger
-        $CurrentCycleledger = TicketLedger::where('student_id', $user->id)
-            ->where('cycle_number', $cycleNumber)
+            $CurrentCycleledger = TicketLedger::where('student_id', $user->id)
+            ->when($used_by == 'user' || !is_null($cycleNumber) , function ($query) use ($cycleNumber) {
+                    $query->where('cycle_number', $cycleNumber);
+                })
             ->latest()
             ->first();
-            
+            // if(!$CurrentCycleledger){
+            //     dd($CurrentCycleledger,$user);
+            //     return null;
+            // }
         // 3️⃣ Fetch matching ledger entry
         $ledgers = TicketLedger::where('student_id', $user->id)
         ->where(function ($query) use ($cycleNumber, $startOfMonth, $endOfMonth) {
@@ -58,7 +63,7 @@ class UseCreditService
         $hold   = (int) $ledgers->sum('hold_credits');
 
         return [
-            'ledger_id' => $CurrentCycleledger->id,
+            'ledger_id' => $CurrentCycleledger->id ?? null,
             'subscription_id' => $subscription->id ?? null,
             'cycle_number'    => $cycleNumber,
             'issued'          => $issued,
@@ -97,18 +102,20 @@ class UseCreditService
         });
     }
 
-    public function getCurrentTicketLedger($user)
+    public function getCurrentTicketLedger($user, $used_by = 'user')
     {
         $subscription = $user->activeSubscription;
-        if (!$subscription) {
+        if (!$subscription && $used_by != 'admin') {
             return null;
         }
                 // 2️⃣ Get cycle number from subscription
-        $cycleNumber = $subscription->cycle_number ?? 1;
+        $cycleNumber = $subscription?->cycle_number ?? null;
 
         // 3️⃣ Fetch matching ledger entry
         $ledger = TicketLedger::where('student_id', $user->id)
-            ->where('cycle_number', $cycleNumber)
+            ->when($used_by == 'user' || !is_null($cycleNumber) , function ($query) use ($cycleNumber) {
+                $query->where('cycle_number', $cycleNumber);
+            })
             ->latest()
             ->first();
         if (!$ledger) {

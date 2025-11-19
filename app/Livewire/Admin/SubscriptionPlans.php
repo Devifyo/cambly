@@ -62,7 +62,7 @@ class SubscriptionPlans extends Component
     {
         // 1. Validate inputs
         $validatedData = $this->validate();
-
+        dd($validatedData);
         // 2. Pass to Service (Service handles file upload & array conversion)
         $service->store($validatedData);
 
@@ -101,7 +101,6 @@ class SubscriptionPlans extends Component
     {
         // 1. Validate inputs
         $validatedData = $this->validate();
-
         // 2. Get Plan
         $plan = Plan::findOrFail($this->plan_id);
 

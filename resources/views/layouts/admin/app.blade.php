@@ -35,6 +35,7 @@
         </style>
         {{-- Add a stack for page-specific CSS --}}
         @stack('css')
+        @livewireStyles
     </head>
     <body>
     
@@ -147,11 +148,11 @@
                                 {{-- Update with your actual route --}}
                                 <a href="{{-- route('admin.teachers.index') --}}"><i class="fe fe-user-plus"></i> <span>Teachers</span></a>
                             </li>
-                            <li class="{{ request()->is('admin/students*') ? 'active' : '' }}"> 
+                            <li class="{{ request()->routeIs('admin.students*') ? 'active' : '' }}"> 
                                 {{-- Update with your actual route --}}
-                                <a href="{{-- route('admin.students.index') --}}"><i class="fe fe-user"></i> <span>Students</span></a>
+                                <a href="{{ route('admin.students.index') }}"><i class="fe fe-user"></i> <span>Students</span></a>
                             </li>
-                            <li class="{{ request()->is('admin/subscriptions*') ? 'active' : '' }}"> 
+                            <li class="{{ request()->routeIs('admin.subscription.plan.*') ? 'active' : '' }}"> 
                                 {{-- Update with your actual route --}}
                                 <a href="{{route('admin.subscription.plan.index')}}"><i class="fe fe-credit-card"></i> <span>Subscription Plans</span></a>
                             </li>
@@ -208,8 +209,9 @@
                 // });
             });
         </script>
-        
         @stack('js')
+        @livewireScripts
         
     </body>
+
 </html>

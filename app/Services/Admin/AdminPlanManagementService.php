@@ -74,7 +74,7 @@ class AdminPlanManagementService
 
     
     public function update(Plan $plan, array $data): Plan
-    {
+    {   
         // 1. Process Data (Convert features string to array)
         $data = $this->prepareData($data);
         $slug = $plan->slug;
@@ -93,7 +93,7 @@ class AdminPlanManagementService
             ];
         
         // 2. Handle Icon Upload
-        if (isset($data['icon_path']) && $data['icon_path'] instanceof UploadedFile) {
+        if (isset($data['icon_path'])) {
             // Pass the new file, the folder, and the OLD path from the model
             $data['icon_path'] = uploadFile(
                 $data['icon_path'], 
@@ -101,7 +101,7 @@ class AdminPlanManagementService
                 $plan->icon_path
             );
         }
-
+        
          $stripeResponse = $this->stripe->createPlan($payload);
 
         if ($stripeResponse) {

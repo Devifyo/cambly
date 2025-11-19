@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AdminDashboardController, AdminManagePlansController};
+use App\Http\Controllers\Admin\{AdminDashboardController, AdminManagePlansController, AdminStudentController};
 Route::middleware(['auth.custom','isAdmin'])->group(function () {
 
     Route::get('/dashboard',[AdminDashboardController::class, 'index'])->name('dashboard');
@@ -10,6 +10,10 @@ Route::middleware(['auth.custom','isAdmin'])->group(function () {
         Route::post('store', 'store')->name('store');
         Route::patch('update/{id}', 'update')->name('update');
         Route::delete('destroy/{id}', 'destroy')->name('destroy');
+    });
+
+    Route::prefix('students')->name('students.')->controller(AdminStudentController::class)->group(function(){
+        Route::get('index','index')->name('index');
     });
 
 });

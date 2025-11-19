@@ -48,6 +48,13 @@
                             </thead>
                             <tbody>
                                 @forelse ($plans as $plan)
+                                {{-- @if($loop->iteration == 1)
+                                @php
+                                $plan->icon_path = null;
+                                $plan->save();
+                                @endphp
+                                @endif --}}
+                                    {{-- Debugging output for the 4th plan --}}
                                     <tr>
                                         <td>
                                             @if($plan->icon_path || $plan->icon_link)
@@ -55,7 +62,7 @@
                                             @endif
                                             {{ $plan->name }}
                                         </td>
-                                        <td>${{ format_currency($plan->price) }}</td>
+                                        <td>{{ format_currency($plan->price) }}</td>
                                         <td>{{ $plan->credits_per_cycle }}</td>
                                         <td>
                                             @if ($plan->is_popular)
