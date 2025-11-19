@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AdminDashboardController, AdminManagePlansController, AdminStudentController};
+use App\Http\Controllers\Admin\{AdminDashboardController, AdminManagePlansController, AdminStudentController, AdminTeacherController};
 Route::middleware(['auth.custom','isAdmin'])->group(function () {
 
     Route::get('/dashboard',[AdminDashboardController::class, 'index'])->name('dashboard');
@@ -13,6 +13,10 @@ Route::middleware(['auth.custom','isAdmin'])->group(function () {
     });
 
     Route::prefix('students')->name('students.')->controller(AdminStudentController::class)->group(function(){
+        Route::get('index','index')->name('index');
+    });
+
+        Route::prefix('teachers')->name('teachers.')->controller(AdminTeacherController::class)->group(function(){
         Route::get('index','index')->name('index');
     });
 

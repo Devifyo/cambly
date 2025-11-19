@@ -18,6 +18,8 @@ class StudentListing extends Component
     // --- Public Properties (Livewire can serialize these) ---
     public $search = '';
     public $statusFilter = '';
+    public $subscriptionFilter = '';
+
     public $studentId;
     public $name, $email, $password, $password_confirmation, $status;
     public $editMode = false;
@@ -49,7 +51,7 @@ class StudentListing extends Component
                 Rule::unique('users')->ignore($this->studentId),
             ],
             'password' => $this->editMode ? 'nullable|min:8|confirmed' : 'required|min:8|confirmed',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:1,0',
         ];
     }
 
@@ -67,10 +69,16 @@ class StudentListing extends Component
     {
         $this->resetPage();
     }
+
+    public function updatingSubscriptionFilter()
+    {
+        $this->resetPage();
+    }
+
     
     public function resetFilters()
     {
-        $this->reset(['search', 'statusFilter']);
+        $this->reset(['search', 'statusFilter' ,'subscriptionFilter']);
         $this->resetPage();
     }
 
@@ -234,7 +242,16 @@ class StudentListing extends Component
                       ->orWhere('email', 'like', '%' . $this->search . '%');
             })
             ->when($this->statusFilter, function ($query) {
-                $query->where('status', $this->statusFilter);
+                $query->where('status', $this->statusFilter === 'active' ? '1' : '0');
+            })
+            ->when($this->subscriptionFilter, function ($query) {
+                if ($this->subscriptionFilter === 'yes') {
+                    // has active subscription
+                    $query->whereHas('activeSubscription');
+                } else {
+                    // no subscription
+                    $query->whereDoesntHave('activeSubscription');
+                }
             })
             ->latest()
             ->paginate(10);

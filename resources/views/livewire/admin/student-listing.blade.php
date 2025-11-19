@@ -33,14 +33,22 @@
                     <div class="col-md-4">
                         <input type="text" wire:model.live.debounce.300ms="search" class="form-control" placeholder="Search by name or email...">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <select wire:model.live="statusFilter" class="form-control">
                             <option value="">All Statuses</option>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
                         </select>
                     </div>
-                    <div class="col-md-5 text-end">
+                    <div class="col-md-3">
+                        <select wire:model.live="subscriptionFilter" class="form-control">
+                            <option value="">All Students</option>
+                            <option value="yes">With Subscription</option>
+                            <option value="no">Without Subscription</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 text-end">
                         <button class="btn btn-secondary" wire:click="resetFilters">Clear Filters</button>
                     </div>
                 </div>
@@ -76,7 +84,7 @@
                                         </span>
                                     </td>
                                     <td>
-                                        @if (Str::lower($student->status) == 'active')
+                                        @if (Str::lower($student->status) == '1')
                                             <span class="badge rounded-pill bg-success">Active</span>
                                         @else
                                             <span class="badge rounded-pill bg-danger">Inactive</span>

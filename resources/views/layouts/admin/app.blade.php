@@ -144,9 +144,9 @@
                             <li class="{{ request()->is('admin/dashboard*') ? 'active' : '' }}"> 
                                 <a href="{{ route('admin.dashboard') }}"><i class="fe fe-home"></i> <span>Dashboard</span></a>
                             </li>
-                            <li class="{{ request()->is('admin/teachers*') ? 'active' : '' }}"> 
+                            <li class="{{ request()->routeIs('admin.teachers*') ? 'active' : '' }}"> 
                                 {{-- Update with your actual route --}}
-                                <a href="{{-- route('admin.teachers.index') --}}"><i class="fe fe-user-plus"></i> <span>Teachers</span></a>
+                                <a href="{{ route('admin.teachers.index') }}"><i class="fe fe-user-plus"></i> <span>Teachers</span></a>
                             </li>
                             <li class="{{ request()->routeIs('admin.students*') ? 'active' : '' }}"> 
                                 {{-- Update with your actual route --}}
@@ -172,6 +172,7 @@
         <script src="{{ asset('admin/assets/js/bootstrap.bundle.min.js') }}"></script>
         
         <script src="{{ asset('admin/assets/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+        
         {{-- <script src="{{ asset('admin/assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('admin/assets/plugins/datatables/datatables.min.js') }}"></script> --}}
         {{-- These scripts are for the dashboard charts --}}
