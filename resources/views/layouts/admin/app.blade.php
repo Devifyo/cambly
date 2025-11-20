@@ -109,12 +109,11 @@
                                     <img src="{{ asset('admin/assets/img/profiles/avatar-01.jpg') }}" alt="User Image" class="avatar-img rounded-circle">
                                 </div>
                                 <div class="user-text">
-                                    <h6>Ryan Taylor</h6>
-                                    <p class="text-muted mb-0">Administrator</p>
+                                    <h6>{{ $authUser->name }}</h6>
+                                    <p class="text-muted mb-0">{{ $authUser->role_name }}</p>
                                 </div>
                             </div>
-                            <a class="dropdown-item" href="{{-- route('admin.profile') --}}">My Profile</a>
-                            <a class="dropdown-item" href="{{-- route('admin.settings') --}}">Settings</a>
+                            <a class="dropdown-item" href="{{ route('admin.account.settings') }}">Account Settings</a>
                             
                             {{-- Laravel Logout Link --}}
                             <a class="dropdown-item" href="{{ route('auth.logout') }}"
