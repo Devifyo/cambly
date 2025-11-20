@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class StudentListing extends Component
 {
@@ -232,6 +233,23 @@ class StudentListing extends Component
             $this->dispatch('alert', type : 'error', message : 'Failed to adjust credits.');
         }
     }
+
+    public function Impersonate($studentId)
+{   
+        
+    $student = User::findOrFail(decryptId($studentId));
+
+    // Use the package's built-in method
+    if (Auth::user()->canImpersonate()) {
+        Auth::user()->impersonate($student);
+        
+        // Redirect to the student's booking page
+        return redirect()->route('search.tutors');
+    }
+
+    session()->flash('error', 'Unauthorized action.');
+    return;
+}
 
     // --- Rendering Logic ---
     public function render()

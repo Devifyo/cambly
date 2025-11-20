@@ -52,3 +52,29 @@ Stack trace:
 [16-Nov-2025 22:00:06 UTC] PHP Parse error:  syntax error, unexpected token "}", expecting ";" in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 172
 [18-Nov-2025 07:16:12 UTC] PHP Parse error:  syntax error, unexpected token "}", expecting ";" in /home/deviytwg/projects/laravel/cambly/app/Models/Plan.php on line 42
 [18-Nov-2025 07:17:54 UTC] PHP Parse error:  syntax error, unexpected token ")" in /home/deviytwg/projects/laravel/cambly/app/Models/Plan.php on line 37
+[20-Nov-2025 20:42:42 UTC] PHP Fatal error:  Trait "App\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 14
+[20-Nov-2025 20:42:50 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 15
+[20-Nov-2025 20:43:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 15
+[20-Nov-2025 20:44:26 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 15
+[20-Nov-2025 20:44:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 15
+[20-Nov-2025 20:45:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 15
+[20-Nov-2025 20:46:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 15
+[20-Nov-2025 20:47:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 15
+[20-Nov-2025 20:48:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 15
+[20-Nov-2025 20:49:16 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 16
+[20-Nov-2025 20:49:27 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 16
+[20-Nov-2025 20:49:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 16
+[20-Nov-2025 20:49:56 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 16
+[20-Nov-2025 20:50:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 16
+[20-Nov-2025 20:50:37 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 16
+[20-Nov-2025 20:51:00 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 17
+[20-Nov-2025 20:51:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 17
+[20-Nov-2025 20:52:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 17
+[20-Nov-2025 20:52:43 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 16
+[20-Nov-2025 20:53:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 16
+[20-Nov-2025 20:54:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 16
+[20-Nov-2025 21:03:57 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 15
+[20-Nov-2025 21:04:31 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 15
+[20-Nov-2025 21:22:53 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 3
+[20-Nov-2025 21:23:31 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 3
+[20-Nov-2025 21:24:31 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 3

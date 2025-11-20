@@ -109,6 +109,23 @@
                                                 </span>
                                             </button>
 
+                                            {{-- 1.5. BOOK CLASS BUTTON (NEW BUTTON) --}}
+                                            <button wire:click="Impersonate('{{ encryptId($student->id) }} ')" 
+                                                    wire:loading.attr="disabled" 
+                                                    class="btn btn-sm bg-primary-light me-2"
+                                                    data-bs-toggle="tooltip" title="Book Lesson">
+                                                <i class="fa-solid fa-calendar-plus" 
+                                                    wire:loading.remove 
+                                                    wire:target="bookClassModal({{ $student->id }})">
+                                                </i>
+                                                <span wire:loading 
+                                                    wire:target="bookClassModal({{ $student->id }})" 
+                                                    class="spinner-border spinner-border-sm" 
+                                                    role="status" 
+                                                    aria-hidden="true">
+                                                </span>
+                                            </button>
+
                                             {{-- 2. EDIT BUTTON LOADER (FIXED TARGETING) --}}
                                             <button wire:click="edit({{ $student->id }})" 
                                                     wire:loading.attr="disabled" 
