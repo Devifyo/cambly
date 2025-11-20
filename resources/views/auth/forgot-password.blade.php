@@ -1,6 +1,6 @@
 @extends('layouts.auth.app')
 
-@section('title', 'Forgot Password | Doccure')
+@section('title', 'Forgot Password')
 
 @section('content')
 <div class="auth-page d-flex align-items-center justify-content-center min-vh-100">

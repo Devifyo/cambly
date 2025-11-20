@@ -130,6 +130,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(\App\Models\Subscription::class)
             ->where('status', 'active')
+            ->where('current_period_end', '>', now())
             ->where(function ($query) {
                 $query->whereNull('ends_at')
                     ->orWhere('ends_at', '>', now());

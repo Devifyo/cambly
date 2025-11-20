@@ -6,9 +6,9 @@
         {{-- Dynamic title, defaults to 'Admin' --}}
         <title>@yield('title', 'Admin') - {{config('app.name')}}</title>
 
-        <meta name="description" content="The responsive professional Doccure template offers many features, like scheduling appointments with  top doctors, clinics, and hospitals via voice, video call & chat.">
-        <meta name="keywords" content="practo clone, doccure, doctor appointment, Practo clone html template, doctor booking template">
-        <meta name="author" content="Practo Clone HTML Template - Doctor Booking Template">
+        <meta name="description" content="Mahogo - Admin Dashboard">
+        <meta name="keywords" content="admin, dashboard, management, Mahogo">
+        <meta name="author" content="Mahogo Admin">
         
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('admin/assets/img/favicon.png') }}">
         

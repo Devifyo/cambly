@@ -1,8 +1,4 @@
-/*
-Author       : Dreamstechnologies
-Template Name: Doccure - Bootstrap Admin Template
-Version      : 1.3
-*/
+
 
 (function($) {
     "use strict";

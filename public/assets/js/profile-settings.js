@@ -1,8 +1,3 @@
-/*
-Author       : Dreamstechnologies
-Template Name: Doccure - Bootstrap Template
-Version      : 1.0
-*/
 
 (function($) {
     "use strict";

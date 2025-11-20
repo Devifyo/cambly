@@ -27,7 +27,7 @@ class Subscription extends Model
         'cycle_number' => 'integer',
     ];
 
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

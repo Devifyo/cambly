@@ -3,8 +3,14 @@
 @props(['teacher', 'authUser'])
 
 @php
+
     // All logic related to this specific teacher is now encapsulated here
-    $nextSlot = $teacher->availabilities->where('is_booked', false)->sortBy('start_utc')->first();
+    $nextSlot = $teacher->availabilities
+    ->where('is_booked', false)
+    ->where('start_utc', '>=', now()) 
+    ->sortBy('start_utc')
+    ->first();
+
     $isAvailable = $nextSlot && !\Carbon\Carbon::parse($nextSlot->start_utc)->isPast();
 @endphp
 

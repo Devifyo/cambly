@@ -323,18 +323,16 @@ if (!function_exists('convertUtcToLocal')) {
         if (!$utcDateTime) {
             return null;
         }
-
+        
         // 2. Get the target timezone
         // Default to the application's timezone (which itself defaults to 'UTC')
         $targetTimezone = config('app.timezone', 'UTC');
-        
         // If a user is provided, try to find their specific timezone
         if ($user) {
             $targetTimezone = optional($user->studentProfile)->tz
                 ?? optional($user->teacherProfile)->tz
-                ?? $targetTimezone; // <-- Fallback to app config if user has no tz
+                ?? getTimeZone(); // <-- Fallback to app config if user has no tz
         }
-
         // 3. Validate the timezone
         // If the timezone is invalid or null, default to UTC
         if (!$targetTimezone || !in_array($targetTimezone, timezone_identifiers_list())) {

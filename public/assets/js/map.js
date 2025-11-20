@@ -1,8 +1,4 @@
-/*
-Author       : Dreamstechnologies
-Template Name: Doccure - Bootstrap Template
-Version      : 1.3
-*/
+
 
 google.maps.visualRefresh = true;
 var slider, infowindow = null;

@@ -1,6 +1,6 @@
 @extends('layouts.auth.app')
 
-@section('title', 'Register | Doccure')
+@section('title', 'Register | ' . config('app.name'))
 
 @section('content')
 <div class="login-content-info py-5">

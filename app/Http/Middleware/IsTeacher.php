@@ -23,6 +23,13 @@ class IsTeacher
 
             abort(403, 'Unauthorized');
         }
+        // Update timezone if not already done in this session
+        if ( !session('timezone_updated')) {
+            $user = Auth::user();
+            $timezone = getTimeZone(); // Your helper function
+            $user->teacherProfile()->update(['tz' => $timezone]);
+            session(['timezone_updated' => true]);
+        }
 
         return $next($request);
     }
