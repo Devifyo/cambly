@@ -385,7 +385,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
     protected function getCurrentMonthCreditInfo(User $student): array
     {
         try {
-            $info = $this->useCreditService->getCurrentMonthCredits($student);
+            $info = $this->useCreditService->getCurrentMonthCredits($student, 'show_all');
             return is_array($info) ? $info : [];
         } catch (\Throwable $e) {
             Log::error('UseCreditService error: '.$e->getMessage(), ['student' => $student->id ?? null]);

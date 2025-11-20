@@ -89,7 +89,7 @@ class StudentListing extends Component
      */
     public function getStudentTotalAvailableCredits(User $student): int
     {
-       return get_current_month_credits($student);
+       return get_current_month_credits($student,'show_all');
     }
     
     // --- CRUD Methods ---
@@ -203,7 +203,7 @@ class StudentListing extends Component
         ]);
         try {
             $student = User::students()->findOrFail($this->creditStudentId);
-            $currenMonthLeadger = getCurrentTicketLedger($student,'user');
+            $currenMonthLeadger = getCurrentTicketLedger($student,'show_all');
             if($currenMonthLeadger){
                 $cycleNumber = $currenMonthLeadger->cycle_number;
             }else{

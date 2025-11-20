@@ -287,7 +287,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                @if($currentCredits['available']  > 1 )
+                                @if(isset($currentCredits['available']) && $currentCredits['available']  > 1 )
                                     <span class="health-percentage d-block mb-2">You have enough {{ trans_choice('app.credits_lower',2) }} for {{$currentCredits['available'] ?? 0}} more lessons</span>
                                     @else
                                     <span class="health-percentage d-block mb-2">You have {{$currentCredits['available'] ?? 0}} tickets </span>

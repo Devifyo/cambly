@@ -383,14 +383,14 @@ if (!function_exists('get_current_month_credits')) {
      * @param User $user
      * @return int
      */
-    function get_current_month_credits(User $user, $used_by = 'user'): int
+    function get_current_month_credits(User $user, $rule = 'show_all'): int
     {
         // 1. Resolve the UseCreditService instance from the Laravel Container.
         // This ensures all of the Service's internal dependencies are handled.
         $creditService = app(UseCreditService::class); 
 
         // 2. Call the service function
-        $currentCredits = $creditService->getCurrentMonthCredits($user, $used_by);
+        $currentCredits = $creditService->getCurrentMonthCredits($user, $rule);
         // 3. Return the calculated available credits, defaulting to 0.
         return $currentCredits['available'] ?? 0;
     }
@@ -404,9 +404,9 @@ if (!function_exists('getCurrentTicketLedger')) {
      * @param User $user
      * @return TicketLedger|null
      */
-    function getCurrentTicketLedger($user, $used_by = 'user')
+    function getCurrentTicketLedger($user, $rule = 'show_all')
     {
         $creditService = app(UseCreditService::class); 
-        return $creditService->getCurrentTicketLedger($user, $used_by);
+        return $creditService->getCurrentTicketLedger($user, $rule);
     }
 }

@@ -77,7 +77,7 @@
                                     <td>
                                         @php
                                             // The helper function is called here
-                                            $currentCredits = get_current_month_credits($student, 'user');
+                                            $currentCredits = get_current_month_credits($student, 'show_all');
                                         @endphp
                                         <span class="badge bg-primary">
                                             {{ $currentCredits }}

@@ -21,7 +21,8 @@ class StudentDashboardController extends Controller
         public function index()
     {   
         $user = auth()->user();
-        $currentCredits = $this->creditService->getCurrentMonthCredits($user);
+        $currentCredits = $this->creditService->getCurrentMonthCredits($user, 'show_all');
+        
         if (
             isset($currentCredits['available'], $currentCredits['issued']) &&
             $currentCredits['issued'] > 0
