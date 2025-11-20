@@ -18,7 +18,7 @@
     <div class="card">
         <div class="card-header">
             {{-- Tab Navigation --}}
-            <ul class="nav nav-tabs nav-tabs-bottom">
+            <ul class="nav nav-tabs nav-tabs-bottom" wire:ignore>
                 <li class="nav-item">
                     <a class="nav-link active" href="#profile_tab" data-bs-toggle="tab">Profile Details</a>
                 </li>
@@ -36,53 +36,7 @@
                     
                     {{-- Profile Picture Section --}}
                     <h5 class="card-title mb-4">Profile Picture</h5>
-                    <div class="row mb-5">
-                        <div class="col-md-8">
-                            <form wire:submit.prevent="updateProfilePicture" 
-                                x-data="{ photoPreview: null }">
-                                
-                                <div class="mb-3 d-flex align-items-center">
-                                    <div class="me-3">
-                                        <img x-bind:src="photoPreview ? photoPreview : '{{ $authUser->profile_picture ? $authUser->profile_link : 'https://placehold.co/100x100/A0A0A0/FFFFFF?text=No+Img' }}'"
-                                            alt="Profile Picture" 
-                                            class="rounded-circle" 
-                                            style="width: 100px; height: 100px; object-fit: cover;">
-                                    </div>
-                                    <div>
-                                        <label for="profile_upload" class="form-label">Upload New Image (Max 1MB)</label>
-                                        
-                                        <input type="file" 
-                                            id="profile_upload" 
-                                            x-ref="photo"
-                                            x-on:change="
-                                                    const reader = new FileReader();
-                                                    reader.onload = (e) => { photoPreview = e.target.result; };
-                                                    reader.readAsDataURL($refs.photo.files[0]);
-                                            "
-                                            wire:model="new_profile_picture" 
-                                            class="form-control @error('new_profile_picture') is-invalid @enderror">
-                                        
-                                        @error('new_profile_picture') 
-                                            <span class="invalid-feedback d-block">{{ $message }}</span> 
-                                        @enderror
-                                    </div>
-                                </div>
-                                
-                                <button type="submit" 
-                                        class="btn btn-warning mt-2" 
-                                        wire:loading.attr="disabled" 
-                                        wire:target="updateProfilePicture">
-                                    
-                                    <span wire:loading.remove wire:target="updateProfilePicture">Update Picture</span>
-                                    
-                                    <span wire:loading wire:target="updateProfilePicture">
-                                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                                        Processing...
-                                    </span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
+                    <livewire:admin.profile.profile-picture :user="$authUser" lazy />
                     
                     <hr class="mb-5">
 

@@ -101,16 +101,16 @@
                     </li> --}}
                     <li class="nav-item dropdown has-arrow">
                         <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-                            <span class="user-img"><img class="rounded-circle" src="{{ asset('admin/assets/img/profiles/avatar-01.jpg') }}" width="31" alt="Ryan Taylor"></span>
+                            <span class="user-img"><img class="rounded-circle" src="{{ $authUser->profile_link }}" width="31" alt="Ryan Taylor"></span>
                         </a>
                         <div class="dropdown-menu">
                             <div class="user-header">
                                 <div class="avatar avatar-sm">
-                                    <img src="{{ asset('admin/assets/img/profiles/avatar-01.jpg') }}" alt="User Image" class="avatar-img rounded-circle">
+                                    <img src="{{ $authUser->profile_link }}" alt="User Image" class="avatar-img rounded-circle">
                                 </div>
                                 <div class="user-text">
-                                    <h6>{{ $authUser->name }}</h6>
-                                    <p class="text-muted mb-0">{{ $authUser->role_name }}</p>
+                                    <h6>{{ ucfirst($authUser->name) }}</h6>
+                                    <p class="text-muted mb-0">{{ ucfirst($authUser->role_name) }}</p>
                                 </div>
                             </div>
                             <a class="dropdown-item" href="{{ route('admin.account.settings') }}">Account Settings</a>

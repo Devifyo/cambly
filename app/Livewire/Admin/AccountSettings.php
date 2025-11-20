@@ -22,6 +22,7 @@ class AccountSettings extends Component
     public $new_password;
     public $new_password_confirmation;
     
+    
     // 3. New property for profile picture file upload
     public $new_profile_picture; 
 
@@ -76,7 +77,7 @@ class AccountSettings extends Component
 
         $this->reset(['current_password', 'new_password', 'new_password_confirmation']);
 
-        $this->dispatch('showAlert', type: 'success', message: 'Password updated successfully!');
+        $this->dispatch('alert', type: 'success', message: 'Password updated successfully!');
     }
 
     /**
