@@ -10,7 +10,11 @@
         <meta name="keywords" content="admin, dashboard, management, Mahogo">
         <meta name="author" content="Mahogo Admin">
         
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('admin/assets/img/favicon.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
         
         <link rel="stylesheet" href="{{ asset('admin/assets/css/bootstrap.min.css') }}">
         
@@ -56,12 +60,12 @@
                     <i class="fe fe-text-align-left"></i>
                 </a>
                 
-                <div class="top-nav-search">
+                {{-- <div class="top-nav-search">
                     <form>
                         <input type="text" class="form-control" placeholder="Search here">
                         <button class="btn" type="submit"><i class="fa fa-search"></i></button>
                     </form>
-                </div>
+                </div> --}}
                 
                 <a class="mobile_btn" id="mobile_btn">
                     <i class="fa fa-bars"></i>
