@@ -96,7 +96,7 @@
                                             <button wire:click="adjustCreditsModal({{ $student->id }})" 
                                                     wire:loading.attr="disabled" 
                                                     class="btn btn-sm bg-info-light me-2"
-                                                    data-bs-toggle="tooltip" title="Adjust Credits">
+                                                    data-bs-toggle="tooltip" title="Adjust Tickets">
                                                 <i class="fa-solid fa-dollar-sign" 
                                                    wire:loading.remove 
                                                    wire:target="adjustCreditsModal({{ $student->id }})">
@@ -250,14 +250,14 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Manually Adjust Student Credits</h5>
+                    <h5 class="modal-title">Manually Adjust Student Tickets</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" wire:click="resetForm"></button>
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="adjustCredits">
-                        <p class="text-muted">Enter a **positive number** to add credits, or a **negative number** to remove credits.</p>
+                        <p class="text-muted">Enter a **positive number** to add tickets, or a **negative number** to remove tickets.</p>
                         <div class="mb-3">
-                            <label class="form-label">Credits to Adjust (e.g., 10 or -5)</label>
+                            <label class="form-label">Tickets to Adjust (e.g., 10 or -5)</label>
                             <input type="number" wire:model.blur="creditsToAdjust" class="form-control @error('creditsToAdjust') is-invalid @enderror">
                             @error('creditsToAdjust') <span class="invalid-feedback">{{ $message }}</span> @enderror
                         </div>

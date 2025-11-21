@@ -52,24 +52,8 @@ class AuthController extends Controller
             //  3. Regenerate session (security best practice)
             $request->session()->regenerate();
             try {
-                $timezone = $request->tz; // Call your helper function
-
-                $profile = null;
-
-                // Find the correct profile based on the user's role
-                if ($user->isStudent() && $user->studentProfile) {
-                    $profile = $user->studentProfile;
-                } elseif ($user->isTeacher() && $user->teacherProfile) {
-                    $profile = $user->teacherProfile;
-                }
-
-                // Update the timezone only if the profile exists AND
-                // the new timezone is different from the one in the database.
-                if ($profile && $profile->tz !== $timezone) {
-                    $profile->tz = $timezone;
-                    $profile->save();
-                }
-            
+               
+                $this->updateUserTimezone($user);
             } catch (\Exception $e) {
                 // Log any errors but do not block the login.
                 // This makes the feature robust.
@@ -149,5 +133,45 @@ class AuthController extends Controller
         // Auth::login($user);
 
         return redirect()->route('auth.login')->with('success', 'Registration successful! Welcome aboard 🎉');
+    }
+
+    private function updateUserTimezone($user)
+    {
+        $timezone = getTimeZone();
+
+        if (session('current_timezone') === $timezone) {
+            return;
+        }
+
+        $profile = null;
+
+        if ($user->isStudent()) {
+            $profile = $user->studentProfile;
+            
+            if (!$profile) {
+                $profile = $user->studentProfile()->create([
+                    'tz' => $timezone, 
+                    'preferred_name' => $user->name
+                ]);
+            }
+        } elseif ($user->isTeacher()) {
+            $profile = $user->teacherProfile;
+
+            if (!$profile) {
+                $profile = $user->teacherProfile()->create([
+                    'tz' => $timezone, 
+                    'preferred_name' => $user->name
+                ]);
+            }
+        }
+
+        if ($profile) {
+            if ($profile->tz !== $timezone) {
+                $profile->tz = $timezone;
+                $profile->save();
+            }
+
+            session(['current_timezone' => $timezone]);
+        }
     }
 }

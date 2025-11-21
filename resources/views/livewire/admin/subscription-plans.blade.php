@@ -40,7 +40,7 @@
                                 <tr>
                                     <th>Plan Name</th>
                                     <th>Price</th>
-                                    <th>Credits</th>
+                                    <th>Tickets</th>
                                     <th>Popular</th>
                                     <th>Status</th>
                                     <th>Actions</th>

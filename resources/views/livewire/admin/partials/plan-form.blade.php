@@ -15,7 +15,7 @@
     </div>
     <div class="col-12 col-sm-6">
         <div class="mb-3">
-            <label class="mb-2">Credits <span class="text-danger">*</span></label>
+            <label class="mb-2">Tickets <span class="text-danger">*</span></label>
             <input type="number" wire:model="credits_per_cycle" class="form-control @error('credits_per_cycle') is-invalid @enderror">
             @error('credits_per_cycle') <span class="invalid-feedback">{{ $message }}</span> @enderror
         </div>

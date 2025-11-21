@@ -13,6 +13,9 @@ class CustomAuth
         if (!Auth::check()) {
             return redirect()->route('auth.login');
         }
+        $user = Auth::user(); // Get the authenticated user model instance
+  
+       
 
         return $next($request);
     }
