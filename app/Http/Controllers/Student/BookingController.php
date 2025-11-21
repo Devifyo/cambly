@@ -99,9 +99,14 @@ class BookingController extends Controller
         }
 
         $student = $request->user();
-        if(!$student->hasActiveSubscription()){
-            return response()->json(['message' => 'You need an active subscription to make a booking.'], 403);
+        $isAdminImpersonating = is_impersonating() && impersonator()->isAdmin();
+    
+        if (!$student->hasActiveSubscription() && !$isAdminImpersonating) {
+            return response()->json([
+                'message' => 'You need an active subscription to make a booking.'
+            ], 403);
         }
+        
         $result = $this->bookingService->confirm((int)$availabilityId, $student, (int)$teacherId);
 
         if (isset($result['error'])) {

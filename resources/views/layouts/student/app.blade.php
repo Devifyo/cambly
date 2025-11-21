@@ -80,7 +80,9 @@
         <div class="content d-flex justify-content-center align-items-center">
             <x-impersonation-banner />
             <div class="container mt-4">
-                <x-subscription-status-alert />
+                @if(!is_impersonating())
+                    <x-subscription-status-alert />
+                @endif
                 @yield('content')
             </div>
         </div>

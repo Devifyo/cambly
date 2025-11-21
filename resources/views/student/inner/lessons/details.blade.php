@@ -121,7 +121,7 @@
                     <nav aria-label="breadcrumb" class="page-breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/"><i class="isax isax-home-15"></i></a></li>
-                            <li class="breadcrumb-item"><a href="{{ route('student.lessons.list') }}">My Lessons</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('student.lessons.list') }}">{{ is_impersonating() ? 'Student Lessons' : 'My Lessons' }}</a></li>
                             <li class="breadcrumb-item active">Lesson Details</li>
                         </ol>
                         <h2 class="breadcrumb-title">Lesson Details</h2>

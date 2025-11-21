@@ -93,7 +93,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
 {
     $creditInfo = $this->getCurrentMonthCreditInfo($student);
     $available = (int) ($creditInfo['available'] ?? 0);
-
+    $isAdminImpersonating = is_impersonating() && impersonator()->isAdmin();
     DB::beginTransaction();
     try {
         $availability = Availability::where('id', $availabilityId)->lockForUpdate()->first();
@@ -115,7 +115,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
 
         $creditsNeeded = config('app.ticket_per_meeting', 1);
         // If user has at least 1 available credit => confirmed booking flow
-        if ($available >= $creditsNeeded) {
+        if ($available >= $creditsNeeded || $isAdminImpersonating) {
             $reservation = Reservation::updateOrCreate(
             [
             'student_id' => $student->id,
@@ -131,22 +131,40 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
             $availability->is_booked = true;
             $availability->save();
             // consume 1 credit from current cycle
-            $this->consumeCredit($student, $creditInfo, $creditsNeeded);
-            // Record transaction in CreditService
+
             $encryptedReservationId = encryptId($reservation->id);
-            $this->creditService->recordCreditTransaction(
-                $student->id,
-                $creditInfo['cycle_number'] ?? 1,
-                $creditsNeeded,
-                'debt',
-                'booking_confirmed',
-                "Booking confirmed for booking #{$encryptedReservationId}",
-                "reservation_{$encryptedReservationId}",
-                null, // plan
-                $creditInfo['ledger_id'] ?? null,
-                $reservation->id,
-                'reservation_confirm'
-            );
+            if(!$isAdminImpersonating){
+                $this->consumeCredit($student, $creditInfo, $creditsNeeded);
+                // Record transaction in CreditService
+                
+                $this->creditService->recordCreditTransaction(
+                    $student->id,
+                    $creditInfo['cycle_number'] ?? 1,
+                    $creditsNeeded,
+                    'debt',
+                    'booking_confirmed',
+                    "Booking confirmed for booking #{$encryptedReservationId}",
+                    "reservation_{$encryptedReservationId}",
+                    null, // plan
+                    $creditInfo['ledger_id'] ?? null,
+                    $reservation->id,
+                    'reservation_confirm'
+                );
+            }else{
+                  $this->creditService->recordCreditTransaction(
+                    $student->id,
+                    $creditInfo['cycle_number'] ?? 1,
+                    0,
+                    'debt',
+                    'booking_confirmed',
+                    "Booking created by Admin for booking #{$encryptedReservationId}",
+                    "reservation_{$encryptedReservationId}",
+                    null, // plan
+                    $creditInfo['ledger_id'] ?? null,
+                    $reservation->id,
+                    'reservation_confirm'
+                );
+            }
             DB::commit();
 
             $teacher = User::find($reservation->teacher_id);

@@ -1,6 +1,6 @@
 @extends('layouts.student.app')
 
-@section('title', 'My Lessons')
+@section('title',  is_impersonating() ? 'Student Lessons' : 'My Lessons')
 
 @push('styles')
     <style>
@@ -208,9 +208,9 @@
                     <nav aria-label="breadcrumb" class="page-breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/"><i class="isax isax-home-15"></i></a></li>
-                            <li class="breadcrumb-item active">My Lessons</li>
+                            <li class="breadcrumb-item active">{{ is_impersonating() ? 'Student Lessons' : 'My Lessons' }}</li>
                         </ol>
-                        <h2 class="breadcrumb-title">My Lessons</h2>
+                        <h2 class="breadcrumb-title">{{ is_impersonating() ? 'Student Lessons' : 'My Lessons' }}</h2>
                     </nav>
                 </div>
             </div>
