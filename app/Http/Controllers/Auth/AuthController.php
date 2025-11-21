@@ -44,9 +44,9 @@ class AuthController extends Controller
 
                 // Redirect back with an error message
               return back()->withErrors([
-    'email' => 'Your account is disabled. Please contact support for assistance. 
-    <a href="'.route('cms.contact').'">Contact Us</a>'
-])->onlyInput('email');
+                    'email' => 'Your account is disabled. Please contact support for assistance. 
+                    <a href="'.route('cms.contact').'">Contact Us</a>'
+                ])->onlyInput('email');
 
             }
             //  3. Regenerate session (security best practice)

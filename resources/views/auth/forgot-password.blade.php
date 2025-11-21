@@ -35,6 +35,7 @@
                     @endif
 
                     <!-- Forgot Password Form -->
+                    <!-- Updated Route Name to 'password.email' -->
                     <form id="forgotPasswordForm" method="POST" action="{{ route('auth.password.email') }}">
                         @csrf
 
@@ -47,6 +48,7 @@
                                 class="form-control form-control-lg rounded-3 @error('email') is-invalid @enderror"
                                 placeholder="you@example.com"
                                 required
+                                value="{{ old('email') }}"
                             >
                             @error('email')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -187,7 +189,7 @@ $(document).ready(function () {
             }
         },
         errorPlacement: function (error, element) {
-            error.insertAfter(element); // ensure message stays neatly below input
+            error.insertAfter(element); 
         }
     });
 });

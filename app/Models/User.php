@@ -11,6 +11,10 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
 use Lab404\Impersonate\Models\Impersonate;
+// for forget password
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\CommonNotification;
+use App\Helpers\EmailHelper;
 
 class User extends Authenticatable
 {
@@ -191,6 +195,34 @@ class User extends Authenticatable
         }
         // Default placeholder image    
         return asset('assets/img/dashboard/user.png');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        // 1. Generate the Reset URL
+        $url = route('auth.password.reset', ['token' => $token, 'email' => $this->email]);
+
+        $placeholders = [
+            'user_name' => $this->name,
+            'action_url' => $url,
+            'user_email' => $this->email,
+        ];
+
+        // 3. Fetch the Custom Template
+        $template = EmailHelper::getTemplateBySlug('forgot-password', $placeholders);
+        if ($template) {
+            // 4. Send using your existing CommonNotification class
+            $this->notify(new CommonNotification(
+                $template->subject,
+                'emails.common_template', // The blade wrapper view you use
+                [
+                    'subject' => $template->subject, 
+                    'content' => $template->body
+                ]
+            ));
+        } else {
+            // Optional: Fallback to default or log error if template is missing
+        }
     }
 
 
