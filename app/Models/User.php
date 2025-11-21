@@ -190,7 +190,7 @@ class User extends Authenticatable
             return asset('assets/img/teacher/teacher-avatar.jpeg');
         }
         // Default placeholder image    
-        return asset('assets/img/dashboard/profile-06.jpg');
+        return asset('assets/img/dashboard/user.png');
     }
 
 
