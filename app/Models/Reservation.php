@@ -18,6 +18,7 @@ class Reservation extends Model
         'cycle_start_utc',
         'status',
         'lesson_meeting_link',
+        'created_by',
     ];
 
     public function student()
@@ -32,6 +33,12 @@ class Reservation extends Model
     {
         return $this->belongsTo(Availability::class);
     }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
 
     public function getStatusAttribute($originalStatus)
     {

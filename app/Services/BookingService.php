@@ -126,6 +126,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
                 'is_hold' => false,
                 'cycle_start_utc' => $availability->start_utc,
                 'status' => 'booked',
+                'created_by' =>  $isAdminImpersonating ? impersonator_id() : auth()->id(),
             ]);
 
             $availability->is_booked = true;

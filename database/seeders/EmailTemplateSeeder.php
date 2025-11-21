@@ -62,7 +62,7 @@ class EmailTemplateSeeder extends Seeder
             'subject' => 'Your lesson with [tutor_name] starts in [remaining_time]!',
             'body' => "
                 <p>Hi [user_name],</p>
-                <p>This is a reminder that your 1-to-1 lesson with <strong>[tutor_name]</strong> is starting soon.</p>
+                <p>This is a reminder that your lesson with <strong>[tutor_name]</strong> is starting soon.</p>
                 <ul>
                     <li><strong>Lesson Time:</strong> [lesson_time]</li>
                 </ul>
@@ -102,17 +102,108 @@ class EmailTemplateSeeder extends Seeder
 
         // 7. Booking Cancelled by Tutor
         EmailTemplate::updateOrCreate(['slug' => 'booking-cancelled-by-tutor'], [
-            'name' => 'Booking Cancelled by Tutor',
+            'name' => 'Booking Cancelled by Teacher',
             'subject' => 'Your upcoming lesson with [tutor_name] has been cancelled',
             'body' => "
                 <p>Hi [user_name],</p>
-                <p>We're writing to inform you that your upcoming lesson with <strong>[tutor_name]</strong> on <strong>[lesson_time]</strong> has been cancelled by the tutor.</p>
+                <p>We're writing to inform you that your upcoming lesson with <strong>[tutor_name]</strong> on <strong>[lesson_time]</strong> has been cancelled by the teacher.</p>
                 <p><strong>Refund Status:</strong> [refund_status]</p>
-                <p>We apologize for any inconvenience. Please feel free to book a new lesson with another tutor.</p>
+                <p>We apologize for any inconvenience. Please feel free to book a new lesson with another teacher.</p>
                 <p style=\"text-align:center;\">
-                    <a href=\"[find_tutor_link]\" style=\"display:inline-block; padding:12px 20px; background-color:#0E82FD; color:#fff; text-decoration:none; border-radius:8px;\">Find a New Tutor</a>
+                    <a href=\"[find_tutor_link]\" style=\"display:inline-block; padding:12px 20px; background-color:#0E82FD; color:#fff; text-decoration:none; border-radius:8px;\">Book a new Lesson</a>
                 </p>
             "
         ]);
+
+        // Booking created by student (student confirmation)
+        EmailTemplate::updateOrCreate(['slug' => 'booking-created-by-student'], [
+            'name' => 'Booking Created (Student)',
+            'subject' => 'Your lesson with [tutor_name] is confirmed — [lesson_time]',
+            'body' => "
+                <p>Hi [student_name],</p>
+                <p>Your lesson with <strong>[tutor_name]</strong> has been successfully booked.</p>
+                <ul>
+                    <li><strong>Lesson ID:</strong> [booking_id]</li>
+                    <li><strong>Lesson Time:</strong> [lesson_time]</li>
+                    <li><strong>Duration:</strong> [lesson_duration]</li>
+                    <li><strong>Lesson Link:</strong> [lesson_link_text]</li>
+                </ul>
+                <p>If you need to reschedule or cancel, please visit your <a href=\"[dashboard_link]\">dashboard</a> or contact support.</p>
+                <p>Thank you for booking — see you soon!</p>
+            "
+        ]);
+
+        // Booking created by admin (student notification when admin books for them)
+        EmailTemplate::updateOrCreate(['slug' => 'booking-created-by-admin'], [
+            'name' => 'Booking Created by Admin (Student Notification)',
+            'subject' => 'A lesson has been scheduled for you by [admin_name] — [lesson_time]',
+            'body' => "
+                <p>Hi [student_name],</p>
+                <p>An administrator (<strong>[admin_name]</strong>) has scheduled a lesson for you with <strong>[tutor_name]</strong>.</p>
+                <ul>
+                    <li><strong>Lesson ID:</strong> [booking_id]</li>
+                    <li><strong>Lesson Time:</strong> [lesson_time]</li>
+                    <li><strong>Duration:</strong> [lesson_duration]</li>
+                    <li><strong>Lesson Link:</strong> [lesson_link_text]</li>
+                </ul>
+                <p>If this was not expected, or you need changes, please contact support or visit your <a href=\"[dashboard_link]\">dashboard</a>.</p>
+                <p>Thanks —</p>
+                <p><em>The Team</em></p>
+            "
+        ]);
+
+        // Lesson link added by teacher
+        EmailTemplate::updateOrCreate(['slug' => 'lesson-link-added'], [
+            'name' => 'Lesson Link Added by Teacher',
+            'subject' => 'Your upcoming lesson now has a lesson link',
+            'body' => "
+                <p>Hi [student_name],</p>
+                <p>Your teacher <strong>[tutor_name]</strong> has added a lesson link for your upcoming lesson.</p>
+                <ul>
+                    <li><strong>Lesson ID:</strong> [booking_id]</li>
+                    <li><strong>Lesson Time:</strong> [lesson_time]</li>
+                    <li><strong>Lesson Link:</strong> <a href=\"[lesson_link]\" target=\"_blank\">Join Lesson</a></li>
+                </ul>
+                <p>Please use this link to join the lesson on time.</p>
+                <p>Thank you!</p>
+            "
+        ]);
+
+        // Lesson link updated by teacher
+        EmailTemplate::updateOrCreate(['slug' => 'lesson-link-updated'], [
+            'name' => 'Lesson Link Updated by Teacher',
+            'subject' => 'Your lesson link has been updated',
+            'body' => "
+                <p>Hi [student_name],</p>
+                <p>Your teacher <strong>[tutor_name]</strong> has updated the lesson link for your upcoming lesson.</p>
+                <ul>
+                    <li><strong>Lesson ID:</strong> [booking_id]</li>
+                    <li><strong>Lesson Time:</strong> [lesson_time]</li>
+                    <li><strong>New Lesson Link:</strong> <a href=\"[lesson_link]\" target=\"_blank\">Join Lesson</a></li>
+                </ul>
+                <p>Please make sure to use this updated link.</p>
+                <p>Thank you!</p>
+            "
+        ]);
+
+        // Reminder to teacher for lessons with missing lesson link
+        EmailTemplate::updateOrCreate(['slug' => 'pending-lesson-link-reminder-teacher'], [
+            'name' => 'Pending Lesson Link Reminder (Teacher)',
+            'subject' => 'Reminder: You have lessons without lesson links',
+            'body' => "
+                <p>Hi [tutor_name],</p>
+                <p>This is a reminder that you have upcoming lessons that do not yet have a lesson link added.</p>
+
+                <p><strong>Pending Lessons:</strong></p>
+                <p>[lessons_list]</p>
+
+                <p>Please add the lesson link as soon as possible so students can join their lessons on time.</p>
+
+                <p>You can add links from your teacher dashboard.</p>
+
+                <p>Thank you!</p>
+            "
+        ]);
+
     }
 }

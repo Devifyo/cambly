@@ -197,6 +197,12 @@ class User extends Authenticatable
         return asset('assets/img/dashboard/user.png');
     }
 
+
+    public function createdReservations()
+    {
+        return $this->hasMany(Reservation::class, 'created_by');
+    }
+
     public function sendPasswordResetNotification($token)
     {
         // 1. Generate the Reset URL
@@ -224,6 +230,7 @@ class User extends Authenticatable
             // Optional: Fallback to default or log error if template is missing
         }
     }
+
 
 
 /********************* Teacher filter scopes *******************************/
