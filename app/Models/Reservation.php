@@ -39,6 +39,10 @@ class Reservation extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function getDurationAttribute()
+    {
+        return '25 minutes';
+    }
 
     public function getStatusAttribute($originalStatus)
     {

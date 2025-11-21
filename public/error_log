@@ -15,3 +15,4 @@
 [20-Nov-2025 20:51:39 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 17
 [20-Nov-2025 21:04:36 UTC] PHP Fatal error:  Trait "Lab404\Impersonate\Models\CanImpersonate" not found in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 15
 [20-Nov-2025 21:24:45 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 3
+[21-Nov-2025 13:01:41 UTC] PHP Fatal error:  Trait "App\Services\BookingLessonEmailTrait" not found in /home/deviytwg/projects/laravel/cambly/app/Services/BookingService.php on line 14

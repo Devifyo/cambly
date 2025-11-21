@@ -130,6 +130,7 @@ class EmailTemplateSeeder extends Seeder
                 </ul>
                 <p>If you need to reschedule or cancel, please visit your <a href=\"[dashboard_link]\">dashboard</a> or contact support.</p>
                 <p>Thank you for booking — see you soon!</p>
+                <p><em>[app_name]</em></p>
             "
         ]);
 
@@ -147,8 +148,8 @@ class EmailTemplateSeeder extends Seeder
                     <li><strong>Lesson Link:</strong> [lesson_link_text]</li>
                 </ul>
                 <p>If this was not expected, or you need changes, please contact support or visit your <a href=\"[dashboard_link]\">dashboard</a>.</p>
-                <p>Thanks —</p>
-                <p><em>The Team</em></p>
+                <p>Thanks you!</p>
+                <p><em>[app_name]</em></p>
             "
         ]);
 

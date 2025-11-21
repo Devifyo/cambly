@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\TicketLedger;
 use Illuminate\Support\Collection;
+use App\Traits\BookingLessonEmailTrait;
 class BookingService
 {   
+    use BookingLessonEmailTrait;
 
     protected UseCreditService $useCreditService;
     protected CreditService $creditService;
@@ -166,6 +168,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
                     'reservation_confirm'
                 );
             }
+            $this->sendLessonBookingMail($reservation, $student);
             DB::commit();
 
             $teacher = User::find($reservation->teacher_id);

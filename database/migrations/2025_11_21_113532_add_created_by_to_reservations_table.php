@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('reservations', function (Blueprint $table) {
-           $table->foreign('created_by')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('set null');
+           $table->unsignedBigInteger('created_by')->nullable()->after('lesson_meeting_link');
+            $table->foreign('created_by')
+            ->references('id')
+            ->on('users')
+            ->onDelete('set null');
         });
     }
 
@@ -25,8 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('reservations', function (Blueprint $table) {
-            $table->dropForeign(['created_by']);
-            $table->dropColumn('created_by');
+           $table->dropForeign(['created_by']);
         });
     }
 };
