@@ -238,7 +238,7 @@ class StudentListing extends Component
 {   
         
     $student = User::findOrFail(decryptId($studentId));
-
+    
     // Use the package's built-in method
     if (Auth::user()->canImpersonate()) {
         Auth::user()->impersonate($student);

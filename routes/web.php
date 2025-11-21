@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CmsController;
+use App\Http\Controllers\Admin\ImpersonationController;
 
 Route::get('/', function () {
     return redirect()->route('auth.login');
@@ -25,3 +26,5 @@ Route::controller(CmsController::class)->group(function () {
     // how-it-works
     Route::get('how-it-works','howItWorks')->name('cms.how.works');
 });
+
+Route::get('/impersonate/leave', [ImpersonationController::class, 'stopImpersonating'])->name('impersonate.leave');

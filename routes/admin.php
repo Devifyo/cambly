@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{AdminDashboardController, AdminManagePlansController, AdminStudentController, AdminTeacherController, AccountSettingController};
+use App\Http\Controllers\Admin\{AdminDashboardController, AdminManagePlansController, AdminStudentController, AdminTeacherController, AccountSettingController, ImpersonationController};
 Route::middleware(['auth.custom','isAdmin'])->group(function () {
 
     Route::get('/dashboard',[AdminDashboardController::class, 'index'])->name('dashboard');
@@ -21,5 +21,7 @@ Route::middleware(['auth.custom','isAdmin'])->group(function () {
     });
 
     Route::get('/account-settings',[ AccountSettingController::class, 'index'])->name('account.settings');
+
+    Route::get('/impersonate/{id}', [ImpersonationController::class, 'impersonate'])->name('impersonate');
 
 });

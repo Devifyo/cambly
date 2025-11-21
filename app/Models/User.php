@@ -10,10 +10,12 @@ use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
+use Lab404\Impersonate\Models\Impersonate;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, Billable, HasRoles;
+    use Impersonate;
 
     /**
      * The attributes that are mass assignable.
@@ -49,6 +51,17 @@ class User extends Authenticatable
     protected $appends = ['profile_link'];
 
 
+    public function canImpersonate(): bool
+    {
+        return $this->isAdmin();
+    }
+
+
+    public function canBeImpersonated(): bool
+    {
+        return !$this->isAdmin();
+    }
+    
     public function getRoleNameAttribute()
     {
         return $this->getRoleNames()->first() ?? 'No Role';
