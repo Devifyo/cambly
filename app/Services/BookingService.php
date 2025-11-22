@@ -95,7 +95,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
 {
     $creditInfo = $this->getCurrentMonthCreditInfo($student);
     $available = (int) ($creditInfo['available'] ?? 0);
-    $isAdminImpersonating = is_impersonating() && impersonator()->isAdmin();
+    $isImpersonating = is_impersonating();
     DB::beginTransaction();
     try {
         $availability = Availability::where('id', $availabilityId)->lockForUpdate()->first();
@@ -117,7 +117,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
 
         $creditsNeeded = config('app.ticket_per_meeting', 1);
         // If user has at least 1 available credit => confirmed booking flow
-        if ($available >= $creditsNeeded || $isAdminImpersonating) {
+        if ($available >= $creditsNeeded || $isImpersonating) {
             $reservation = Reservation::updateOrCreate(
             [
             'student_id' => $student->id,
@@ -128,7 +128,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
                 'is_hold' => false,
                 'cycle_start_utc' => $availability->start_utc,
                 'status' => 'booked',
-                'created_by' =>  $isAdminImpersonating ? impersonator_id() : auth()->id(),
+                'created_by' =>  $isImpersonating ? impersonator_id() : auth()->id(),
             ]);
 
             $availability->is_booked = true;
@@ -136,7 +136,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
             // consume 1 credit from current cycle
 
             $encryptedReservationId = encryptId($reservation->id);
-            if(!$isAdminImpersonating){
+            if(!$isImpersonating){
                 $this->consumeCredit($student, $creditInfo, $creditsNeeded);
                 // Record transaction in CreditService
                 
@@ -271,6 +271,10 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
         //     return ['error' => 'Forbidden', 'status' => 403];
         // }
 
+        $isImpersonating = is_impersonating();
+        if($isImpersonating){
+           $actor = impersonator();
+        }
 
 
         // Short-circuit if already cancelled

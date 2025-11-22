@@ -99,9 +99,9 @@ class BookingController extends Controller
         }
 
         $student = $request->user();
-        $isAdminImpersonating = is_impersonating() && impersonator()->isAdmin();
+        $iImpersonating = is_impersonating();
     
-        if (!$student->hasActiveSubscription() && !$isAdminImpersonating) {
+        if (!$student->hasActiveSubscription() && !$iImpersonating) {
             return response()->json([
                 'message' => 'You need an active subscription to make a booking.'
             ], 403);

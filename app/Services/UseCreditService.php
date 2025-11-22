@@ -131,6 +131,9 @@ class UseCreditService
     public function refundCreditsOnCancel(Reservation $reservation): array
     {
         try {
+
+            $isImpersonating = is_impersonating();
+
             $refundCount = max(1, (int) config('app.ticket_per_meeting', 1));
 
             $availability = $reservation->availability;
@@ -144,7 +147,7 @@ class UseCreditService
 
             // Refund only if >= 12 hours until start
             $hoursUntilStart = Carbon::now('UTC')->diffInHours($startUtc, false);
-            if ($hoursUntilStart < 12) {
+            if ($hoursUntilStart < 12 && !$isImpersonating) {
                 return ['ok' => true, 'skipped' => 'within_12_hours'];
             }
 

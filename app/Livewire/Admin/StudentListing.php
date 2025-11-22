@@ -98,7 +98,7 @@ class StudentListing extends Component
     public function create()
     {
         $this->resetForm();
-        $this->status = 'active';
+        $this->status = '1';
         $this->editMode = false;
         $this->dispatch('showAddModal');
     }

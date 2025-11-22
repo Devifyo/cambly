@@ -130,7 +130,7 @@
                     </div>
                 </div>
                 <div class="card-footer text-center">
-                     <a href="{{ route('admin.teachers.index') }}" class="text-primary">View All Teachers</a>
+                     <a href="{{ role_route('admin.teachers.index') }}" class="text-primary">View All Teachers</a>
                 </div>
             </div>
         </div>
@@ -175,7 +175,7 @@
                     </div>
                 </div>
                 <div class="card-footer text-center">
-                     <a href="{{ route('admin.students.index') }}" class="text-primary">View All Students</a>
+                     <a href="{{ role_route('admin.students.index') }}" class="text-primary">View All Students</a>
                 </div>
             </div>
         </div>

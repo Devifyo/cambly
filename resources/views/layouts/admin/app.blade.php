@@ -26,6 +26,7 @@
         <link rel="stylesheet" href="{{ asset('admin/assets/plugins/morris/morris.css') }}">
         
         <link rel="stylesheet" href="{{ asset('admin/assets/css/custom.css') }}">
+        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script> 
         <style>
             .logo-text {
                 background: linear-gradient(90deg, #0E82FD 0%, #06AED4 70%);
@@ -35,6 +36,20 @@
                 font-size: 24px; /* adjust as needed */
                 display: inline-block;
             }
+            
+            .sidebar ul li a i[class*="fa"] {
+                font-size: 20px !important;
+                vertical-align: middle;
+                width: 20px;
+                line-height: 24px;
+            }
+            .user-img img{
+                height: 50px;
+                width: 50px;
+                object-fit: cover;
+            }
+
+
 
         </style>
         {{-- Add a stack for page-specific CSS --}}
@@ -49,10 +64,10 @@
             
                 <div class="header-left">
                     {{-- Use a named route for the dashboard --}}
-                    <a href="{{ route('admin.dashboard') }}" class="logo">
+                    <a href="{{ role_route('admin.dashboard') }}" class="logo">
                         <span class="logo-text">{{config('app.name')}}</span>
                     </a>
-                    <a href="{{ route('admin.dashboard') }}" class="logo logo-small">
+                    <a href="{{ role_route('admin.dashboard') }}" class="logo logo-small">
                         <span class="logo-text">{{config('app.name')}}</span>
                     </a>
                 </div>
@@ -117,15 +132,15 @@
                                     <p class="text-muted mb-0">{{ ucfirst($authUser->role_name) }}</p>
                                 </div>
                             </div>
-                            <a class="dropdown-item" href="{{ route('admin.account.settings') }}">Account Settings</a>
+                            <a class="dropdown-item" href="{{ role_route('admin.account.settings') }}">Account Settings</a>
                             
                             {{-- Laravel Logout Link --}}
-                            <a class="dropdown-item" href="{{ route('auth.logout') }}"
+                            <a class="dropdown-item" href="{{ role_route('auth.logout') }}"
                                onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
                                 Logout
                             </a>
-                            <form id="logout-form" action="{{ route('auth.logout') }}" method="POST" class="d-none">
+                            <form id="logout-form" action="{{ role_route('auth.logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>
 
@@ -133,36 +148,8 @@
                     </li>
                     </ul>
                 </div>
-            <div class="sidebar" id="sidebar">
-                <div class="sidebar-inner slimscroll">
-                    <div id="sidebar-menu" class="sidebar-menu">
-                        <ul>
-                            <li class="menu-title"> 
-                                <span>Main</span>
-                            </li>
-                            {{-- 
-                                Use request()->is() to set the 'active' class 
-                                (assuming your routes are prefixed with 'admin') 
-                            --}}
-                            <li class="{{ request()->is('admin/dashboard*') ? 'active' : '' }}"> 
-                                <a href="{{ route('admin.dashboard') }}"><i class="fe fe-home"></i> <span>Dashboard</span></a>
-                            </li>
-                            <li class="{{ request()->routeIs('admin.teachers*') ? 'active' : '' }}"> 
-                                {{-- Update with your actual route --}}
-                                <a href="{{ route('admin.teachers.index') }}"><i class="fe fe-user-plus"></i> <span>Teachers</span></a>
-                            </li>
-                            <li class="{{ request()->routeIs('admin.students*') ? 'active' : '' }}"> 
-                                {{-- Update with your actual route --}}
-                                <a href="{{ route('admin.students.index') }}"><i class="fe fe-user"></i> <span>Students</span></a>
-                            </li>
-                            <li class="{{ request()->routeIs('admin.subscription.plan.*') ? 'active' : '' }}"> 
-                                {{-- Update with your actual route --}}
-                                <a href="{{route('admin.subscription.plan.index')}}"><i class="fe fe-credit-card"></i> <span>Subscription Plans</span></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            {{-- Include the sidebar partial --}}
+            @include('layouts.admin.partials.sidebar')
             <div class="page-wrapper">
                 
                 {{-- This is where the page-specific content will be injected --}}

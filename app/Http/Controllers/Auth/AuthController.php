@@ -69,8 +69,10 @@ class AuthController extends Controller
                  return redirect()->route('student.account.subscription')->with('success', 'Welcome back!');
             }elseif($user->isTeacher()){
                return redirect()->route('teacher.dashboard')->with('success', 'Welcome back!');
-            }elseif($user->isAdmin()){
+            }elseif($user->isAdmin() || $user->isSubAdmin()){
                 return redirect()->route('admin.dashboard')->with('success', 'Welcome back!');
+            }elseif($user->isOps()){
+                return redirect()->route('ops.dashboard')->with('success', 'Welcome back!');
             }
         }
 

@@ -82,3 +82,12 @@ Stack trace:
 [21-Nov-2025 13:14:51 UTC] PHP Parse error:  syntax error, unexpected token "}", expecting ";" in /home/deviytwg/projects/laravel/cambly/app/Models/Reservation.php on line 44
 [21-Nov-2025 13:14:54 UTC] PHP Parse error:  syntax error, unexpected token "}", expecting ";" in /home/deviytwg/projects/laravel/cambly/app/Models/Reservation.php on line 44
 [21-Nov-2025 13:15:01 UTC] PHP Parse error:  syntax error, unexpected token "}", expecting ";" in /home/deviytwg/projects/laravel/cambly/app/Models/Reservation.php on line 44
+[22-Nov-2025 05:02:56 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Admin\OpsController as OpsController because the name is already in use in /home/deviytwg/projects/laravel/cambly/routes/admin.php on line 3
+[22-Nov-2025 05:03:17 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Admin\OpsController as OpsController because the name is already in use in /home/deviytwg/projects/laravel/cambly/routes/admin.php on line 3
+[22-Nov-2025 05:03:17 UTC] PHP Fatal error:  Cannot use App\Http\Controllers\Admin\OpsController as OpsController because the name is already in use in /home/deviytwg/projects/laravel/cambly/routes/admin.php on line 3
+[22-Nov-2025 06:22:59 UTC] PHP Fatal error:  Cannot declare class App\Http\Middleware\IsAdmin, because the name is already in use in /home/deviytwg/projects/laravel/cambly/app/Http/Middleware/IsOps.php on line 9
+[22-Nov-2025 07:20:34 UTC] PHP Fatal error:  Uncaught ReflectionException: Class "Spatie\Permission\Middlewares\RoleMiddleware" does not exist in Command line code:1
+Stack trace:
+#0 Command line code(1): ReflectionMethod->__construct()
+#1 {main}
+  thrown in Command line code on line 1

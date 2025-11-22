@@ -40,7 +40,7 @@ class TeacherListing extends Component
     protected $listeners = ['deleteConfirmed' => 'destroy'];
 
     protected function rules()
-    {
+    {                  
         return [
             'name' => 'required|string|max:255',
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($this->userId)],
@@ -95,7 +95,8 @@ class TeacherListing extends Component
     }
 
     public function store()
-    {
+    {   
+       
         $this->validate();
 
         try {
@@ -111,6 +112,8 @@ class TeacherListing extends Component
                 $user->assignRole(config('roles.teacher'));
 
                 TeacherProfile::create([
+                    'preferred_name' => $this->name,
+                    'tz' => getTimeZone(),
                     'user_id' => $user->id,
                     'gender' => $this->gender,
                     'native_language' => $this->native_language,
@@ -118,11 +121,11 @@ class TeacherListing extends Component
             });
 
             $this->dispatch('hideAddModal');
-            $this->dispatch('alert', ['type' => 'success', 'message' => 'Teacher created successfully.']);
+            $this->dispatch('alert', type: 'success', message: 'Teacher created successfully.');
             $this->resetForm();
 
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['type' => 'error', 'message' => 'Failed to create teacher.']);
+            $this->dispatch('alert', type: 'error', message: 'Failed to create teacher.');
         }
     }
 
@@ -144,7 +147,8 @@ class TeacherListing extends Component
     }
 
     public function update()
-    {
+    {   
+       
         $this->validate($this->rules());
 
         try {
@@ -166,7 +170,9 @@ class TeacherListing extends Component
                 
                 $user->teacherProfile()->updateOrCreate(
                     ['user_id' => $user->id],
-                    [
+                    [   
+                        'tz' => $user->teacherProfile->tz ?? getTimeZone(),
+                        'preferred_name' => $this->name,
                         'gender' => $this->gender,
                         'native_language' => $this->native_language,
                     ]
@@ -174,11 +180,11 @@ class TeacherListing extends Component
             });
             
             $this->dispatch('hideEditModal');
-            $this->dispatch('alert', ['type' => 'success', 'message' => 'Teacher updated successfully.']);
+            $this->dispatch('alert', type: 'success', message: 'Teacher updated successfully.');
             $this->resetForm();
 
-        } catch (\Exception $e) {
-            $this->dispatch('alert', ['type' => 'error', 'message' => 'Failed to update teacher.']);
+        } catch (\Exceptions $e) {
+            $this->dispatch('alert', type: 'error', message: 'Failed to update teacher.');
         }
     }
 
@@ -193,9 +199,9 @@ class TeacherListing extends Component
         try {
             User::teachers()->findOrFail($this->userId)->delete();
             $this->dispatch('hideDeleteModal');
-            $this->dispatch('alert', ['type' => 'success', 'message' => 'Teacher deleted successfully.']);
+            $this->dispatch('alert', type: 'success', message: 'Teacher deleted successfully.');
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['type' => 'error', 'message' => 'Failed to delete teacher.']);
+            $this->dispatch('alert', type: 'error', message: 'Failed to delete teacher.');
         }
         $this->resetForm();
     }

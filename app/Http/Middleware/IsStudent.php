@@ -18,20 +18,58 @@ class IsStudent
             // Optional: You can redirect them by role
             if (Auth::user()->hasRole('teacher')) {
                 return redirect()->route('teacher.dashboard');
-            } elseif (Auth::user()->hasRole('admin')) {
+            } elseif (Auth::user()->hasRole('admin') || Auth::user()->hasRole('subadmin')) {
                 return redirect()->route('admin.dashboard');
+            } elseif (Auth::user()->hasRole('ops')) {
+                 return redirect()->route('ops.dashboard');
             }
 
             abort(403, 'Unauthorized');
         }
-        // Update timezone if not already done in this session
-        if ( !session('timezone_updated')) {
-            $user = Auth::user();
-            $timezone = getTimeZone(); // Your helper function
-            $user->studentProfile()->update(['tz' => $timezone]);
-            session(['timezone_updated' => true]);
-        }
+        
+        $this->updateUserTimezone(Auth::user());
 
         return $next($request);
+    }
+
+
+    private function updateUserTimezone($user)
+    {
+        $timezone = getTimeZone();
+
+        if (session('current_timezone') === $timezone) {
+            return;
+        }
+
+        $profile = null;
+
+        if ($user->isStudent()) {
+            $profile = $user->studentProfile;
+            
+            if (!$profile) {
+                $profile = $user->studentProfile()->create([
+                    'tz' => $timezone, 
+                    'preferred_name' => $user->name
+                ]);
+            }
+        } elseif ($user->isTeacher()) {
+            $profile = $user->teacherProfile;
+
+            if (!$profile) {
+                $profile = $user->teacherProfile()->create([
+                    'tz' => $timezone, 
+                    'preferred_name' => $user->name
+                ]);
+            }
+        }
+
+        if ($profile) {
+            if ($profile->tz !== $timezone) {
+                $profile->tz = $timezone;
+                $profile->save();
+            }
+
+            session(['current_timezone' => $timezone]);
+        }
     }
 }

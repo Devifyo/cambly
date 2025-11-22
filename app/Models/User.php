@@ -57,7 +57,7 @@ class User extends Authenticatable
 
     public function canImpersonate(): bool
     {
-        return $this->isAdmin();
+        return $this->isAdmin() || $this->isSubadmin() || $this->isOps();
     }
 
 
@@ -102,9 +102,9 @@ class User extends Authenticatable
         return $this->hasMany(Subscription::class);
     }
 
-        public function isTeacher(): bool
+    public function isTeacher(): bool
     {
-        return $this->hasRole(config('roles.teacher'));
+    return $this->hasRole(config('roles.teacher'));
     }
 
     /**
@@ -115,9 +115,19 @@ class User extends Authenticatable
         return $this->hasRole(config('roles.student'));
     }
 
-        public function isAdmin(): bool
+    public function isAdmin(): bool
     {
         return $this->hasRole(config('roles.admin'));
+    }
+
+    public function isSubadmin(): bool
+    {
+        return $this->hasRole(config('roles.subadmin'));
+    }
+
+    public function isOps(): bool
+    {
+        return $this->hasRole(config('roles.ops'));
     }
 
         /**
@@ -134,6 +144,11 @@ class User extends Authenticatable
     public function scopeStudents($query)
     {
         return $query->role(config('roles.student'));
+    }
+
+    public function scopeSubadmins($query)
+    {
+        return $query->role(config('roles.subadmin', 'subadmin'));
     }
 
     /**
