@@ -49,6 +49,12 @@
                 object-fit: cover;
             }
 
+            .table-user-img{
+                height: 52px;
+                width: 52px;
+                object-fit: cover;
+            }
+
 
 
         </style>

@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12 d-flex justify-content-between align-items-center">
                 <div>
-                    <h3 class="page-title">Subadmin Listing</h3>
+                    <h3 class="page-title">Admin Listing</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active">Subadmins</li>
@@ -92,7 +92,7 @@
                         @forelse ($subadmins as $subadmin)
                             <tr>
                                 <td class="text-center">
-                                    <img src="{{ $subadmin->profile_link }}" alt="Profile" width="30" class="rounded-circle">
+                                    <img src="{{ $subadmin->profile_link }}" alt="Profile" width="30" class="rounded-circle table-user-img">
                                 </td>
                                 <td>{{ $subadmin->name }}</td>
                                 <td>{{ $subadmin->email }}</td>

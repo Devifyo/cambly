@@ -90,7 +90,7 @@
                         @forelse ($opsUsers as $ops)
                             <tr>
                                 <td class="text-center">
-                                    <img src="{{ $ops->profile_link }}" alt="Profile" width="30" class="rounded-circle">
+                                    <img src="{{ $ops->profile_link }}" alt="Profile" width="30" class="rounded-circle table-user-img">
                                 </td>
                                 <td>{{ $ops->name }}</td>
                                 <td>{{ $ops->email }}</td>

@@ -111,7 +111,7 @@
 
                                             {{-- 1.5. BOOK CLASS BUTTON (NEW BUTTON) --}}
                                             @if($student->id !== auth()->id() && $student->canBeImpersonated())
-                                                <a href="{{route('admin.impersonate', ['id' => encryptId($student->id)]) }}"
+                                                <a href="{{ role_route('admin.impersonate', ['id' => encryptId($student->id)]) }}"
                                                     
                                                         class="btn btn-sm bg-primary-light me-2"
                                                         data-bs-toggle="tooltip" title="Book Lesson">

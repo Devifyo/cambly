@@ -393,7 +393,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
      * Resolve timezone for viewer; fallback to teacher/app/UTC.
      */
     protected function resolveViewerTimezone(?User $viewer, User $teacher): string
-    {
+    {   
         $tz = null;
         if ($viewer) {
             $tz = optional($viewer->studentProfile)->tz

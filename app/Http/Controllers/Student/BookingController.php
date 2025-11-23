@@ -30,7 +30,7 @@ class BookingController extends Controller
     }
 
     public function slots(Request $request, $teacherId)
-    {
+    {   
         if (function_exists('decryptId')) {
             try { $teacherId = decryptId($teacherId); } catch (\Throwable $e) {}
         } else {
@@ -50,7 +50,7 @@ class BookingController extends Controller
     }
 
     public function weekSlots(Request $request, $teacherId)
-    {
+    {   
         $user = $request->user();
         // decrypt teacher id if you use encryptId helper (adjust as needed)
         try {

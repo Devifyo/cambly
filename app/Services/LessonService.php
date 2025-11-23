@@ -90,12 +90,16 @@ class LessonService
      */
     public function getViewerTimezone(User $viewer): string
     {
-        // This logic assumes the $viewer is the student.
-        $tz = optional($viewer->studentProfile)->tz
-            ?? optional($viewer->teacherProfile)->tz; // In case a teacher views it
+        $isImpersonating = is_impersonating();
+        if ($isImpersonating) {
+            $tz = getTimeZone();
+        }else{
+            // This logic assumes the $viewer is the student.
+            $tz = optional($viewer->studentProfile)->tz
+                ?? optional($viewer->teacherProfile)->tz; // In case a teacher views it
 
-        $tz = $tz ?? config('app.timezone', 'UTC');
-
+            $tz = $tz ?? config('app.timezone', 'UTC');
+        }
         return in_array($tz, \DateTimeZone::listIdentifiers()) ? $tz : 'UTC';
     }
 

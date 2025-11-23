@@ -22,7 +22,8 @@ class SlotService
      * @return \Illuminate\Support\Collection of arrays shaped for FullCalendar
      */
     public function getWeekSlotsForTeacher(?User $student, $teacherId, string $startIso, string $endIso): Collection
-    {
+    {   
+        // dd("lol");
         try {
             $start = Carbon::parse($startIso);
             $end = Carbon::parse($endIso);
@@ -39,7 +40,6 @@ class SlotService
             ->whereBetween('start_utc', [$start, $end])
             ->orderBy('start_utc')
             ->get();
-
         // If you don't have an Availability model, you can use Reservation->whereHas('availability') similarly.
         // Map availabilities to FullCalendar events
         $events = $availabilities->map(function ($avail) use ($student) {
@@ -56,7 +56,14 @@ class SlotService
                 ?? 'Teacher';
 
             // form human-friendly user formatted time according to viewer timezone if available
-            $viewerTz = $student?->studentProfile?->tz ?? ($avail->teacher->teacherProfile->tz ?? 'UTC');
+            $isImpersonating = is_impersonating();
+            $viewerTz = 'UTC';
+            if($isImpersonating){
+                $viewerTz = getTimeZone();
+            }else{
+                $viewerTz = $student?->studentProfile?->tz ?? ($avail->teacher->teacherProfile->tz ?? 'UTC');
+            }
+
             $dtStartUtc = Carbon::parse($avail->start_utc, 'UTC');
             $dtUser = $dtStartUtc->copy()->setTimezone($viewerTz);
 

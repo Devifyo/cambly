@@ -10,17 +10,24 @@
                 // 2. Check logic: 
                 // - Must HAVE a subscription record ($subscription is not null)
                 // - AND (ends_at is in the past OR current_period_end is in the past)
+             
             $isExpired = $subscription && (
-                optional($subscription->ends_at)->isPast() || 
-                optional($subscription->current_period_end)->isPast()
+                optional($subscription->current_period_end)->isPast() || 
+                optional($subscription->ends_at)->isPast()
             );
-            
+            $isCancelled = $subscription && $subscription->status === 'cancelled';
             if ($isExpired) {
                 $type = 'danger';
-                $title = 'Subscription Expired!';
+                $title = 'Subscription Ended!';
                 $message = 'Your subscription has ended. Please renew your plan to continue booking lessons.';
                 $btnClass = 'btn-outline-danger';
-            } else {
+            }elseif($isCancelled){
+                $type = 'danger';
+                $title = 'Subscription Cancelled!';
+                $message = 'Your subscription has been cancelled. Please renew your plan to continue booking lessons.';
+                $btnClass = 'btn-outline-danger';
+            }
+             else {
                 $type = 'warning';
                 $title = 'Start Learning!';
                 $message = 'You are not subscribed yet. Please subscribe to a plan to start booking lessons.';

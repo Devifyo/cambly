@@ -194,6 +194,16 @@ class User extends Authenticatable
             ->exists();
     }
 
+    public function lastSubscriptionIsCancelled(): bool
+    {
+        $last = $this->hasOne(\App\Models\Subscription::class)
+            ->latest('created_at')
+            ->first();
+
+        return $last && $last->status === 'cancelled';
+    }
+
+
     public function webhookEvents()
     {
         return $this->hasMany(\App\Models\WebhookEvent::class);
