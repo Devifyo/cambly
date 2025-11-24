@@ -158,6 +158,43 @@ class EmailTemplateSeeder extends Seeder
             ",
             'status' => true,
         ]);
+        // 8d. Booking Cancelled by admin - Confirmation to  teacher
+
+        EmailTemplate::updateOrCreate(
+            ['slug' => 'booking-cancelled-by-admin-send-teacher'],
+            [
+                'name' => 'Booking Cancelled by Admin',
+                'subject' => 'Lesson Cancelled by Admin',
+                'body' => "
+                    <p>Hi [teacher_name],</p>
+
+                    <p>The lesson scheduled for <strong>[lesson_time]</strong> 
+                    <strong>[student_name]</strong> was cancelled by <strong>[action_by]</strong>.</p>
+
+                    <p>Please check your <a href=\"[dashboard_link]\">dashboard</a> for more details.</p>
+                ",
+                'status' => true,
+            ]
+        );
+
+        // 8e. Booking Cancelled by admin - Confirmation to  student
+
+        EmailTemplate::updateOrCreate(
+            ['slug' => 'booking-cancelled-by-admin-send-student'],
+            [
+                'name' => 'Booking Cancelled by Admin',
+                'subject' => 'Lesson Cancelled by Admin',
+                'body' => "
+                    <p>Hi [student_name],</p>
+
+                    <p>The lesson scheduled for <strong>[lesson_time]</strong> 
+                    <strong>[teacher_name]</strong> was cancelled by <strong>[action_by]</strong>.</p>
+
+                    <p>Please check your <a href=\"[dashboard_link]\">dashboard</a> for more details.</p>
+                ",
+                'status' => true,
+            ]
+        );
 
 
         // 9. Booking created by student (student confirmation)
