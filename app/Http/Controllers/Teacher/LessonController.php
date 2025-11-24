@@ -8,8 +8,11 @@ use App\Services\Teacher\TeacherLessonService;
 use App\Models\Reservation; // <-- Import the Reservation model
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\BookingLessonEmailTrait;
 class LessonController extends Controller
 {   
+    use BookingLessonEmailTrait;
+
     public $view_path = 'teacher.lessons';
     // Inject the service via the constructor
     public function __construct(private TeacherLessonService $lessonService)
@@ -90,7 +93,7 @@ class LessonController extends Controller
             $reservation = Reservation::where('id', decryptId($id))
                 ->where('teacher_id', auth()->id()) // <-- IMPORTANT security check
                 ->firstOrFail();
-
+            $this->sendLessonLinkUpdatedEmail($reservation);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['success' => false, 'message' => 'Lesson not found.'], 404);
         }

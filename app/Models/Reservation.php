@@ -19,6 +19,7 @@ class Reservation extends Model
         'status',
         'lesson_meeting_link',
         'created_by',
+        'cancelled_by'
     ];
 
     public function student()

@@ -25,7 +25,8 @@ class EmailTemplateSeeder extends Seeder
                 </ul>
                 <p><strong>Subject:</strong> [ticket_subject]</p>
                 <p><strong>Message:</strong><br>[ticket_message]</p>
-            "
+            ",
+            'status' => true,
         ]);
 
         // 2. Support Ticket Confirmation (for User)
@@ -37,7 +38,8 @@ class EmailTemplateSeeder extends Seeder
                 <p>Thank you for contacting us. We have received your support request and a member of our team will get back to you as soon as possible.</p>
                 <p><strong>Your Inquiry:</strong> [ticket_subject]</p>
                 <p>Your ticket ID is #[ticket_id].</p>
-            "
+            ",
+            'status' => true,
         ]);
 
         // 3. Forgot Password
@@ -53,7 +55,8 @@ class EmailTemplateSeeder extends Seeder
                 </p>
                 <p>This password reset link will expire in 60 minutes.</p>
                 <p>If you did not request a password reset, no further action is required.</p>
-            "
+            ",
+            'status' => true,
         ]);
 
         // 4. Booking Starting Soon
@@ -70,7 +73,8 @@ class EmailTemplateSeeder extends Seeder
                 <p style=\"text-align:center;\">
                     <a href=\"[lesson_link]\" style=\"display:inline-block; padding:12px 20px; background-color:#0E82FD; color:#fff; text-decoration:none; border-radius:8px;\">Join Lesson Now</a>
                 </p>
-            "
+            ",
+            'status' => true,
         ]);
         
         // 5. Subscription Renewed
@@ -82,7 +86,8 @@ class EmailTemplateSeeder extends Seeder
                 <p>Your <strong>[plan_name]</strong> subscription has been successfully renewed. Your payment of <strong>[amount]</strong> was processed.</p>
                 <p>Your next billing date is <strong>[next_billing_date]</strong>.</p>
                 <p>Thank you for learning with us!</p>
-            "
+            ",
+            'status' => true,
         ]);
 
         // 6. Subscription Renewal Failed
@@ -97,7 +102,8 @@ class EmailTemplateSeeder extends Seeder
                 <p style=\"text-align:center;\">
                     <a href=\"[update_payment_link]\" style=\"display:inline-block; padding:12px 20px; background-color:#dc3545; color:#fff; text-decoration:none; border-radius:8px;\">Update Payment Method</a>
                 </p>
-            "
+            ",
+            'status' => true,
         ]);
 
         // 7. Booking Cancelled by Tutor
@@ -112,10 +118,49 @@ class EmailTemplateSeeder extends Seeder
                 <p style=\"text-align:center;\">
                     <a href=\"[find_tutor_link]\" style=\"display:inline-block; padding:12px 20px; background-color:#0E82FD; color:#fff; text-decoration:none; border-radius:8px;\">Book a new Lesson</a>
                 </p>
-            "
+            ",
+            'status' => true,
         ]);
 
-        // Booking created by student (student confirmation)
+        // 8a. Booking Cancelled by Student - Notification to Teacher
+        EmailTemplate::updateOrCreate(['slug' => 'booking-cancelled-by-student-notification'], [
+            'name' => 'Booking Cancelled by Student (Teacher Notification)',
+            'subject' => 'Lesson Cancelled by Student: [student_name]',
+            'body' => "
+                <p>Hi [tutor_name],</p>
+                <p>We're writing to inform you that <strong>[student_name]</strong> has cancelled the lesson scheduled for <strong>[lesson_time]</strong>.</p>
+                <p>This slot is now available for other students to book.</p>
+                <p>Please check your <a href=\"[dashboard_link]\">dashboard</a> for more details.</p>
+            ",
+            'status' => true,
+        ]);
+
+        // 8b. Booking Cancelled by Student - Confirmation to Student
+        EmailTemplate::updateOrCreate(['slug' => 'booking-cancelled-by-student-confirmation'], [
+            'name' => 'Booking Cancelled (Student Confirmation)',
+            'subject' => 'Booking Cancelled Successfully',
+            'body' => "
+                <p>Hi [student_name],</p>
+                <p>You have successfully cancelled your lesson with <strong>[tutor_name]</strong> scheduled for <strong>[lesson_time]</strong>.</p>
+                <p>If you have any credits refunded, they are now available in your account.</p>
+            ",
+            'status' => true,
+        ]);
+
+                // 8c. Booking Cancelled by teacher - Confirmation to teacher
+        EmailTemplate::updateOrCreate(['slug' => 'booking-cancelled-by-teacher-confirmation'], [
+            'name' => 'Booking Cancelled (teacher Confirmation)',
+            'subject' => 'Booking Cancelled Successfully',
+            'body' => "
+                <p>Hi [teacher_name],</p>
+                <p>You have successfully cancelled your lesson with <strong>[student_name]</strong> scheduled for <strong>[lesson_time]</strong>.</p>
+                <p>If you have any credits refunded, they are now available in your account.</p>
+            ",
+            'status' => true,
+        ]);
+
+
+        // 9. Booking created by student (student confirmation)
         EmailTemplate::updateOrCreate(['slug' => 'booking-created-by-student'], [
             'name' => 'Booking Created (Student)',
             'subject' => 'Your lesson with [tutor_name] is confirmed — [lesson_time]',
@@ -128,13 +173,13 @@ class EmailTemplateSeeder extends Seeder
                     <li><strong>Duration:</strong> [lesson_duration]</li>
                     <li><strong>Lesson Link:</strong> [lesson_link_text]</li>
                 </ul>
-                <p>If you need to reschedule or cancel, please visit your <a href=\"[dashboard_link]\">dashboard</a> or contact support.</p>
                 <p>Thank you for booking — see you soon!</p>
                 <p><em>[app_name]</em></p>
-            "
+            ",
+            'status' => true,
         ]);
 
-        // Booking created by admin (student notification when admin books for them)
+        // 10. Booking created by admin (student notification when admin books for them)
         EmailTemplate::updateOrCreate(['slug' => 'booking-created-by-admin'], [
             'name' => 'Booking Created by Admin (Student Notification)',
             'subject' => 'A lesson has been scheduled for you by [admin_name] — [lesson_time]',
@@ -148,12 +193,13 @@ class EmailTemplateSeeder extends Seeder
                     <li><strong>Lesson Link:</strong> [lesson_link_text]</li>
                 </ul>
                 <p>If this was not expected, or you need changes, please contact support or visit your <a href=\"[dashboard_link]\">dashboard</a>.</p>
-                <p>Thanks you!</p>
+                <p>Thank you!</p>
                 <p><em>[app_name]</em></p>
-            "
+            ",
+            'status' => true,
         ]);
 
-        // Lesson link added by teacher
+        // 11. Lesson link added by teacher
         EmailTemplate::updateOrCreate(['slug' => 'lesson-link-added'], [
             'name' => 'Lesson Link Added by Teacher',
             'subject' => 'Your upcoming lesson now has a lesson link',
@@ -167,10 +213,11 @@ class EmailTemplateSeeder extends Seeder
                 </ul>
                 <p>Please use this link to join the lesson on time.</p>
                 <p>Thank you!</p>
-            "
+            ",
+            'status' => true,
         ]);
 
-        // Lesson link updated by teacher
+        // 12. Lesson link updated by teacher
         EmailTemplate::updateOrCreate(['slug' => 'lesson-link-updated'], [
             'name' => 'Lesson Link Updated by Teacher',
             'subject' => 'Your lesson link has been updated',
@@ -184,10 +231,11 @@ class EmailTemplateSeeder extends Seeder
                 </ul>
                 <p>Please make sure to use this updated link.</p>
                 <p>Thank you!</p>
-            "
+            ",
+            'status' => true,
         ]);
 
-        // Reminder to teacher for lessons with missing lesson link
+        // 13. Reminder to teacher for lessons with missing lesson link
         EmailTemplate::updateOrCreate(['slug' => 'pending-lesson-link-reminder-teacher'], [
             'name' => 'Pending Lesson Link Reminder (Teacher)',
             'subject' => 'Reminder: You have lessons without lesson links',
@@ -203,8 +251,30 @@ class EmailTemplateSeeder extends Seeder
                 <p>You can add links from your teacher dashboard.</p>
 
                 <p>Thank you!</p>
-            "
+            ",
+            'status' => true,
         ]);
 
+        // 14. New Booking Notification for Teacher
+        EmailTemplate::updateOrCreate(['slug' => 'booking-created-notification-teacher'], 
+            [
+                'name' => 'New Booking Notification (Teacher)',
+                'subject' => 'New Booking: [student_name] — [lesson_time]',
+                'body' => '
+                    <p>Hi [user_name],</p>
+                    <p>You have a new lesson booked with <strong>[student_name]</strong>.</p>
+                    <div style="background-color:#f0f9ff; border-left: 4px solid #0E82FD; padding: 15px; margin: 20px 0;">
+                        <p style="margin:0;"><strong>Student:</strong> [student_name]</p>
+                        <p style="margin:0;"><strong>Time:</strong> [lesson_time]</p>
+                        <p style="margin:0;"><strong>Duration:</strong> [lesson_duration]</p>
+                    </div>
+                    <p>Please ensure you add the meeting link before the lesson starts.</p>
+                    <p style="text-align:center; margin-top:30px;">
+                        <a href="[dashboard_link]" style="background-color:#0E82FD; color:#ffffff; padding: 12px 24px; text-decoration:none; border-radius:5px; font-weight:bold;">View Booking</a>
+                    </p>
+                ',
+                'status' => true,
+            ],
+        );
     }
 }

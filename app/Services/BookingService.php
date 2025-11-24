@@ -283,7 +283,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
         }
 
         try {
-            $result = DB::transaction(function () use ($reservation, $actor) {
+            $result = DB::transaction(function () use ($reservation, $actor, $isImpersonating) {
                 $availability = $reservation->availability;
                 $nowUtc = Carbon::now('UTC');
 
@@ -318,6 +318,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
                 }
 
                 // Mark reservation canceled and optionally record cancellation metadata if available
+                $reservation->cancelled_by = $actor->id;
                 $reservation->status = 'cancelled';
                 // Optionally set canceled_by_id / canceled_at if your schema has them
                 if (property_exists($reservation, 'canceled_by_id')) {
@@ -332,10 +333,12 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
                 $refundResult = $this->useCreditService->refundCreditsOnCancel($reservation);
                 $encryptedReservationId = encryptId($reservation->id);
                 $response['refund'] = isset($refundResult['refunded']) ? $refundResult['refunded'] : null;
+                $is_refund = false;
                  if ($refundResult && isset($refundResult['refunded']) && $refundResult['refunded']) {
                     // Credits were refunded
                     $creditInfo = $this->getCurrentMonthCreditInfo($reservation->student);
                     $creditsRefunded = $refundResult['credits_refunded'] ?? config('app.ticket_per_meeting', 1);
+                    $is_refund = true;
                     $this->creditService->recordCreditTransaction(
                         $reservation->student_id,
                         $creditInfo['cycle_number'] ?? 1,
@@ -349,25 +352,32 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
                         $reservation->id,
                         'booking_cancel'
                     );
-            } else {
-                // No refund (past 12-hour window or other reason)
-                $creditInfo = $this->getCurrentMonthCreditInfo($reservation->student);
+                } else {
+                    // No refund (past 12-hour window or other reason)
+                    $creditInfo = $this->getCurrentMonthCreditInfo($reservation->student);
 
-                $this->creditService->recordCreditTransaction(
-                    $reservation->student_id,
-                    $creditInfo['cycle_number'] ?? 1,
-                    0, // No credits changed
-                    'no_refund',
-                    'booking_cancelled_no_refund',
-                    "Booking cancelled without refund for booking #{$encryptedReservationId} - " . 
-                    ($refundResult['reason'] ?? 'outside refund window'),
-                    "booking_cancel_{$encryptedReservationId}",
-                    null, // plan
-                    $creditInfo['ledger_id'] ?? null,
-                    $reservation->id,
-                    'booking_cancel'
-                );
-            }
+                    $this->creditService->recordCreditTransaction(
+                        $reservation->student_id,
+                        $creditInfo['cycle_number'] ?? 1,
+                        0, // No credits changed
+                        'no_refund',
+                        'booking_cancelled_no_refund',
+                        "Booking cancelled without refund for booking #{$encryptedReservationId} - " . 
+                        ($refundResult['reason'] ?? 'outside refund window'),
+                        "booking_cancel_{$encryptedReservationId}",
+                        null, // plan
+                        $creditInfo['ledger_id'] ?? null,
+                        $reservation->id,
+                        'booking_cancel'
+                    );
+                }
+                if(!$isImpersonating && $actor->isStudent()){
+                $this->sendBookingCancelledByStudentEmail($reservation);
+                }elseif(!$isImpersonating && $actor->isTeacher()){
+                    $this->sendBookingCancelledByTutorEmail($reservation, $is_refund);
+                }elseif($isImpersonating){
+
+                }
                 return $response;
             }, 5); // retry up to 5 times for deadlock safety
 

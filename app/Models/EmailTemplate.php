@@ -13,5 +13,6 @@ class EmailTemplate extends Model
         'slug',
         'subject',
         'body',
+        'status'
     ];
 }
