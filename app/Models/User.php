@@ -107,6 +107,12 @@ class User extends Authenticatable
     return $this->hasRole(config('roles.teacher'));
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
+
+
     /**
      * Check if the user has the 'student' role.
      */

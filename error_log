@@ -91,3 +91,60 @@ Stack trace:
 #0 Command line code(1): ReflectionMethod->__construct()
 #1 {main}
   thrown in Command line code on line 1
+[25-Nov-2025 09:25:15 UTC] PHP Parse error:  syntax error, unexpected token "}" in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 112
+[25-Nov-2025 09:25:32 UTC] PHP Parse error:  syntax error, unexpected token "}" in /home/deviytwg/projects/laravel/cambly/app/Models/User.php on line 112
+[25-Nov-2025 09:33:32 UTC] PHP Fatal error:  Can't use function return value in write context in /home/deviytwg/projects/laravel/cambly/app/Console/Commands/EmailSender.php on line 30
+[25-Nov-2025 09:33:32 UTC] PHP Fatal error:  Can't use function return value in write context in /home/deviytwg/projects/laravel/cambly/app/Console/Commands/EmailSender.php on line 30
+[25-Nov-2025 10:10:46 UTC] PHP Parse error:  syntax error, unexpected token "$", expecting "]" in /home/deviytwg/projects/laravel/cambly/app/Models/Reservation.php on line 118
+[25-Nov-2025 10:53:32 UTC] PHP Fatal error:  During class fetch: Uncaught ParseError: syntax error, unexpected single-quoted string "remaining_time", expecting "]" in /home/deviytwg/projects/laravel/cambly/app/Traits/BookingLessonEmailTrait.php:164
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(427): Composer\Autoload\{closure}()
+#1 /home/deviytwg/projects/laravel/cambly/app/Console/Commands/EmailSender.php(10): Composer\Autoload\ClassLoader->loadClass()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(576): include('/home/deviytwg/...')
+#3 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(427): Composer\Autoload\{closure}()
+#4 [internal function]: Composer\Autoload\ClassLoader->loadClass()
+#5 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(346): is_subclass_of()
+#6 /home/deviytwg/projects/laravel/cambly/app/Console/Kernel.php(23): Illuminate\Foundation\Console\Kernel->load()
+#7 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(453): App\Console\Kernel->commands()
+#8 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(199): Illuminate\Foundation\Console\Kernel->bootstrap()
+#9 Command line code(1): Illuminate\Foundation\Console\Kernel->handle()
+#10 {main} in /home/deviytwg/projects/laravel/cambly/app/Console/Commands/EmailSender.php on line 10
+[25-Nov-2025 10:53:32 UTC] PHP Fatal error:  During class fetch: Uncaught ParseError: syntax error, unexpected single-quoted string "remaining_time", expecting "]" in /home/deviytwg/projects/laravel/cambly/app/Traits/BookingLessonEmailTrait.php:164
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(427): Composer\Autoload\{closure}()
+#1 /home/deviytwg/projects/laravel/cambly/app/Console/Commands/EmailSender.php(10): Composer\Autoload\ClassLoader->loadClass()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(576): include('/home/deviytwg/...')
+#3 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(427): Composer\Autoload\{closure}()
+#4 [internal function]: Composer\Autoload\ClassLoader->loadClass()
+#5 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(346): is_subclass_of()
+#6 /home/deviytwg/projects/laravel/cambly/app/Console/Kernel.php(23): Illuminate\Foundation\Console\Kernel->load()
+#7 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(453): App\Console\Kernel->commands()
+#8 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(199): Illuminate\Foundation\Console\Kernel->bootstrap()
+#9 Command line code(1): Illuminate\Foundation\Console\Kernel->handle()
+#10 {main} in /home/deviytwg/projects/laravel/cambly/app/Console/Commands/EmailSender.php on line 10
+[25-Nov-2025 11:06:32 UTC] PHP Fatal error:  During class fetch: Uncaught ParseError: syntax error, unexpected single-quoted string "lesson_link_text", expecting "]" in /home/deviytwg/projects/laravel/cambly/app/Traits/BookingLessonEmailTrait.php:160
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(427): Composer\Autoload\{closure}()
+#1 /home/deviytwg/projects/laravel/cambly/app/Console/Commands/EmailSender.php(10): Composer\Autoload\ClassLoader->loadClass()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(576): include('/home/deviytwg/...')
+#3 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(427): Composer\Autoload\{closure}()
+#4 [internal function]: Composer\Autoload\ClassLoader->loadClass()
+#5 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(346): is_subclass_of()
+#6 /home/deviytwg/projects/laravel/cambly/app/Console/Kernel.php(23): Illuminate\Foundation\Console\Kernel->load()
+#7 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(453): App\Console\Kernel->commands()
+#8 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(199): Illuminate\Foundation\Console\Kernel->bootstrap()
+#9 Command line code(1): Illuminate\Foundation\Console\Kernel->handle()
+#10 {main} in /home/deviytwg/projects/laravel/cambly/app/Console/Commands/EmailSender.php on line 10
+[25-Nov-2025 11:06:32 UTC] PHP Fatal error:  During class fetch: Uncaught ParseError: syntax error, unexpected single-quoted string "lesson_link_text", expecting "]" in /home/deviytwg/projects/laravel/cambly/app/Traits/BookingLessonEmailTrait.php:160
+Stack trace:
+#0 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(427): Composer\Autoload\{closure}()
+#1 /home/deviytwg/projects/laravel/cambly/app/Console/Commands/EmailSender.php(10): Composer\Autoload\ClassLoader->loadClass()
+#2 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(576): include('/home/deviytwg/...')
+#3 /home/deviytwg/projects/laravel/cambly/vendor/composer/ClassLoader.php(427): Composer\Autoload\{closure}()
+#4 [internal function]: Composer\Autoload\ClassLoader->loadClass()
+#5 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(346): is_subclass_of()
+#6 /home/deviytwg/projects/laravel/cambly/app/Console/Kernel.php(23): Illuminate\Foundation\Console\Kernel->load()
+#7 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(453): App\Console\Kernel->commands()
+#8 /home/deviytwg/projects/laravel/cambly/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(199): Illuminate\Foundation\Console\Kernel->bootstrap()
+#9 Command line code(1): Illuminate\Foundation\Console\Kernel->handle()
+#10 {main} in /home/deviytwg/projects/laravel/cambly/app/Console/Commands/EmailSender.php on line 10

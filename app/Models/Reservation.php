@@ -19,8 +19,11 @@ class Reservation extends Model
         'status',
         'lesson_meeting_link',
         'created_by',
-        'cancelled_by'
+        'cancelled_by',
+        'last_email_at'
     ];
+
+    protected $appends = ['schedule_array'];
 
     public function student()
     {
@@ -71,6 +74,66 @@ class Reservation extends Model
         // If the conditions are not met, return the original status
         return $originalStatus;
     }
+
+    public function getScheduleArrayAttribute(): array
+    {
+        return $this->getScheduleArray();
+    }
+
+    public function getScheduleArray(): array
+    {
+        if (! $this->availability || ! $this->availability->start_utc) {
+            return [
+                'student' => $this->emptySchedulePayload(),
+                'teacher' => $this->emptySchedulePayload(),
+            ];
+        }
+
+        // Base UTC start time
+        $startUtc = Carbon::parse($this->availability->start_utc)->timezone('UTC');
+
+        // Build for both participants
+        return [
+            'student' => $this->buildSchedulePayload($this->student, 'studentProfile', $startUtc),
+            'teacher' => $this->buildSchedulePayload($this->teacher, 'teacherProfile', $startUtc),
+        ];
+    }
+
+    protected function buildSchedulePayload($user, string $profileRelation, Carbon $startUtc): array
+    {
+        if (! $user) {
+            return $this->emptySchedulePayload();
+        }
+
+        // Get timezone from the related profile
+        $tz = $user->{$profileRelation}->tz ?? 'UTC';
+        // Convert UTC start time -> user local timezone
+        $local = $startUtc->copy()->timezone($tz);
+
+        // Minutes until start (clamped to zero)
+        $minutesToStart = Carbon::now('UTC')->diffInMinutes($startUtc, false);
+        $minutesToStart = max(0, $minutesToStart);
+
+        return [
+            'lesson_start_time_local'         => $local->format('H:i'),
+            'lesson_start_date_time_local'    => formatLessonDateTime($local->toDateTimeString()),
+            'lesson_start_date_time_utc'      => formatLessonDateTime($startUtc->toDateTimeString()),
+            'time_to_start_lesson_in_minutes' => $minutesToStart,
+            'timezone'                        => $tz,
+        ];
+    }
+
+    protected function emptySchedulePayload(): array
+    {
+        return [
+            'lesson_start_time_local'         => null,
+            'lesson_start_date_time_local'    => null,
+            'lesson_start_date_time_utc'      => null,
+            'time_to_start_lesson_in_minutes' => null,
+            'timezone'                        => null,
+        ];
+    }
+
 
 
     /**

@@ -93,7 +93,6 @@ class LessonController extends Controller
             $reservation = Reservation::where('id', decryptId($id))
                 ->where('teacher_id', auth()->id()) // <-- IMPORTANT security check
                 ->firstOrFail();
-            $this->sendLessonLinkUpdatedEmail($reservation);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['success' => false, 'message' => 'Lesson not found.'], 404);
         }
@@ -106,6 +105,7 @@ class LessonController extends Controller
         // 4. Update the link (will be set to null if request input is empty)
         $reservation->lesson_meeting_link = $request->input('lesson_meeting_link');
         $reservation->save();
+        $this->sendLessonLinkUpdatedEmail($reservation);
 
         // 5. Return a success response
         return response()->json([

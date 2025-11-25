@@ -279,9 +279,9 @@ class EmailTemplateSeeder extends Seeder
             'body' => "
                 <p>Hi [tutor_name],</p>
                 <p>This is a reminder that you have upcoming lessons that do not yet have a lesson link added.</p>
-
-                <p><strong>Pending Lessons:</strong></p>
-                <p>[lessons_list]</p>
+                <p style=\"text-align:center;\">
+                    <a href=\"[lesson_update_url]\" style=\"display:inline-block; padding:12px 20px; background-color:#C7381A; color:#fff; text-decoration:none; border-radius:8px;\">Update Lesson Link</a>
+                </p>
 
                 <p>Please add the lesson link as soon as possible so students can join their lessons on time.</p>
 

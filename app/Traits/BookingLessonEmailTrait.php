@@ -142,25 +142,26 @@ trait BookingLessonEmailTrait
      * Wrapper for sendEmailNotification to easily call from other methods
      */
     private function sendEmailNotification(Reservation $reservation, User $recipient, string $slug, $is_refund = false): void
-    {
+    {   
         // Calculate basic placeholders
         $lessonLinkText = $reservation->lesson_meeting_link
             ? '<a href="' . $reservation->lesson_meeting_link . '" target="_blank" style="background-color:#0E82FD; color:#fff; padding:10px 15px; text-decoration:none; border-radius:5px;">Join Lesson</a>'
             : 'Link not available yet';
 
         $bookingId = function_exists('encryptId') ? encryptId($reservation->id) : $reservation->id;
-
         $placeholders = [
             'student_name'     => $reservation->student->name ?? 'Student',
             'tutor_name'       => $reservation->teacher->name ?? 'Tutor',
             'teacher_name'     => $reservation->teacher->name ?? 'Tutor',
-            'lesson_duration'  => '60 Minutes',
+            'lesson_duration'  => '25 minutes',
             'lesson_link'      => $reservation->lesson_meeting_link ?? '',
+            'lesson_update_url' => route('teacher.lessons.details',['id' => encryptId($reservation->id)]),
             'lesson_link_text' => $lessonLinkText,
             'booking_id'       => $bookingId,
             'dashboard_link'   => url('/dashboard'),
             'app_name'         => config('app.name'),
-            'refund_status' =>  $is_refund ? 'Completed' : 'No valid refund,'
+            'refund_status' =>  $is_refund ? 'Completed' : 'No valid refund,',
+            'remaining_time' => formatRemainingTime($reservation->schedule_array['student']['time_to_start_lesson_in_minutes'])
         ];
 
         $this->processAndSend($reservation, $recipient, $slug, $placeholders);

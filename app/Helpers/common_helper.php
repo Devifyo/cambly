@@ -245,6 +245,27 @@ if (! function_exists('formatLessonDateTime')) {
     }
 
 }
+if (! function_exists('formatRemainingTime')) {
+    function formatRemainingTime(int $minutes): string
+    {
+        if ($minutes >= 60) {
+            $hours = floor($minutes / 60);
+            $remainingMinutes = $minutes % 60;
+
+            $hourText = $hours . ' hour' . ($hours > 1 ? 's' : '');
+
+            if ($remainingMinutes > 0) {
+                $minuteText = $remainingMinutes . ' minute' . ($remainingMinutes > 1 ? 's' : '');
+                return $hourText . ' ' . $minuteText;
+            }
+
+            return $hourText;
+        }
+
+        return $minutes . ' minute' . ($minutes > 1 ? 's' : '');
+    }
+}
+
 
 if (! function_exists('uploadProfile')) {
     function uploadProfile(User $user, UploadedFile $newImage): string

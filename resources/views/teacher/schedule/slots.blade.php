@@ -142,7 +142,14 @@
     </div>
 </div>
 @endsection
+@php
+    // choose the user's timezone: prefer studentProfile, then teacherProfile, then app default
+    $user = auth()->user();
+    $tz = $user->studentProfile->timezone ?? $user->teacherProfile->timezone ?? config('app.timezone');
 
+    // current offset in seconds for that timezone (accounts for DST)
+    $offsetSeconds = \Carbon\Carbon::now($tz)->getOffset();
+@endphp
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -153,16 +160,23 @@
     
     // Modal instance
     const slotModal = new bootstrap.Modal('#slotModal');
-
+     const USER_TZ = @json($tz);
+    const USER_OFFSET_SECONDS = {{ $offsetSeconds }};
     // Configuration
     const CONFIG = {
         slotsUrl: "{{ route('teacher.schedule.slots') }}", // GET and POST
         updateUrl: "{{ url('teacher/schedule/schedule-slots') }}", // Base for PUT/DELETE
         csrf: "{{ csrf_token() }}",
-        now: new Date(),
-        slotDuration: {{ config('app.max_meeting_duration', 25) }}
-    };
+        now: (function(){
+            const nowUtcMs = Date.now();
+            return new Date(nowUtcMs + USER_OFFSET_SECONDS * 1000);
+        })(),
+        slotDuration: {{ config('app.max_meeting_duration', 25) }},
+        userTz: USER_TZ,
+        userOffsetSeconds: USER_OFFSET_SECONDS
 
+    };
+    console.log(CONFIG.now);
     // State Management
     const state = {
         serverEvents: [],
