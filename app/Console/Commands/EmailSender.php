@@ -50,8 +50,8 @@ class EmailSender extends Command
         $this->info("Checking " . $reservationsInFuture->count() . " upcoming reservations...");
 
         foreach($reservationsInFuture as $reservation) {
-                $reservation->last_email_at = null;
-                $reservation->save();
+                // $reservation->last_email_at = null;
+                // $reservation->save();
             // Safety check for schedule data
             $minutesToStart = $reservation->schedule_array['student']['time_to_start_lesson_in_minutes'] ?? null;
 
