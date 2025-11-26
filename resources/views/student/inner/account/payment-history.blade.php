@@ -145,7 +145,6 @@
                             @endif
                         </div>
                     </div>
-
                     <div style="margin-top:.5rem; color:#6b7280; font-size:.88rem;">
                         Billed on: {{ $tx->formatted_date }}
                     </div>

@@ -34,6 +34,26 @@ class WebhookEvent extends Model
         'eur' => '€',
     ];
 
+    public function getPayloadAttribute($value)
+    {
+        // 1. If the value is null, return an empty array immediately
+        if (is_null($value)) {
+            return [];
+        }
+
+        // 2. Decode the raw database value
+        $decoded = json_decode($value, true);
+
+        // 3. THE FIX: If the result is STILL a string, it means it was double-encoded.
+        // We decode it one more time to get the actual array.
+        if (is_string($decoded)) {
+            return json_decode($decoded, true);
+        }
+
+        // 4. Ensure we always return an array (in case of other errors)
+        return is_array($decoded) ? $decoded : [];
+    }
+
     // --- SCOPE (Unchanged) ---
     public function scopeApplyFilters(Builder $query, array $filters): Builder
     {
