@@ -45,7 +45,7 @@ class BookingController extends Controller
             $status = $res['status'] ?? 404;
             return response()->json(['message' => $res['error']], $status);
         }
-
+        
         return response()->json($res);
     }
 
@@ -67,6 +67,7 @@ class BookingController extends Controller
 
         try {
             $events = $this->slotService->getWeekSlotsForTeacher($user, $teacherRawId, $start, $end);
+            // dd($events);
             return response()->json(['events' => $events], 200);
         } catch (\Throwables $e) {
             Log::error('slotService error: '.$e->getMessage());
