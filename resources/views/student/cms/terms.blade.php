@@ -3,7 +3,6 @@
 
 @push('styles')
     <style>
-        /* This CSS is identical to your privacy.blade.php for consistency */
         .cms-container { 
             max-width: 1000px; 
             margin: 0 auto;
@@ -21,26 +20,27 @@
             font-size: 1.5rem;
             font-weight: 600;
             color: #111827;
-            margin-top: 1.5rem;
+            margin-top: 2rem;
             margin-bottom: 1rem;
             border-bottom: 2px solid #0E82FD;
             padding-bottom: 0.5rem;
         }
         .cms-card h3 {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            color: #111827;
+            color: #374151;
             margin-top: 1.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
         .cms-card p, .cms-card li {
             font-size: 1rem;
             line-height: 1.7;
-            color: #374151;
-            margin-bottom: 1.5rem;
+            color: #4b5563;
+            margin-bottom: 1rem;
         }
         .cms-card ul {
             padding-left: 20px;
+            margin-bottom: 1.5rem;
         }
         .cms-card p:last-child {
             margin-bottom: 0;
@@ -49,14 +49,19 @@
             font-size: 0.9rem;
             color: #6b7280;
             font-style: italic;
+            margin-bottom: 2rem;
         }
-        .disclaimer-box {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #b91c1c;
+        
+        /* Highlight box for important policies */
+        .policy-alert {
+            background-color: #fff4f4;
+            border-left: 4px solid #dc2626;
             padding: 1rem;
-            border-radius: 8px;
+            border-radius: 4px;
             margin-bottom: 1.5rem;
+        }
+        .policy-alert strong {
+            color: #dc2626;
         }
     </style>
 @endpush
@@ -84,90 +89,97 @@
     <div class="cms-container">
         <div class="cms-card">
 
-            {{-- <div class="disclaimer-box">
-                <strong>Disclaimer:</strong> This is a template and not legal advice. You must consult with a legal professional to ensure this policy is complete and compliant with all relevant laws.
-            </div> --}}
-
             <p class="last-updated">Last Updated: {{ date('F j, Y') }}</p>
 
             <h2>1. Acceptance of Terms</h2>
             <p>
-                Welcome to <strong>{{ config('app.name') }}</strong> ("we," "our," or "us"). These Terms and Conditions ("Terms") govern your use of our website and our platform (the "Services") that connects Students with independent Tutors. By creating an account or using our Services, you agree to be bound by these Terms.
+                Welcome to <strong>{{ config('app.name') }}</strong> ("we," "our," or "us"). By creating an account, purchasing a subscription, or using our services to book lessons with teachers ("Teachers"), you agree to be bound by these Terms and Conditions ("Terms").
             </p>
 
-            <h2>2. The Service</h2>
-            <h3>A. Our Platform is a Venue</h3>
+            <h2>2. The Service Overview</h2>
             <p>
-                {{ config('app.name') }} provides a platform for Students to find and book 1-to-1 lessons with Tutors. The Tutors are independent contractors, not employees or agents of {{ config('app.name') }}. We are not responsible for the content of lessons or the teaching methods used by Tutors.
-            </p>
-            <h3>B. Student Responsibilities</h3>
-            <p>
-                You are responsible for selecting the right Tutor for your needs. While we may verify Tutors, we do not guarantee any specific learning outcomes from your lessons.
+                {{ config('app.name') }} is a platform that connects Students with independent Teachers for educational lessons. Students browse Tutor profiles, check schedules, and book sessions using our subscription-based ticketing system.
             </p>
 
             <h2>3. Account Registration</h2>
             <p>
-                To use most features of the Service, you must register for an account. You agree to:
+                To access the booking system, you must register for an account. You agree to provide accurate information and maintain the security of your account credentials. You are responsible for all activities that occur under your account.
+            </p>
+
+            <h2>4. Subscription and Ticketing Policy</h2>
+            <p>
+                Our platform operates on a monthly subscription model that utilizes "Tickets" for lesson bookings. By subscribing, you agree to the following logic:
+            </p>
+
+            <h3>A. Active Subscription Requirement</h3>
+            <p>
+                You must hold a valid, active subscription to search for Teachers and book lessons. If your subscription expires or is cancelled, you will lose access to booking functionality until a new subscription is purchased.
+            </p>
+
+            <h3>B. Ticket Allocation & Usage</h3>
+            <p>
+                Upon purchasing or renewing a subscription, your account is credited with a specific number of Tickets based on your selected plan.
             </p>
             <ul>
-                <li>Provide accurate, current, and complete information during the registration process (as seen in your "Account Settings" page).</li>
-                <li>Maintain the security of your password. You are responsible for all activities that occur under your account.</li>
-                <li>Be at least 13 years of age. If you are under 18, you must have your parent or legal guardian's permission to use the Service.</li>
+                <li><strong>1 Ticket = 1 Lesson Booking.</strong></li>
+                <li>Tickets are the sole currency used to reserve time slots with Teachers.</li>
             </ul>
 
-            <h2>4. Bookings, Payments, and Cancellations</h2>
-            <h3>A. Booking a Lesson</h3>
+            <h3>C. No Rollover Policy (Use It or Lose It)</h3>
+            <div class="policy-alert">
+                <strong>Important:</strong> Tickets are valid ONLY for the specific billing month in which they are issued.
+            </div>
             <p>
-                When you book a lesson, you agree to pay the fees listed by the Tutor. The booking is confirmed only upon successful payment.
-            </p>
-            <h3>B. Payments</h3>
-            <p>
-                All payments are processed through our third-party payment processor (e.g., Stripe, PayPal). We do not store your full credit card details. You agree to provide valid payment information and authorize us to charge your payment method for the lessons you book.
-            </p>
-            <h3>C. Cancellation and Refund Policy</h3>
-            <p>
-                <strong>[This is a critical section you must define]</strong>
-                You must replace this with your official policy. For example:
-            </p>
-            <p>
-                <em>"Cancellations by Student: You may cancel a lesson up to 24 hours before the scheduled start time for a full refund or credit. Cancellations made within 24 hours of the start time are non-refundable.
-                Cancellations by Tutor: If a Tutor cancels a lesson at any time, you will receive a full refund or credit to your account."</em>
+                At the end of your monthly billing cycle, any unused tickets remaining in your account will <strong>expire immediately</strong>. Tickets <strong>do not</strong> carry forward to the next month. When your subscription renews, your ticket balance resets according to your plan's limit.
             </p>
 
-            <h2>5. User Conduct</h2>
+            <h2>5. Booking and Cancellation Rules</h2>
             <p>
-                You agree not to use the Service in any way that is unlawful, harmful, or violates these Terms. You will not:
+                We value the time of both our Students and Teachers. The following rules apply to all lesson bookings:
+            </p>
+
+            <h3>A. Booking a Lesson</h3>
+            <p>
+                When you book a lesson, one (1) Ticket is immediately deducted from your account balance.
+            </p>
+
+            <h3>B. Cancellation by Student (12-Hour Rule)</h3>
+            <p>
+                You may cancel a scheduled lesson via your dashboard. Refund eligibility depends on <em>when</em> you cancel:
+            </p>
+            <ul>
+                <li><strong>More than 12 hours before start time:</strong> The Ticket used for the booking will be <strong>refunded</strong> to your account automatically.</li>
+                <li><strong>Less than 12 hours before start time:</strong> The Ticket is <strong>forfeited</strong>. No refund will be issued, as this is considered a late cancellation.</li>
+            </ul>
+
+            <h3>C. Cancellation by Tutor</h3>
+            <p>
+                If a Tutor cancels a lesson at any time (even within 12 hours), your Ticket will be fully refunded to your account balance.
+            </p>
+
+            <h2>6. User Conduct</h2>
+            <p>
+                You agree to use the Service professionally and respectfully. You will not:
             </p>
             <ul>
                 <li>Harass, threaten, or defame any Tutor or other user.</li>
-                <li>Use the platform to solicit Tutors or Students to meet or transact off-platform.</li>
-                <li>Share lesson materials, recordings, or other content in violation of copyright laws.</li>
-                <li>Attempt to gain unauthorized access to our systems or another user's account.</li>
+                <li>Attempt to solicit Teachers to conduct lessons outside of the {{ config('app.name') }} platform.</li>
+                <li>Share offensive or inappropriate content during lessons.</li>
             </ul>
 
-            <h2>6. Termination of Account</h2>
+            <h2>7. Limitation of Liability</h2>
             <p>
-                We may suspend or terminate your account at our discretion, without notice, if you breach these Terms or engage in conduct that we deem harmful to the platform or other users.
+                {{ config('app.name') }} acts as a venue for connecting users. We are not responsible for the educational quality, outcomes, or the conduct of individual Teachers. To the fullest extent permitted by law, we shall not be liable for any indirect or consequential damages arising from your use of the service.
             </p>
 
-            <h2>7. Disclaimers and Limitation of Liability</h2>
-            <h3>A. Disclaimer of Warranties</h3>
+            <h2>8. Changes to Terms</h2>
             <p>
-                The Service is provided "as is" and "as available" without any warranties of any kind. We do not guarantee that the platform will be error-free or uninterrupted, or that any Tutor will meet your expectations.
-            </p>
-            <h3>B. Limitation of Liability</h3>
-            <p>
-                To the fullest extent permitted by law, {{ config('app.name') }} shall not be liable for any indirect, incidental, special, or consequential damages (including lost profits or data) arising from your use of the Service, or for any disputes between you and a Tutor.
-            </D>
-
-            <h2>8. Changes to These Terms</h2>
-            <p>
-                We reserve the right to modify these Terms at any time. We will provide notice by updating the "Last Updated" date at the top of this page. Your continued use of the Service after any such change constitutes your acceptance of the new Terms.
+                We reserve the right to modify these Terms at any time. Continued use of the platform after changes are posted constitutes your acceptance of the new Terms.
             </p>
 
             <h2>9. Contact Us</h2>
             <p>
-                If you have any questions about these Terms and Conditions, please <a href="{{ route('cms.contact') }}">contact us</a>.
+                If you have questions regarding these Terms, specifically regarding subscriptions or the cancellation policy, please <a href="{{ route('cms.contact') }}">contact us</a>.
             </p>
         </div>
     </div>

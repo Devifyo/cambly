@@ -262,7 +262,7 @@
                     </ul>
                 </div>
                 <div class="why-us-image">
-                    <img src="{{ asset('assets/img/banner/about.jpeg') }}" alt="Student learning online">
+                    <img src="{{ asset('assets/img/about.webp') }}" alt="Student learning online" loading="lazy">
                     {{-- Tip: A great image here would be a smiling student on a laptop. --}}
                 </div>
             </div>

@@ -1,220 +1,125 @@
 @extends('layouts.auth.app')
 
-@section('title', 'Register | ' . config('app.name'))
+@section('title', 'Create Account | ' . config('app.name'))
 
 @section('content')
-<div class="login-content-info py-5">
-    <div class="container">
-        <div class="row justify-content-center align-items-center min-vh-100">
-            <div class="col-lg-5 col-md-7">
-                <div class="account-content shadow-sm rounded bg-white p-4 p-md-5">
-                    <div class="account-info text-center mb-4">
-                        <h3 class="fw-bold mb-2">Create Your Account</h3>
-                        <p class="text-muted mb-0">
-                            Join <strong>{{ config('app.name') }}</strong> as a Student or Teacher and start your journey today!
-                        </p>
-                    </div>
+<div class="row g-0 min-vh-100">
+    
+    <x-auth.auth-sidebar 
+        heading="Join the Community" 
+        description="Start your journey today. Whether you want to learn new skills or share your knowledge, we have a place for you." 
+    />
 
-                    <!-- Alerts -->
-                    @if (session('success'))
-                        <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
-
-                    @if ($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
-                            <ul class="mb-0 ps-3 small">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    @endif
-
-                    <!-- Registration Form -->
-                    <form id="registerForm" method="POST" action="{{ route('auth.register') }}">
-                        @csrf
-
-                        <!-- Role Selection -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold d-block mb-2">Register As</label>
-                            <div class="d-flex gap-3">
-                                <div class="form-check">
-                                    <input
-                                        class="form-check-input"
-                                        type="radio"
-                                        name="role"
-                                        id="role_student"
-                                        value="student"
-                                        {{ old('role') === 'student' ? 'checked' : '' }}
-                                        required>
-                                    <label class="form-check-label" for="role_student">Student</label>
-                                </div>
-                                <div class="form-check">
-                                    <input
-                                        class="form-check-input"
-                                        type="radio"
-                                        name="role"
-                                        id="role_teacher"
-                                        value="teacher"
-                                        {{ old('role') === 'teacher' ? 'checked' : '' }}
-                                        required>
-                                    <label class="form-check-label" for="role_teacher">Teacher</label>
-                                </div>
-                            </div>
-                            @error('role')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Full Name -->
-                        <div class="mb-4">
-                            <label for="name" class="form-label fw-semibold">Full Name</label>
-                            <input
-                                id="name"
-                                type="text"
-                                name="name"
-                                value="{{ old('name') }}"
-                                class="form-control @error('name') is-invalid @enderror"
-                                placeholder="John Doe"
-                                required>
-                            @error('name')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Email -->
-                        <div class="mb-4">
-                            <label for="email" class="form-label fw-semibold">Email Address</label>
-                            <input
-                                id="email"
-                                type="email"
-                                name="email"
-                                value="{{ old('email') }}"
-                                class="form-control @error('email') is-invalid @enderror"
-                                placeholder="you@example.com"
-                                required>
-                            @error('email')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Password -->
-                        <div class="mb-4">
-                            <label for="password" class="form-label fw-semibold">Password</label>
-                            <div class="input-group">
-                                <input
-                                    id="password"
-                                    type="password"
-                                    name="password"
-                                    class="form-control pass-input @error('password') is-invalid @enderror"
-                                    placeholder="Enter your password"
-                                    required>
-                                <span class="feather-eye-off toggle-password"></span>
-                            </div>
-                            @error('password')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <!-- Confirm Password -->
-                        <div class="mb-4">
-                            <label for="password_confirmation" class="form-label fw-semibold">Confirm Password</label>
-                            <input
-                                id="password_confirmation"
-                                type="password"
-                                name="password_confirmation"
-                                class="form-control"
-                                placeholder="Re-enter your password"
-                                required>
-                        </div>
-
-                        <!-- Terms -->
-                        <div class="form-check mb-4">
-                            <input
-                                class="form-check-input"
-                                type="checkbox"
-                                id="terms"
-                                name="terms"
-                                required>
-                            <label class="form-check-label small" for="terms">
-                                I agree to the <a href="#" class="text-primary text-decoration-none">Terms & Conditions</a>
-                            </label>
-                        </div>
-
-                        <!-- Submit -->
-                        <div class="d-grid mb-3">
-                            <button class="btn btn-primary-gradient py-2 fw-semibold" type="submit">
-                                Create Account
-                            </button>
-                        </div>
-
-                        <!-- Login Link -->
-                        <div class="text-center mt-4">
-                            <p class="text-muted mb-0">
-                                Already have an account?
-                                <a href="{{ route('auth.login') }}" class="fw-semibold text-primary text-decoration-none">Sign in</a>
-                            </p>
-                        </div>
-                    </form>
-                    <!-- /Registration Form -->
-                </div>
+    <div class="col-lg-6 d-flex align-items-center justify-content-center bg-white">
+        <div class="login-form-container p-4 p-md-5 w-100" style="max-width: 550px;">
+            
+            <div class="mb-4">
+                <h2 class="fw-bold text-dark">Create Account 🚀</h2>
+                <p class="text-muted">Join <strong>{{ config('app.name') }}</strong> today!</p>
             </div>
+
+            @if (session('success'))
+                <div class="alert alert-success border-0 bg-success bg-opacity-10 text-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger alert-dismissible fade show" role="alert">
+                    <ul class="mb-0 ps-3 small">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            <form id="registerForm" method="POST" action="{{ route('auth.register') }}">
+                @csrf
+
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold text-uppercase ls-1">I am a...</label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check custom-radio-box">
+                            <input class="form-check-input" type="radio" name="role" id="role_student" value="student" {{ old('role') === 'student' ? 'checked' : '' }} required>
+                            <label class="form-check-label fw-semibold" for="role_student">👨‍🎓 Student</label>
+                        </div>
+                        <div class="form-check custom-radio-box">
+                            <input class="form-check-input" type="radio" name="role" id="role_teacher" value="teacher" {{ old('role') === 'teacher' ? 'checked' : '' }} required>
+                            <label class="form-check-label fw-semibold" for="role_teacher">👨‍🏫 Teacher</label>
+                        </div>
+                    </div>
+                    @error('role')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="John Doe" value="{{ old('name') }}" required>
+                        <label for="name">Full Name</label>
+                        <i class="feather-user input-icon"></i>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" value="{{ old('email') }}" required>
+                        <label for="email">Email Address</label>
+                        <i class="feather-mail input-icon"></i>
+                    </diV>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-floating position-relative">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                        <label for="password">Password</label>
+                        <i class="feather-lock input-icon"></i>
+                        <span class="feather-eye-off toggle-password" style="position: absolute; right: 20px; top: 20px; cursor: pointer; z-index: 10;"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-floating position-relative">
+                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
+                        <label for="password_confirmation">Confirm Password</label>
+                        <i class="feather-lock input-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                    <label class="form-check-label small text-muted" for="terms">
+                        I agree to the <a href="{{route('cms.terms')}}" class="text-primary text-decoration-none fw-bold">Terms & Conditions</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 py-3 rounded-pill fw-bold shadow-sm btn-hover-effect">
+                    Create Account
+                </button>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted mb-0">
+                        Already have an account?
+                        <a href="{{ route('auth.login') }}" class="text-primary fw-bold text-decoration-none">Sign in</a>
+                    </p>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 @endsection
 
-@push('styles')
-<style>
-.login-content-info {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f5f8ff 0%, #e6f0ff 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.account-content {
-    background-color: #fff;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-}
-
-.account-content:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-}
-
-.btn-primary-gradient {
-    background: linear-gradient(90deg, #3a7bd5 0%, #00d2ff 100%);
-    border: none;
-    color: #fff;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.btn-primary-gradient:hover {
-    transform: scale(1.02);
-    background: linear-gradient(90deg, #2f6bcf 0%, #00b8e6 100%);
-}
-
-</style>
-@endpush
-
 @push('scripts')
-<!-- jQuery Validation Plugin -->
-
 <script>
 $(document).ready(function () {
-    // jQuery Validation setup
+    
+    // jQuery Validation
     $("#registerForm").validate({
         errorElement: 'div',
-        errorClass: 'error text-danger small',
+        errorClass: 'text-danger small mt-1',
         highlight: function (element) {
             $(element).addClass('is-invalid');
         },
@@ -230,41 +135,33 @@ $(document).ready(function () {
             terms: { required: true }
         },
         messages: {
-            role: "Please select whether you are registering as a Student or Teacher.",
-            name: {
-                required: "Please enter your full name.",
-                minlength: "Your name must be at least 3 characters long."
-            },
-            email: {
-                required: "Please enter your email address.",
-                email: "Please enter a valid email address."
-            },
+            role: "Please select a role.",
+            name: "Please enter your full name.",
+            email: "Please enter a valid email.",
             password: {
                 required: "Please provide a password.",
-                minlength: "Your password must be at least 8 characters long."
+                minlength: "Password must be at least 8 characters."
             },
             password_confirmation: {
-                required: "Please confirm your password.",
                 equalTo: "Passwords do not match."
             },
-            terms: "You must agree to the terms & conditions."
+            terms: "You must agree to the terms."
         },
         errorPlacement: function (error, element) {
-            // ✅ For radio buttons
             if (element.attr("name") === "role") {
                 error.insertAfter(element.closest('.d-flex'));
-            }
-            // ✅ For checkbox (terms)
+            } 
             else if (element.attr("name") === "terms") {
-                error.insertAfter(element.closest('.form-check'));
-            }
-            // ✅ For input groups (passwords, etc.)
-            else if (element.closest('.input-group').length) {
-                error.insertAfter(element.closest('.input-group'));
-            }
-            // ✅ Default
+                // OLD CODE (Causing the gap):
+                // error.insertAfter(element.closest('.form-check'));
+                
+                // ✅ NEW CODE (Fixes the gap):
+                // Place the error inside the container, right after the label
+                error.appendTo(element.closest('.form-check'));
+            } 
             else {
-                error.insertAfter(element);
+                // For floating labels
+                error.insertAfter(element.closest('.form-floating') || element);
             }
         }
     });
