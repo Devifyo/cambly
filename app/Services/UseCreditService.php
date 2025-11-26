@@ -147,8 +147,18 @@ class UseCreditService
 
             // Refund only if >= 12 hours until start
             $hoursUntilStart = Carbon::now('UTC')->diffInHours($startUtc, false);
-            if ($hoursUntilStart < 12 && !$isImpersonating) {
+            // 1. Late Cancellation Policy
+            // Students cannot get a refund if cancelling within 12 hours.
+            // However, if an Admin is impersonating, we override this rule to allow the refund.
+            if ($hoursUntilStart < 12 && ! $isImpersonating) {
                 return ['ok' => true, 'skipped' => 'within_12_hours'];
+            }
+
+            // 2. Booking Origin Check
+            // If the student didn't book this lesson themselves (e.g., it was created by an Admin 
+            // or was a free lesson), they didn't spend a ticket, so no refund is needed.
+            if ($reservation->created_by !== $reservation->student_id) {
+                return ['ok' => true, 'skipped' => 'free_lesson_no_refund'];
             }
 
             $studentId = $reservation->student_id;

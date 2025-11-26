@@ -187,6 +187,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
             ];
         }
 
+         return ['error' => 'Insufficient tickets for new lesson', 'status' => 400];
         // No available credits: create reservation on-hold + schedule 1 hold credit for next cycle
         $reservation = Reservation::updateOrCreate(           [
             'student_id' => $student->id,
@@ -334,7 +335,7 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
                 $encryptedReservationId = encryptId($reservation->id);
                 $response['refund'] = isset($refundResult['refunded']) ? $refundResult['refunded'] : null;
                 $is_refund = false;
-                 if ($refundResult && isset($refundResult['refunded']) && $refundResult['refunded']) {
+                if ($refundResult && isset($refundResult['refunded']) && $refundResult['refunded']) {
                     // Credits were refunded
                     $creditInfo = $this->getCurrentMonthCreditInfo($reservation->student);
                     $creditsRefunded = $refundResult['credits_refunded'] ?? config('app.ticket_per_meeting', 1);

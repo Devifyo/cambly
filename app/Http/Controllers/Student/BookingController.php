@@ -101,7 +101,7 @@ class BookingController extends Controller
         $student = $request->user();
         $iImpersonating = is_impersonating();
     
-        if (!$student->hasActiveSubscription() && !$iImpersonating) {
+        if (!$student->hasActiveSubscription() && !$student->currentSubscription() && !$iImpersonating) {
             return response()->json([
                 'message' => 'You need an active subscription to make a booking.'
             ], 403);
