@@ -41,6 +41,17 @@
                                 <li class="{{ request()->routeIs('student.account.subscription') ? 'active' : '' }}"><a href="{{ route('student.account.subscription') }}">Subscription</a></li>
                                 <li class="{{ request()->routeIs('student.account.ticket-history') ? 'active' : '' }}"><a href="{{ route('student.account.ticket-history') }}">Ticket History</a></li>
                                 <li class="{{ request()->routeIs('student.account.payment-history') ? 'active' : '' }}"><a href="{{ route('student.account.payment-history') }}">Payment History</a></li>
+                                <li class="d-md-none md:hidden"> 
+                                    <a href="{{ route('auth.logout') }}" 
+                                    onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();"
+                                    class="text-danger">
+                                    Logout
+                                    </a>
+                                    
+                                    <form id="mobile-logout-form" action="{{ route('auth.logout') }}" method="POST" class="d-none" style="display: none;">
+                                        @csrf
+                                    </form>
+                                </li>
                             </ul>
                         </li>
                     @endif

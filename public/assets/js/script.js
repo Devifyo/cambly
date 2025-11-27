@@ -3942,4 +3942,21 @@ document.addEventListener("DOMContentLoaded", function () {
 			scrollerInner.appendChild(duplicatedItem);
 		});
 	});
+
+
+	// 1. Select the toggle icon and the input field
+    const toggleIcon = document.querySelector('.toggle-password');
+    const passwordInput = document.querySelector('#password');
+
+    // 2. SAFETY CHECK: Only proceed if both elements exist
+    if (toggleIcon && passwordInput) {
+        
+        toggleIcon.addEventListener('click', function (e) {
+            // 3. Toggle the type attribute
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        });
+
+    }
+
 });
