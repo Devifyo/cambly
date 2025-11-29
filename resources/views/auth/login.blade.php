@@ -8,10 +8,12 @@
     <div class="col-lg-6 d-flex align-items-center justify-content-center bg-white">
         <div class="login-form-container p-4 p-md-5 w-100" style="max-width: 550px;">
             
-            <div class="mb-5">
-                <h2 class="fw-bold text-dark">Welcome Back! 👋</h2>
+            <div class="mb-5 text-center">
+                <h3 class="fw-bold text-primary">{{ config('app.name') }}</h3>
+                <h2 class="fw-bold text-dark mt-2">Welcome Back! 👋</h2>
                 <p class="text-muted">Enter your credentials to access your account.</p>
             </div>
+
 
             @if (session('success'))
                 <div class="alert alert-success border-0 bg-success bg-opacity-10 text-success alert-dismissible fade show" role="alert">
@@ -79,6 +81,14 @@
                         <a href="{{ route('auth.register') }}" class="text-primary fw-bold text-decoration-none">Create Account</a>
                     </p>
                 </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ route('cms.about') }}" class="text-muted small text-decoration-none me-3">About Us</a>
+                    <a href="{{ route('cms.contact') }}" class="text-muted small text-decoration-none me-3">Contact Us</a>
+                    <a href="{{ route('cms.terms') }}" class="text-muted small text-decoration-none me-3">Terms & Conditions</a>
+                    <a href="{{ route('cms.privacy') }}" class="text-muted small text-decoration-none">Privacy Policy</a>
+                </div>
+
             </form>
         </div>
     </div>

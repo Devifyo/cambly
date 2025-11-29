@@ -13,7 +13,8 @@
     <div class="col-lg-6 d-flex align-items-center justify-content-center bg-white">
         <div class="login-form-container p-4 p-md-5 w-100" style="max-width: 550px;">
             
-            <div class="mb-4">
+            <div class="mb-4  text-center">
+                <h3 class="fw-bold text-primary">{{ config('app.name') }}</h3>
                 <h2 class="fw-bold text-dark">Create Account 🚀</h2>
                 <p class="text-muted">Join <strong>{{ config('app.name') }}</strong> today!</p>
             </div>
@@ -105,6 +106,12 @@
                         Already have an account?
                         <a href="{{ route('auth.login') }}" class="text-primary fw-bold text-decoration-none">Sign in</a>
                     </p>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="{{ route('cms.about') }}" class="text-muted small text-decoration-none me-3">About Us</a>
+                    <a href="{{ route('cms.contact') }}" class="text-muted small text-decoration-none me-3">Contact Us</a>
+                    <a href="{{ route('cms.terms') }}" class="text-muted small text-decoration-none me-3">Terms & Conditions</a>
+                    <a href="{{ route('cms.privacy') }}" class="text-muted small text-decoration-none">Privacy Policy</a>
                 </div>
             </form>
         </div>
