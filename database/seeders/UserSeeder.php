@@ -13,14 +13,14 @@ class UserSeeder extends Seeder
     {
         // Admin
         $admin = User::firstOrCreate(
-            ['email' => 'admin@mahobook.com.com'],
+            ['email' => 'superadmin@mahobook.com'],
             ['name' => 'Admin User', 'password' => Hash::make('pass@admin'), 'status' => true]
         );
         $admin->assignRole('admin');
 
         // Ops
         $ops = User::firstOrCreate(
-            ['email' => 'ops@mahobook.com.com'],
+            ['email' => 'ops@mahobook.com'],
             ['name' => 'Ops Manager', 'password' => Hash::make('pass@ops'), 'status' => true]
         );
         $ops->assignRole('ops');
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
         for ($i = 0; $i < 1; $i++) {
             $t = User::create([
                 'name' => "Teacher $i",
-                'email' => "teacher$i@mahobook.com.com",
+                'email' => "teacher$i@mahobook.com",
                 'password' => Hash::make('Note@123'),
             ]);
             $t->assignRole('teacher');
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
         for ($i = 0; $i < 1; $i++) {
             $s = User::create([
                 'name' => "Student $i",
-                'email' => "student$i@mahobook.com.com",
+                'email' => "student$i@mahobook.com",
                 'password' => Hash::make('Note@123'),
             ]);
             $s->assignRole('student');

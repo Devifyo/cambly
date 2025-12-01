@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
          $this->call([
             RoleSeeder::class,
             UserSeeder::class,
-            DemoSeeder::class,
+            // DemoSeeder::class,
             EmailTemplateSeeder::class,
         ]);
     }
