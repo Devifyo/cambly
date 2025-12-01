@@ -45,7 +45,7 @@ class BookingController extends Controller
             $status = $res['status'] ?? 404;
             return response()->json(['message' => $res['error']], $status);
         }
-
+        
         return response()->json($res);
     }
 
@@ -67,6 +67,7 @@ class BookingController extends Controller
 
         try {
             $events = $this->slotService->getWeekSlotsForTeacher($user, $teacherRawId, $start, $end);
+            // dd($events);
             return response()->json(['events' => $events], 200);
         } catch (\Throwables $e) {
             Log::error('slotService error: '.$e->getMessage());
@@ -101,7 +102,7 @@ class BookingController extends Controller
         $student = $request->user();
         $iImpersonating = is_impersonating();
     
-        if (!$student->hasActiveSubscription() && !$iImpersonating) {
+        if (!$student->hasActiveSubscription() && !$student->currentSubscription() && !$iImpersonating) {
             return response()->json([
                 'message' => 'You need an active subscription to make a booking.'
             ], 403);

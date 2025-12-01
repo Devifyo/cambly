@@ -32,7 +32,6 @@ class PaymentHistoryController extends Controller
             ->applyFilters($filters)
             ->paginate(10)
             ->withQueryString();
-
         // 4. Return the view
         return view('student.inner.account.payment-history', compact('payments', 'stats'));
     }
@@ -60,7 +59,16 @@ class PaymentHistoryController extends Controller
         }
 
         foreach ($allEvents as $event) {
-            $invoice = $event->payload['data']['object'];
+            // 1. Get the payload (Laravel casts it once, returning a JSON string)
+            $payload = $event->payload;
+
+            // 2. If it is still a string, decode it again manually
+            if (is_string($payload)) {
+                $payload = json_decode($payload, true);
+            }
+
+            // 3. Now it is a real array
+            $invoice = $payload['data']['object']; // This will work now
             $currency = strtolower($invoice['currency']);
             
             // Call the public static method on the model

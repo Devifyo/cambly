@@ -33,8 +33,17 @@ class EmailSender extends Command
         // 1. Define the notification intervals (in minutes) descending order
         // 12h, 6h, 2h, 1h, 30m, 20m, 10m, 5m, 1m
         $notificationTiers = [
-            720, 360, 120, 60, 30, 20, 10, 5, 1
+            // 720,
+            // 360,
+            // 120,
+            // 60,
+            // 30,
+            20,
+            // 10,
+            // 5, 
+            // 1
         ];
+
 
         // 2. Fetch reservations
         // Optimized query: Eager load relationships and filter only necessary records

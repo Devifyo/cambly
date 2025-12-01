@@ -81,3 +81,19 @@
 .fa{
     font-size: 20px !important;
 }
+
+/* 1. Target the direct child div of fc-event-main */
+.fc-timegrid-event .fc-event-main > div {
+    /* Remove the inline padding */
+    padding: 0 !important; 
+    
+    /* Center the text horizontally */
+    justify-content: center !important;
+    
+    /* Ensure text alignment is center */
+    text-align: center !important;
+    
+    /* Optional: If the text is still off-center, 
+       reset the width ensures it spans the whole block */
+    width: 100% !important;
+}

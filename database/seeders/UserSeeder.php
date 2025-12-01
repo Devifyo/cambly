@@ -14,14 +14,14 @@ class UserSeeder extends Seeder
         // Admin
         $admin = User::firstOrCreate(
             ['email' => 'admin@mailinator.com'],
-            ['name' => 'Admin User', 'password' => Hash::make('Note@123'), 'status' => true]
+            ['name' => 'Admin User', 'password' => Hash::make('pass@admin'), 'status' => true]
         );
         $admin->assignRole('admin');
 
         // Ops
         $ops = User::firstOrCreate(
             ['email' => 'ops@mailinator.com'],
-            ['name' => 'Ops Manager', 'password' => Hash::make('Note@123'), 'status' => true]
+            ['name' => 'Ops Manager', 'password' => Hash::make('pass@ops'), 'status' => true]
         );
         $ops->assignRole('ops');
 

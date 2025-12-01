@@ -47,8 +47,8 @@ class SlotService
             // reservation relationship may be null if nobody booked it yet
             $reservation = $avail->reservation ?? null;
 
-            $status = $reservation ? $reservation->status : 'available';
-            $isBooked = $status !== 'available';
+            $status = $avail->is_booked ? $reservation->status : 'available';
+            $isBooked = $avail->is_booked ? true : false;
             $bookedByViewer = $reservation && $student && ($reservation->student_id == $student->id);
 
             $teacherName = $avail->teacher->teacherProfile->preferred_name

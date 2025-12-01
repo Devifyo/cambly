@@ -198,6 +198,11 @@
         .form-group .error { color: #dc2626; font-size: 0.875rem; font-weight: 500; margin-top: 0.25rem; }
         .form-control.error { border-color: #dc2626; }
         .form-control.error:focus { box-shadow: 0 0 0 0.25rem rgba(220, 38, 38, 0.12); }
+        @media (max-width: 768px) {
+            .settings-tabs {
+                margin-top: 75px;
+            }
+        }
     </style>
 @endpush
 

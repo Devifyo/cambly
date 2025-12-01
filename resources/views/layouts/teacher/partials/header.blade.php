@@ -38,6 +38,17 @@
                         <a href="#">Account <i class="fas fa-chevron-down"></i> </a>
                         <ul class="submenu">
                             <li class="{{ request()->routeIs('teacher.account.show') ? 'active' : '' }}"><a href="{{ route('teacher.account.show') }}">Account settings</a></li>
+                            <li class="d-md-none md:hidden"> 
+                                    <a href="{{ route('auth.logout') }}" 
+                                    onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();"
+                                    class="text-danger">
+                                    Logout
+                                    </a>
+                                    
+                                    <form id="mobile-logout-form" action="{{ route('auth.logout') }}" method="POST" class="d-none" style="display: none;">
+                                        @csrf
+                                    </form>
+                            </li>
                         </ul>
                     </li>
                 </ul>

@@ -157,6 +157,19 @@ class User extends Authenticatable
         return $query->role(config('roles.subadmin', 'subadmin'));
     }
 
+
+    public function currentSubscription()
+    {
+        return $this->hasOne(\App\Models\Subscription::class)
+            ->whereIn('status', ['active', 'cancelled']) 
+            ->where('current_period_end', '>', now())
+            ->where(function ($query) {
+                $query->whereNull('ends_at')
+                    ->orWhere('ends_at', '>', now());
+            })
+            ->latest('created_at');
+    }
+
     /**
      * Get the active and valid subscription for the user.
      * A subscription is considered active if:

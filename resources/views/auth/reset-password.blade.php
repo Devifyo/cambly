@@ -11,7 +11,7 @@
                     
                     <!-- Header -->
                     <div class="text-center mb-4">
-                        <!-- If you see 'Forgot Your Password' here, you are in the wrong file! -->
+                        <h3 class="fw-bold text-primary">{{ config('app.name') }}</h3>
                         <h2 class="fw-bold text-dark mb-2">Reset Password</h2>
                         <p class="text-muted mb-0">
                             Create a new password for your account.
@@ -84,6 +84,12 @@
                             <button type="submit" class="btn btn-primary-gradient py-3 fw-semibold rounded-3">
                                 Reset Password
                             </button>
+                        </div>
+                        <div class="text-center mt-4">
+                            <a href="{{ route('cms.about') }}" class="text-muted small text-decoration-none me-3">About Us</a>
+                            <a href="{{ route('cms.contact') }}" class="text-muted small text-decoration-none me-3">Contact Us</a>
+                            <a href="{{ route('cms.terms') }}" class="text-muted small text-decoration-none me-3">Terms & Conditions</a>
+                            <a href="{{ route('cms.privacy') }}" class="text-muted small text-decoration-none">Privacy Policy</a>
                         </div>
                     </form>
                 </div>
