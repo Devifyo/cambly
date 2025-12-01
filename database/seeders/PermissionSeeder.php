@@ -51,9 +51,8 @@ class PermissionSeeder extends Seeder
 
         // --- A. SUPER ADMIN (Everything) ---
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $adminRole->syncPermissions(
-            array_merge($allPermissions, ['manage_settings'])
-        );
+        $adminRole->syncPermissions($allPermissions);
+
 
         // --- B. SUBADMIN (All permissions EXCEPT managing Admins) ---
         // Logic: Filter out any permission containing '_admins'

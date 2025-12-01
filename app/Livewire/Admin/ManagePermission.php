@@ -18,7 +18,7 @@ class ManagePermission extends Component
         'Teachers'      => ['view_teachers', 'create_teachers', 'edit_teachers', 'delete_teachers', 'export_teachers'],
         'Students'      => ['view_students', 'create_students', 'edit_students', 'delete_students', 'book_student_lesson', 'add_student_tickets'],
         'Subscriptions' => ['view_subscriptions', 'create_subscriptions', 'edit_subscriptions', 'delete_subscriptions'],
-        'Settings'      => ['manage_settings'],
+        'Settings'      => ['manage_permissions'],
     ];
 
     public function mount()
@@ -32,7 +32,7 @@ class ManagePermission extends Component
         $role = Role::findById($roleId);
         
         // Prevent locking out Super Admin from settings
-        if($role->name === config('roles.admin') && $permissionName === 'manage_settings') {
+        if($role->name === config('roles.admin') && $permissionName === 'manage_permissions') {
             $this->dispatch('alert', type: 'error', message: 'Cannot revoke Settings from Admin.');
             return;
         }
