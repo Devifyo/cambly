@@ -5,11 +5,10 @@
             <p class="lead text-white-50 mb-4">{{ $description ?? 'Connect with expert teachers and master new skills today.' }}</p>
             
             <div class="d-inline-flex align-items-center bg-white bg-opacity-10 backdrop-blur rounded-pill px-4 py-2 border border-light border-opacity-25">
-                <i class="fas fa-user-graduate me-2 text-warning"></i>
-                <span class="small">Join 10,000+ Students</span>
+                <i class="fas fa-rocket me-2 text-warning"></i>
+                <span class="small">Start Your Journey Today</span>
             </div>
         </div>
-        
         <div class="shape-circle-1"></div>
         <div class="shape-circle-2"></div>
     </div>
