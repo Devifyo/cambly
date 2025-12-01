@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Plan;
-use App\Services\stripeService;
+use App\Services\StripeService;
 use Illuminate\Support\Str;
 
 class PlanSeeder extends Seeder
