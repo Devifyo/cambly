@@ -70,7 +70,7 @@
                             @forelse ($students as $student)
                                 <tr>
                                     <td class="text-center">
-                                        <img src="{{ $student->profile_link }}" alt="Profile" width="30" class="rounded-circle">
+                                        <img src="{{ $student->profile_link }}" alt="Profile" width="30" height="30" class="rounded-circle">
                                     </td>
                                     <td>{{ $student->name }}</td>
                                     <td>{{ $student->email }}</td>
