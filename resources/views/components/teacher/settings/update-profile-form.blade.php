@@ -61,7 +61,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6 col-md-6">
+                    {{-- <div class="col-lg-6 col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="gender">Gender <span class="text-danger">*</span></label>
                             <select id="gender" name="gender" class="form-control" required>
@@ -77,7 +77,7 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="col-lg-6 col-md-6">
                         <div class="form-group">
