@@ -112,6 +112,28 @@ class User extends Authenticatable
         return $query->where('status', 1);
     }
 
+    public function languages()
+    {
+        return $this->belongsToMany(Language::class, 'user_languages')
+                    ->withPivot('type')
+                    ->withTimestamps();
+    }
+
+    // You can keep these helpers for easy reading later
+    public function motherTongue()
+    {
+        return $this->belongsToMany(Language::class, 'user_languages')
+                    ->wherePivot('type', 'mother_tongue')
+                    ->withTimestamps();
+    }
+
+    public function nativeLanguages()
+    {
+        return $this->belongsToMany(Language::class, 'user_languages')
+                    ->wherePivot('type', 'native')
+                    ->withTimestamps();
+    }
+
 
     /**
      * Check if the user has the 'student' role.

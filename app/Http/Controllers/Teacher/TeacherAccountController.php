@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use App\Models\Language;
+use Illuminate\Support\Arr; // Import this
 
 // Import the two new Form Requests
 use App\Http\Requests\ProfileUpdateRequest;
@@ -34,7 +36,6 @@ class TeacherAccountController extends Controller
     public function updateProfile(ProfileUpdateRequest $request): RedirectResponse
     {   
         $user = $request->user();
-        // dd($request->all());
         // Update name/email on the model first
         $user->fill($request->only('name', 'email', 'gender'));
 
@@ -67,7 +68,7 @@ class TeacherAccountController extends Controller
                 'short_bio',
                 'country_residence'
         ]);
-        
+        $this->syncUserLanguages($user, $request);
         $user->teacherProfile()->updateOrCreate(
             ['user_id' => $user->id], // Find profile by user_id
             $profileData                 // Update with all new data
@@ -102,5 +103,51 @@ class TeacherAccountController extends Controller
         $user->save();
 
         return Redirect::route('student.account.show')->with('success', 'Profile picture removed.');
+    }
+
+
+    private function syncUserLanguages($user, $request)
+    {
+        // A. Mother Tongue
+        $mtCode = $request->input('mother_tongue'); // 'en'
+        if ($mtCode) {
+            $lang = $this->getOrCreateLanguage($mtCode);
+            
+            // Detach old, Attach new
+            $user->languages()->wherePivot('type', 'mother_tongue')->detach();
+            $user->languages()->attach($lang->id, ['type' => 'mother_tongue']);
+        }
+
+        // B. Native Languages
+        $nativeCodes = $request->input('native_languages', []); // ['fr', 'es']
+        
+        // Detach old
+        $user->languages()->wherePivot('type', 'native')->detach();
+
+        foreach ($nativeCodes as $code) {
+            // Skip if same as mother tongue (optional check)
+            if ($code === $mtCode) continue;
+
+            $lang = $this->getOrCreateLanguage($code);
+            $user->languages()->attach($lang->id, ['type' => 'native']);
+        }
+    }
+
+    private function getOrCreateLanguage($code)
+    {
+        // Try to find by CODE first
+        $language = Language::where('code', $code)->first();
+
+        // If not found, create it dynamically
+        if (!$language) {
+            // Use PHP to get the nice name: "fr" -> "French"
+            $name = class_exists('Locale') ? \Locale::getDisplayLanguage($code, 'en') : $code;
+            $language = Language::create([
+                'code' => $code,
+                'name' => $name
+            ]);
+        }
+
+        return $language;
     }
 }
