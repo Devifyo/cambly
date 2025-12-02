@@ -118,13 +118,34 @@ class SubscriptionPlans extends Component
     public function deleteConfirmation($id)
     {
         $this->plan_id = $id;
+         $plan = Plan::findOrFail($this->plan_id);
+
+        if (!$plan) {
+            $this->dispatch('alert', type: 'error', message: 'Plan not found.');
+            return;
+        }
+        
+        if ($plan->slug === 'trial-one-time') {
+            $this->dispatch('alert', type: 'error', message: 'This plan cannot be deleted.');
+            return;
+        }
+
         $this->dispatch('open-modal', name: 'delete_modal');
     }
 
     public function destroy(AdminPlanManagementService $service)
     {
         $plan = Plan::findOrFail($this->plan_id);
-        
+
+        if (! $plan) {
+            $this->dispatch('alert', type: 'error', message: 'Plan not found.');
+            return;
+        }
+
+        if ($plan->slug === 'trial-one-time') {
+            $this->dispatch('alert', type: 'error', message: 'This plan cannot be deleted.');
+            return;
+        }
         // Service handles deleting the image from storage
         $service->destroy($plan);
 

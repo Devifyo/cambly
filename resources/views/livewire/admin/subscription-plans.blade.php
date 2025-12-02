@@ -97,7 +97,9 @@
                                                 {{-- 3. DELETE BUTTON LOADER (Scoped by ID) --}}
                                                 <button wire:click="deleteConfirmation({{ $plan->id }})" 
                                                         wire:loading.attr="disabled" 
-                                                        class="btn btn-sm bg-danger-light">
+                                                        class="btn btn-sm bg-danger-light"
+                                                        @if($plan->slug === 'trial-one-time') disabled @endif
+                                                    >
                                                     
                                                     <i class="fe fe-trash" wire:loading.remove wire:target="deleteConfirmation({{ $plan->id }})"></i>
                                                     
