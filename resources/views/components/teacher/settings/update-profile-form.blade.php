@@ -104,7 +104,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-12 col-md-12">
+                    <div class="col-lg-6 col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
                             <input id="date_of_birth" name="date_of_birth" type="date" class="form-control"
@@ -112,15 +112,15 @@
                         </div>
                     </div>
 
+                        {{-- === NATIVE LANGUAGE COMPONENT === --}}
+                        <div class="col-lg-6 col-md-6">
+                            <x-inputs.native-language-select />
+                        </div>
                     {{-- === MOTHER TONGUE COMPONENT === --}}
-                    <div class="col-lg-6 col-md-6">
+                    {{-- <div class="col-lg-6 col-md-6">
                         <x-inputs.mother-tongue-select />
-                    </div>
+                    </div> --}}
 
-                    {{-- === NATIVE LANGUAGE COMPONENT === --}}
-                    <div class="col-lg-6 col-md-6">
-                        <x-inputs.native-language-select />
-                    </div>
 
                 </div>
             </div>
@@ -261,7 +261,7 @@
                 email: { required: true, email: true },
                 date_of_birth: { required: true, futureDate: true, minAge: 13 },
                 // These rules still work because your components output inputs with these names
-                mother_tongue: { required: true },
+                // mother_tongue: { required: true },
                 "native_languages[]": { required: true, maxlength: 3 },
                 english_level: { required: true },
                 country_residence: { required: true, notDefaultSelect: true },

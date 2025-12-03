@@ -158,72 +158,25 @@
                                         @php
                                             $selectedLanguages = request('languages', []);
                                         @endphp
-                                        <div class="form-check mb-2">
-                                            <input 
-                                                class="form-check-input language-filter" 
-                                                type="checkbox" 
-                                                name="language_filter[]" 
-                                                id="langEnglish"
-                                                value="English"
-                                                {{ in_array('English', $selectedLanguages) ? 'checked' : '' }}
-                                            >
-                                            <label class="form-check-label" for="langEnglish">English</label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input 
-                                                class="form-check-input language-filter" 
-                                                type="checkbox" 
-                                                name="language_filter[]" 
-                                                id="langJapanese"
-                                                value="Japanese"
-                                                {{ in_array('Japanese', $selectedLanguages) ? 'checked' : '' }}
-                                            >
-                                            <label class="form-check-label" for="langJapanese">Japanese</label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input 
-                                                class="form-check-input language-filter" 
-                                                type="checkbox" 
-                                                name="language_filter[]" 
-                                                id="langFrench"
-                                                value="French"
-                                                {{ in_array('French', $selectedLanguages) ? 'checked' : '' }}
-                                            >
-                                            <label class="form-check-label" for="langFrench">French</label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input 
-                                                class="form-check-input language-filter" 
-                                                type="checkbox" 
-                                                name="language_filter[]" 
-                                                id="langVietnamese"
-                                                value="Vietnamese"
-                                                {{ in_array('Vietnamese', $selectedLanguages) ? 'checked' : '' }}
-                                            >
-                                            <label class="form-check-label" for="langVietnamese">Vietnamese</label>
-                                        </div>
-                                        <div class="form-check mb-2">
-                                            <input 
-                                                class="form-check-input language-filter" 
-                                                type="checkbox" 
-                                                name="language_filter[]" 
-                                                id="langSpanish"
-                                                value="Spanish"
-                                                {{ in_array('Spanish', $selectedLanguages) ? 'checked' : '' }}
-                                            >
-                                            <label class="form-check-label" for="langSpanish">Spanish</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input 
-                                                class="form-check-input language-filter" 
-                                                type="checkbox" 
-                                                name="language_filter[]" 
-                                                id="langKorean"
-                                                value="Korean"
-                                                {{ in_array('Korean', $selectedLanguages) ? 'checked' : '' }}
-                                            >
-                                            <label class="form-check-label" for="langKorean">Korean</label>
-                                        </div>
+                                        {{-- Iterate through the languages from the DB --}}
+                                        @foreach(getAllLanguages() as $language)
+                                            <div class="form-check mb-2">
+                                                <input 
+                                                    class="form-check-input language-filter" 
+                                                    type="checkbox" 
+                                                    name="language_filter[]" 
+                                                    {{-- Ensure ID is unique by using the language ID --}}
+                                                    id="lang_{{ $language->id }}"
+                                                    {{-- IMPORTANT: Ensure this value matches what your scopeFilterByLanguage expects (name or code) --}}
+                                                    value="{{ $language->code }}"
+                                                    {{-- Check if this specific language name is in the selected array --}}
+                                                    {{ in_array($language->code, $selectedLanguages ?? []) ? 'checked' : '' }}
+                                                >
+                                                <label class="form-check-label" for="lang_{{ $language->id }}">
+                                                    {{ ucfirst($language->name) }}
+                                                </label>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>

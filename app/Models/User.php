@@ -379,16 +379,22 @@ class User extends Authenticatable
     public function scopeFilterByLanguage($query, $languages)
     {
         return $query->when($languages, function ($q) use ($languages) {
-            // Handle both array and single value
+            
+            // 1. Ensure it is an array
             $languageArray = is_array($languages) ? $languages : [$languages];
-            // dd($languageArray);
-            $languageArray = ['english'];
-            $q->whereHas('teacherProfile', function ($query) use ($languageArray) {
-                $query->whereIn('native_language', $languageArray);
+
+            // 2. Query the separate 'languages' relationship
+            // This assumes your User model has: public function languages() { return $this->belongsToMany(...); }
+            $q->whereHas('languages', function ($subQuery) use ($languageArray) {
+                
+                // 3. Match the column in your 'languages' table. 
+                // Since your JS sends ISO codes (e.g. 'en', 'fr'), use the 'code' column.
+                // If your DB stores full names (e.g. 'English'), change 'code' to 'name'.
+                $subQuery->whereIn('code', $languageArray);
+                
             });
         });
     }
-
 
 
 

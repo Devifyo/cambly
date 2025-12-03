@@ -128,8 +128,8 @@
 
                             <div class="col-md-6 text-md-end">
                                 <p class="d-flex align-items-center justify-content-md-end mb-1 fs-12">
-                                    <i class="isax isax-language-circle text-dark me-2"></i>
-                                    {{ ucfirst($teacher?->teacherProfile?->native_language  ?? 'English' ) }}
+                                    <i class="isax isax-language-circle text-dark me-2"></i>     
+                                    {{ (format_user_languages($teacher, 'native')  ?? 'English' ) }}
                                 </p>
 
                                 <p class="d-flex align-items-center justify-content-md-end mb-1 fs-12">
