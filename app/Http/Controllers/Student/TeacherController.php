@@ -26,6 +26,7 @@ public function searchTeachers(Request $request)
         ->filterByGender($request->gender)
         ->filterByLanguage($request->languages)
         ->filterByAvailability($request->start_utc)
+        ->sortByClosestAvailability($request->start_utc)
         ->withTeacherData($request->start_utc)
         ->paginate(5)
         ->appends($filters);

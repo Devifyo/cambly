@@ -11,6 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Facades\Storage;
 use Lab404\Impersonate\Models\Impersonate;
+use Carbon\Carbon;
 // for forget password
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CommonNotification;
@@ -394,6 +395,28 @@ class User extends Authenticatable
                 
             });
         });
+    }
+
+    public function scopeSortByClosestAvailability($query, $targetDate = null)
+    {
+        // 1. Determine search window
+        $startTime = $targetDate ? Carbon::parse($targetDate)->startOfDay() : now();
+        $endTime   = $targetDate ? Carbon::parse($targetDate)->endOfDay() : null;
+
+        // 2. Add virtual column 'closest_slot'
+        return $query->addSelect(['closest_slot' => Availability::select('start_utc')
+            ->whereColumn('teacher_id', 'users.id') 
+            
+            ->where('is_booked', false)
+            ->where('start_utc', '>=', $startTime)
+            ->when($endTime, function ($q) use ($endTime) {
+                $q->where('start_utc', '<=', $endTime);
+            })
+            ->orderBy('start_utc', 'asc')
+            ->limit(1)
+        ])
+        // 3. Sort: NULLs last, then ascending time
+        ->orderByRaw('ISNULL(closest_slot), closest_slot ASC');
     }
 
 
