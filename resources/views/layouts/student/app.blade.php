@@ -133,6 +133,10 @@
     <script src="{{asset('assets/js/script.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/additional-methods.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/iso-639-1@3.1.5/build/index.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/gh/linuxguist/countries@main/script.js"></script>
     <script>
                 // Set global defaults for jQuery Validation
         $.validator.setDefaults({

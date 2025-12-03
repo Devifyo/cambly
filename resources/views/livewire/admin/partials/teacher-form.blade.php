@@ -22,11 +22,11 @@
         @error('gender') <span class="invalid-feedback">{{ $message }}</span> @enderror
     </div>
     
-    <div class="col-md-6 mb-3">
+    {{-- <div class="col-md-6 mb-3">
         <label class="form-label">Native Language</label>
         <input type="text" wire:model.blur="native_language" class="form-control @error('native_language') is-invalid @enderror">
         @error('native_language') <span class="invalid-feedback">{{ $message }}</span> @enderror
-    </div>
+    </div> --}}
 
     <div class="col-md-6 mb-3">
         <label class="form-label">Password</label>

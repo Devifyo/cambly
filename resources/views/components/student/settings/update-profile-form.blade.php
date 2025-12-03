@@ -1,5 +1,45 @@
 {{-- Optimized profile form (cleaned & final-touch) --}}
 <form id="profile-form" method="POST" action="{{ route('student.profile.update') }}" enctype="multipart/form-data">
+    <style>
+        /* Your specific Select2 Styling fixes */
+        .select2-container .select2-selection--multiple {
+            min-height: 45px !important;
+            border: 1px solid #ced4da;
+            display: flex !important;
+            align-items: center !important;
+            padding: 2px 5px !important;
+        }
+        .select2-container .select2-selection--multiple .select2-selection__rendered {
+            display: block !important;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            line-height: normal;
+        }
+        .select2-container .select2-search--inline .select2-search__field {
+            height: 30px !important;
+            margin-top: 0 !important;
+            line-height: 30px !important;
+            padding-left: 5px;
+            vertical-align: middle;
+            font-family: inherit;
+        }
+        .select2-search__field::placeholder {
+            color: #6c757d !important;
+            opacity: 1;
+        }
+        .select2-container .select2-selection--single {
+            height: 45px !important;
+            padding-top: 8px;
+            border: 1px solid #ced4da;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 10px;
+        }
+        .select2-selection__arrow {
+            display: none !important;
+        }
+    </style>
     @csrf
     @method('PATCH')
 
@@ -86,12 +126,17 @@
                     </div>
 
                     {{-- Mother Tongue --}}
-                    <div class="col-lg-6 col-md-6">
+                    {{-- <div class="col-lg-6 col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="mother_tongue">Mother Tongue <span class="text-danger">*</span></label>
                             <input id="mother_tongue" name="native_language" type="text" class="form-control"
                                     value="{{ old('native_language', auth()->user()->studentProfile?->native_language) }}" placeholder="e.g. Hindi, Spanish" required>
                         </div>
+                    </div> --}}
+
+                    {{-- === NATIVE LANGUAGE COMPONENT === --}}
+                    <div class="col-lg-6 col-md-6">
+                        <x-inputs.native-language-select />
                     </div>
 
                     {{-- Country of residence --}}
@@ -291,15 +336,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     name: { required: true, minlength: 2 },
                     email: { required: true, email: true },
                     date_of_birth: { required: true, dateISO: true, futureDate: true, minAge: 13 },
-                    native_language: { required: true, minlength: 2 },
                     english_level: { required: true },
                     country_residence: { 
                         required: true,
                         notDefaultSelect: true // <-- NEW RULE APPLICATION
                     },
+                    "native_languages[]": { required: true, maxlength: 3 },
                     avatar: { accept: "image/jpeg,image/png,image/jpg", filesize: MAX_FILE_SIZE }
                 },
                 messages: {
+                    "native_languages[]": {
+                        required: "Please select at least one native language.",
+                        maxlength: "You cannot select more than 3."
+                    },
                     name: { required: "Please provide a username.", minlength: "Username must be at least 2 characters long." },
                     email: { required: "We need your email address for account access.", email: "Please enter a valid email address (e.g., user@example.com)." },
                     date_of_birth: {
