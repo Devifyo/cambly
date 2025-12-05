@@ -94,7 +94,7 @@
 
     </div>
     <!-- /Main Wrapper -->
-
+    <x-global-video-modal />
     <!-- Modals -->
     @stack('modals')
 

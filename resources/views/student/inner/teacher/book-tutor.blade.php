@@ -260,30 +260,48 @@
 @section('content')
 <fieldset id="bookingFieldset">
     <div class="card booking-card mb-0">
+        {{-- teacher info --}}
         <div class="card-header">
             <div class="booking-header pb-0">
                 <div class="card mb-0">
                     <div class="card-body">
-                        <!-- Teacher Header -->
+                        {{-- 1. Header with Name + Video Link --}}
                         <div class="d-flex align-items-center flex-wrap row-gap-2 mb-4">
                             <span class="avatar avatar-xxxl avatar-rounded me-2 flex-shrink-0">
                                 <img src="{{ $teacher->profile_link }}" alt="{{ $teacher->name ?? 'Teacher' }} Profile">
                             </span>
                             <div>
-                                <h4 class="mb-1">{{ $teacher->name ?? $teacher->teacherProfile->preferred_name ?? 'Teacher' }}</h4>
+                                {{-- Flex container to align Name and Video Button --}}
+                                <div class="d-flex align-items-center flex-wrap gap-2">
+                                    <h4 class="mb-1">{{ $teacher->name ?? $teacher->teacherProfile->preferred_name ?? 'Teacher' }}</h4>
+                                    
+                                    {{-- MOVED HERE: Video Button --}}
+                                    @if($teacher->teacherProfile->youtube_url)
+                                        <a href="javascript:void(0);" 
+                                        class="d-inline-flex align-items-center fs-11 text-danger bg-danger-transparent px-2 py-1 rounded-pill fw-medium"
+                                        style="text-decoration: none;"
+                                        onclick="openVideoPreview('{{ $teacher->teacherProfile->youtube_url }}')">
+                                            <i class="fa-solid fa-play me-1"></i> Watch Intro
+                                        </a>
+                                    @endif
+                                </div>
+
                                 <p class="mb-0 text-muted small">Teacher ID: {{ encryptId($teacher->id) }}</p>
                             </div>
                         </div>
 
-                        @if ($teacher->teacherProfile->bio ?? false)
-                        <div class="mb-4">
-                            <h6 class="mb-2">About the Teacher</h6>
-                            <p class="text-muted mb-0">{{ $teacher->teacherProfile->bio }}</p>
-                        </div>
-                        <hr class="my-3">
+                        {{-- Original Bio Section (Headline/Short Bio) --}}
+                        @if ($teacher->teacherProfile->short_bio ?? false)
+                            <div class="mb-4">
+                                <h6 class="mb-2">About the Teacher</h6>
+                                <p class="text-muted mb-0">{{ $teacher->teacherProfile->short_bio }}</p>
+                            </div>
+                            <hr class="my-3">
                         @endif
 
                         <h6 class="mb-2">Booking Info</h6>
+                        
+                        {{-- Row 1: Existing Stats --}}
                         <div class="row gx-2 gy-3">
                             <div class="col-lg-3 col-sm-6">
                                 <h6 class="fs-14 fw-medium mb-1">Service</h6>
@@ -301,12 +319,43 @@
                                 <h6 class="fs-14 fw-medium mb-1">Total Experience</h6>
                                 <p class="mb-0">{{ $teacher->teacherProfile->experience ?? 'N/A' }} years</p>
                             </div>
+
+                            {{-- Row 2: NEW FIELDS (Japanese Level & Games only - Video moved up) --}}
+
+                            {{-- Japanese Level (using english_level) --}}
+                            <div class="col-lg-3 col-sm-6">
+                                <h6 class="fs-14 fw-medium mb-1">Japanese Level</h6>
+                                <p class="mb-0">{{ ucfirst($teacher->teacherProfile->english_level ?? '-') }}</p>
+                            </div>
+                            {{-- Native Languages --}}
+                            <div class="col-lg-3 col-sm-6">
+                                <h6 class="fs-14 fw-medium mb-1">Native Languages</h6>
+                                <p class="mb-0">{{ format_user_languages($teacher, 'native-language')?? '-' }}</p>
+                            </div>
+                            
+                            {{-- Games --}}
+                            <div class="col-lg-3 col-sm-6">
+                                <h6 class="fs-14 fw-medium mb-1">Games</h6>
+                                <p class="mb-0">{{ $teacher->teacherProfile->games ?? '-' }}</p>
+                            </div>
                         </div>
+                        
+                        {{-- Row 3: Introduction (Full Width) --}}
+                        @if($teacher->teacherProfile->introduction)
+                            <hr class="my-3">
+                            <div class="row gx-2 gy-3">
+                                <div class="col-12">
+                                    <h6 class="fs-14 fw-medium mb-1">Introduction</h6>
+                                    <p class="mb-0 text-muted" style="white-space: pre-wrap;">{{ $teacher->teacherProfile->introduction }}</p>
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
             </div>
         </div>
-
+        {{-- end of teacher info --}}
         <div class="card-body booking-body">
             <div class="card mb-0">
                 <div class="card-body pb-1">

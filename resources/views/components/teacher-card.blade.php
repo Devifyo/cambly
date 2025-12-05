@@ -123,11 +123,13 @@
                 <div class="teacher-img-blur-bg" style="background-image: url('{{ $teacher->profile_link }}');"></div>
                 
                 {{-- Layer 2: Sharp Centered Image --}}
-                <img 
-                    src="{{ $teacher->profile_link }}" 
-                    alt="{{ $teacher->name }}" 
-                    class="teacher-img-fit"
-                >
+                 <a href="{{ route('student.tutors.booking.datetime',['teacherId' => encryptId($teacher->id)]) }}">
+                    <img 
+                        src="{{ $teacher->profile_link }}" 
+                        alt="{{ $teacher->name }}" 
+                        class="teacher-img-fit"
+                    >
+                 </a>
             </div>
         </div>
 
@@ -174,24 +176,25 @@
                     <div class="doctor-info-detail pb-2">
                         <div class="row align-items-center gy-2">
                             <div class="col-md-6">
-                                <p class="mb-1 fs-13">
-                                    {{ $teacher->teacherProfile->short_bio ?? 'Certified TESOL Tutor' }}
+                                <p class="d-flex align-items-center mb-0 fs-12 text-muted">
+                                   <i class="fas fa-user-edit me-2"></i>
+                                    {{$teacher->teacherProfile?->short_bio ?? '-' }}
                                 </p>
                                 <p class="d-flex align-items-center mb-0 fs-12 text-muted">
-                                    <i class="isax isax-location me-2"></i>
-                                    {{ $teacher->teacherProfile->tz ?? 'N/A' }}
+                                     <i class="fab fa-discord me-2"></i>
+                                     {{$teacher->teacherProfile?->discord_id ?? '-' }}
                                 </p>
                             </div>
 
                             <div class="col-md-6 text-md-end">
                                 <p class="d-flex align-items-center justify-content-md-end mb-1 fs-12">
-                                    <i class="isax isax-language-circle text-dark me-2"></i>     
-                                    {{ (format_user_languages($teacher, 'native')  ?? 'English' ) }}
+                                    <i class="fas fa-circle text-danger me-2"></i>
+                                    {{ blank($teacher->teacherProfile?->english_level) ? '-' : ucfirst(trim($teacher->teacherProfile->english_level))  }}
                                 </p>
 
                                 <p class="d-flex align-items-center justify-content-md-end mb-1 fs-12">
-                                    <i class="isax isax-archive-14 text-dark me-2"></i>
-                                    {{ $teacher?->teacherProfile?->experience ?? '**' }} Years Experience
+                                    <i class="fas fa-briefcase text-mute me-2"></i>
+                                    {{ blank($teacher?->teacherProfile?->experience) ? '-': $teacher?->teacherProfile?->experience. ' Years Experience' }}
                                 </p>
 
                                 {{-- Availability Info --}}
