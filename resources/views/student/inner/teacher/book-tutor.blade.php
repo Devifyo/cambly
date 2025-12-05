@@ -224,6 +224,34 @@
     }
 }
 
+/* --- ADD THIS NEW BLOCK FOR MOBILE TOOLBAR --- */
+@media (max-width: 768px) {
+    .fc .fc-toolbar.fc-header-toolbar {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    /* Nav Buttons (< > Today) */
+    .fc .fc-toolbar-chunk:first-child {
+        order: 1; 
+    }
+
+    /* View Switcher (Week Day) - Move from right to Left under Nav */
+    .fc .fc-toolbar-chunk:last-child {
+        order: 2;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    /* Title - Move to bottom */
+    .fc .fc-toolbar-chunk:nth-child(2) {
+        order: 3;
+        padding-top: 5px;
+    }
+}
+
 </style>
 
 
@@ -746,9 +774,12 @@
         allDaySlot: false,
         slotMinTime: '00:00:00',
         slotMaxTime: '24:00:00',
-        slotDuration: '00:25:00',
+        
+        // --- UPDATED HERE ---
+        slotDuration: '00:30:00', // Changed from 00:25:00 to 00:30:00
+        // --------------------
+
         height: 'auto',
-        // expandRows: true,
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
@@ -762,7 +793,7 @@
         slotLabelFormat: {
             hour: '2-digit',
             minute: '2-digit',
-            hour12: false // Crucial: sets to 24-hour format
+            hour12: false
         },
         eventContent(arg) {
             const timeRange = utils.toTimeRange24(arg.event.start, arg.event.end);
