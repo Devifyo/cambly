@@ -357,8 +357,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         dateISO: "Please enter a valid date (YYYY-MM-DD).",
                         minAge: "You must be at least 13 years old to proceed."
                     },
-                    discord_id: {  required: "Please provide a discord username."}
-                    native_language: { required: "Please specify your mother tongue.", minlength: "Mother tongue must be at least 2 characters long." },
+                    discord_id: {  required: "Please provide a discord username."},
                     english_level: { required: "Please select your English proficiency level." },
                     country_residence: { 
                         required: "Please select your country of residence.",
