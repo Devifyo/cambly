@@ -22,6 +22,22 @@
         width: 100%;
     }
     
+    /* Mobile-first defaults: Columns take full width */
+    .teacher-img-col {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .teacher-text-col {
+        width: 100%;
+        flex: 0 0 100%;
+    }
+    
+    /* Desktop overrides */
     @media (min-width: 768px) {
         .teacher-card-row {
             flex-wrap: nowrap;
@@ -30,18 +46,13 @@
             width: 25%; /* Compact Width */
             min-width: 180px;
             flex-shrink: 0;
+            flex: 0 0 auto; /* Reset flex basis */
         }
         .teacher-text-col {
             width: 75%;
             flex-grow: 1;
+            flex: 1 1 auto; /* Allow grow */
         }
-    }
-
-    .teacher-img-fit {
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Key: Fills height without distortion */
-        display: block;
     }
 
     .teacher-card-body {
@@ -57,6 +68,49 @@
         padding-top: 0.75rem;
         border-top: 1px solid #f0f0f0; /* Optional separator */
     }
+
+    /* === UPDATED IMAGE STYLES === */
+    .teacher-img-inner {
+        position: relative; 
+        width: 100%;
+        height: 140px;      
+        overflow: hidden;
+        border-radius: 8px;
+        background-color: #f0f0f0; /* Neutral background behind blur */
+    }
+
+    /* 1. The Blur Layer: Fills the entire box behind the image */
+    .teacher-img-blur-bg {
+        position: absolute;
+        inset: 0; /* Top, Right, Bottom, Left = 0 */
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        filter: blur(8px); /* Soft blur */
+        transform: scale(1.1); /* Zoom in to hide white blur edges */
+        opacity: 0.5; /* Visibility of the blur */
+        z-index: 0;
+    }
+
+    /* 2. The Main Image: Fits nicely on top */
+    .teacher-img-fit {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        
+        /* Logic: 'contain' ensures the whole image is seen. 
+           Empty space (left/right or top/bottom) is transparent, revealing the blur layer behind. */
+        object-fit: contain; 
+        
+        /* Logic: 'center' ensures the image sits in the middle of the box, not the left */
+        object-position: center; 
+        
+        display: block;
+    }
+
 </style>
 
 <div class="card doctor-list-card overflow-hidden mb-3 shadow-sm border-0">
@@ -64,16 +118,19 @@
         
         {{-- Teacher image --}}
         <div class="teacher-img-col">
-            <div style="height: 100%;">
-                 {{-- <a href="{{ route('student.tutors.profile',['id' => encryptId($teacher->id)]) }}"> --}}
+            <div class="teacher-img-inner">
+                {{-- Layer 1: Blurred Background (Fills the gaps) --}}
+                <div class="teacher-img-blur-bg" style="background-image: url('{{ $teacher->profile_link }}');"></div>
+                
+                {{-- Layer 2: Sharp Centered Image --}}
                 <img 
-                    src="{{$teacher->profile_link }}" 
+                    src="{{ $teacher->profile_link }}" 
                     alt="{{ $teacher->name }}" 
                     class="teacher-img-fit"
                 >
-                {{-- </a> --}}
             </div>
         </div>
+
 
         {{-- card body --}}
         <div class="teacher-text-col">

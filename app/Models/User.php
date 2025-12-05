@@ -258,7 +258,7 @@ class User extends Authenticatable
             return Storage::url($this->profile_picture);
         }
         if($this->isTeacher()){
-            return asset('assets/img/teacher/teacher-avatar.jpeg');
+            return asset('assets/img/anonymous-avatar.jpg');
         }
         // Default placeholder image    
         return asset('assets/img/dashboard/user.png');
