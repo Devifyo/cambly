@@ -4,7 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\ValidationException;
 class ProfileUpdateRequest extends FormRequest
 {
     public function authorize(): bool
@@ -31,10 +32,10 @@ class ProfileUpdateRequest extends FormRequest
             ],
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
 
-             // Profile attributes (optional)
+            //  Profile attributes (optional)
             // 'age' => ['nullable', 'integer', 'min:1', 'max:120'],
             'date_of_birth' => [
-                'required',
+                // 'required',
                 'date',
                 'before_or_equal:' . now()->toDateString(), // Cannot be in the future
                 // Checks if the date of birth is at least 13 years ago
@@ -43,7 +44,7 @@ class ProfileUpdateRequest extends FormRequest
             'native_language' => ['nullable', 'string', 'max:100'],
             'english_level' => [
                 'required', 
-                Rule::in(['beginner', 'intermediate', 'advanced', 'native']),
+                Rule::in(['native-like', 'fluent', 'conversational', 'basic', 'none']),
             ],
             'country_residence' => ['required', 'string', 'max:100'],
             'discord_id' => ['nullable', 'string', 'max:100'],
@@ -60,4 +61,9 @@ class ProfileUpdateRequest extends FormRequest
             'avatar.max' => 'The profile photo cannot exceed 5MB.',
         ];
     }
+
+    // protected function failedValidation(Validator $validator)
+    // {
+    //     dd($validator->errors()->toArray());
+    // }
 }

@@ -104,13 +104,13 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6 col-md-6">
+                    {{-- <div class="col-lg-6 col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
                             <input id="date_of_birth" name="date_of_birth" type="date" class="form-control"
                                    value="{{ old('date_of_birth', auth()->user()->teacherProfile?->date_of_birth ? auth()->user()->teacherProfile->date_of_birth->format('Y-m-d') : null) }}" required>
                         </div>
-                    </div>
+                    </div> --}}
 
                         {{-- === NATIVE LANGUAGE COMPONENT === --}}
                         <div class="col-lg-6 col-md-6">
@@ -133,11 +133,11 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="english_level">English Level <span class="text-danger">*</span></label>
+                            <label class="form-label" for="english_level">Japanese Level <span class="text-danger">*</span></label>
                             <select id="english_level" name="english_level" class="form-control" required>
                                 <option value="" disabled {{ old('english_level', auth()->user()->teacherProfile?->english_level) ? '' : 'selected' }}>Please select your level</option>
                                 @php
-                                    $levels = ['beginner', 'intermediate', 'advanced', 'native'];
+                                    $levels = ['native-like','Fluent', 'Conversational', 'Basic', 'None'];
                                     $currentLevel = old('english_level', auth()->user()->teacherProfile?->english_level);
                                 @endphp
                                 @foreach ($levels as $level)
@@ -160,7 +160,7 @@
                     
                     <div class="col-lg-6 col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="discord_id">Discord ID (Optional)</label>
+                            <label class="form-label" for="discord_id">Discord username <span class="text-danger">*</span></label>
                             <input id="discord_id" name="discord_id" type="text" class="form-control"
                                    value="{{ old('discord_id', auth()->user()->teacherProfile?->discord_id) }}" placeholder="myusername#1234">
                         </div>
@@ -185,12 +185,53 @@
                     
                     <div class="col-lg-12">
                         <div class="form-group">
-                            <label class="form-label" for="short_description">Short Bio / Headline <span class="text-danger">*</span></label>
+                            <label class="form-label" for="short_description">Headline <span class="text-danger">*</span></label>
                             <textarea id="short_description" name="short_bio" class="form-control" rows="3" 
                                       placeholder="A short, catchy headline for your profile (e.g., 'Friendly Native Speaker Specializing in Business English')" required>{{ old('short_bio', auth()->user()->teacherProfile?->short_bio) }}</textarea>
                             <small class="form-text text-muted">Max 50 characters.</small></br>
                         </div>
                     </div>
+                    {{-- Introduction --}}
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="form-label" for="introduction">Introduction (Optional)</label>
+                            <textarea id="introduction" name="introduction" class="form-control" rows="6"
+                                    placeholder="Introduce yourself to students (max 2000 characters).">{{ old('introduction', auth()->user()->teacherProfile?->introduction) }}</textarea>
+                            <small class="form-text text-muted">Max 2000 characters.</small>
+                        </div>
+                    </div>
+                    {{-- End Introduction --}}
+
+                    {{-- Games --}}
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="form-label" for="games">Games (Optional)</label>
+                            <input id="games" type="text" name="games" class="form-control"
+                                placeholder="Games you like (max 100 characters)"
+                                value="{{ old('games', auth()->user()->teacherProfile?->games) }}">
+                            <small class="form-text text-muted">Max 100 characters.</small>
+                        </div>
+                    </div>
+                    {{-- End Games --}}
+
+                    {{-- Video URL (YouTube) --}}
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="form-label" for="youtube_url">Video (YouTube URL, Optional)</label>
+                            <input id="youtube_url" type="url" name="youtube_url" class="form-control"
+                                placeholder="https://www.youtube.com/watch?v=xxxxxxx"
+                                value="{{ old('youtube_url', auth()->user()->teacherProfile?->youtube_url) }}">
+                            <small class="form-text text-muted">Paste a valid YouTube link. The video will be embedded on your profile.</small>
+                        </div>
+                        @if(auth()->user()->teacherProfile?->youtube_url)
+                            <a href="javascript:void(0);" 
+                            class="d-inline-flex align-items-center mt-2"
+                            onclick="openVideoPreview('{{ auth()->user()->teacherProfile->youtube_url }}')">
+                                <i class="fa-solid fa-play me-2"></i> View Video
+                            </a>
+                        @endif
+                    </div>
+                    {{-- End Video --}}
                 </div>
             </div>
 
@@ -253,20 +294,35 @@
             return age >= param;
         }, 'You must be at least {0} years old.');
 
+        $.validator.addMethod("youtubeUrl", function (value, element) {
+            // Return true if the field is empty (optional)
+            if (this.optional(element)) {
+                return true;
+            }
+            
+            const pattern = /^(https?:\/\/)?((www\.|m\.)?youtube\.com|youtu\.be)\//i;
+            
+            return pattern.test(value);
+        }, "Please enter a valid YouTube URL (e.g., youtube.com or youtu.be).");
+
         // Initialize Validation
         $("#profile-form").validate({
             ignore: [], 
             rules: {
                 name: { required: true, minlength: 2 },
                 email: { required: true, email: true },
-                date_of_birth: { required: true, futureDate: true, minAge: 13 },
+                // date_of_birth: { required: true, futureDate: true, minAge: 13 },
                 // These rules still work because your components output inputs with these names
                 // mother_tongue: { required: true },
+                discord_id: {required:true},
                 "native_languages[]": { required: true, maxlength: 3 },
                 english_level: { required: true },
                 country_residence: { required: true, notDefaultSelect: true },
                 experience: { required: true, digits: true, min: 0, max: 60 },
-                short_bio: { required: true, minlength: 10, maxlength: 80 },
+                short_bio: { required: true, minlength: 10, maxlength: 50 },
+                introduction: { maxlength: 2000 },
+                games: { maxlength: 100 },
+                youtube_url: { url: true, youtubeUrl: true }
             },
             messages: {
                 mother_tongue: { required: "Please select your mother tongue." },
@@ -274,6 +330,8 @@
                     required: "Please select at least one native language.",
                     maxlength: "You cannot select more than 3."
                 },
+                english_level: {required: "Please select your Japanese level."},
+                discord_id: {  required: "Please provide a discord username."},
                 date_of_birth: { required: "Please enter your date of birth", futureDate: "The date of birth cannot be in the future.", minAge: "You must be at least 13 years old." },
                 experience: {
                     required: "Please enter your years of experience",
@@ -281,11 +339,38 @@
                     min: "Please enter a valid number (0 or more)",
                     max: "Please enter a valid number (60 or less)"
                 },
+                short_bio: { 
+                    required: "Headline is required.",
+                    minlength: "Headline must be at least 5 characters.",
+                    maxlength: "Headline cannot exceed 50 characters."
+                },
+
+                introduction: { 
+                    maxlength: "Introduction cannot exceed 2000 characters."
+                },
+
+                games: { 
+                    maxlength: "Games field cannot exceed 100 characters."
+                },
+
+                youtube_url: { 
+                    url: "Please enter a valid URL.",
+                    youtubeUrl: "Please enter a valid YouTube link."
+                },
             },
             errorPlacement: function(error, element) {
+                // For Select2 elements
                 if (element.hasClass('select2-hidden-accessible')) {
                     error.insertAfter(element.next('.select2'));
-                } else {
+                } 
+                // FIX: If the input has helper text (class .form-text), place error AFTER the helper text
+                else if (element.next('.form-text').length > 0) {
+                    error.insertAfter(element.next('.form-text'));
+                    // Add a line break to ensure the error sits on a new line below the helper text
+                    $("<br>").insertBefore(error);
+                } 
+                // Default placement
+                else {
                     error.insertAfter(element);
                 }
             }

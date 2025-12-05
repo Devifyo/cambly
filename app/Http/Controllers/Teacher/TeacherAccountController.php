@@ -66,7 +66,10 @@ class TeacherAccountController extends Controller
                 'discord_id',
                 'experience',
                 'short_bio',
-                'country_residence'
+                'country_residence',
+                'introduction',
+                'games',
+                'youtube_url'
         ]);
         $this->syncUserLanguages($user, $request);
         $user->teacherProfile()->updateOrCreate(

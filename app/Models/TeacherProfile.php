@@ -21,7 +21,10 @@ class TeacherProfile extends Model
         'gender',
         'experience',
         'short_bio',
-        'country_residence'
+        'country_residence',
+        'games',
+        'introduction',
+        'youtube_url',
     ];
             protected $casts = [
         'date_of_birth' => 'date',
