@@ -64,6 +64,6 @@ class ProfileUpdateRequest extends FormRequest
 
     // protected function failedValidation(Validator $validator)
     // {
-    //     dd($validator->errors()->toArray());
+    //     dd(request()->all(), $validator->errors()->toArray());
     // }
 }

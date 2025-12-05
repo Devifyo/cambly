@@ -137,7 +137,7 @@
                             <select id="english_level" name="english_level" class="form-control" required>
                                 <option value="" disabled {{ old('english_level', auth()->user()->teacherProfile?->english_level) ? '' : 'selected' }}>Please select your level</option>
                                 @php
-                                    $levels = ['native-like','Fluent', 'Conversational', 'Basic', 'None'];
+                                    $levels = ['native-like','fluent', 'conversational', 'basic', 'none'];
                                     $currentLevel = old('english_level', auth()->user()->teacherProfile?->english_level);
                                 @endphp
                                 @foreach ($levels as $level)
