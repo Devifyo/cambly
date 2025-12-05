@@ -174,3 +174,18 @@ if (!function_exists('getAllLanguages')) {
     }
 }
 
+
+if(!function_exists('getJapaneseLevelName')) {
+    /**
+     * Get language name by its code.
+     *
+     * @param string $code
+     * @return string|null
+     */
+    function getJapaneseLevelName()
+    {
+        $levels = ['native-like','fluent', 'conversational', 'basic', 'none'];
+
+        return $levels ?? [];
+    }
+}

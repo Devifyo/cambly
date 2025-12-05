@@ -305,6 +305,16 @@ class User extends Authenticatable
     /**
      * Filter teachers by name
      */
+
+    public function scopeFilterByJapaneseLevel($query, $japaneseLevel)
+    {
+        return $query->when($japaneseLevel, function ($q) use ($japaneseLevel) {
+            $q->whereHas('teacherProfile', function ($query) use ($japaneseLevel) {
+                $query->where('english_level', 'like', "%{$japaneseLevel}%");
+            });
+        });
+    }
+    
     public function scopeFilterByName($query, $name)
     {
         return $query->when($name, function ($q) use ($name) {

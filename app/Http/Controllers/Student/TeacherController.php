@@ -10,19 +10,21 @@ class TeacherController extends Controller
 {
 
 public function searchTeachers(Request $request)
-{
+{   
     $request->validate([
         'name' => 'nullable|string|max:255',
         'start_utc' => 'nullable|date_format:Y-m-d',
         'gender' => 'nullable|in:male,female',
         'languages' => 'nullable|array',
         'languages.*' => 'string',
+        'japanese_level' => 'nullable|string|max:255',
     ]);
 
-    $filters = $request->only(['name', 'start_utc', 'gender', 'languages']);
+    $filters = $request->only(['name', 'start_utc','gender','languages','japanese_level']);
 
     $teachers = User::teachers()
         ->filterByName($request->name)
+        ->filterByJapaneseLevel($request->japanese_level)
         ->filterByGender($request->gender)
         ->filterByLanguage($request->languages)
         ->filterByAvailability($request->start_utc)
