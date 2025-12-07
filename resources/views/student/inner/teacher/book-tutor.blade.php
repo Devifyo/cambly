@@ -273,10 +273,10 @@
                             <div>
                                 {{-- Flex container to align Name and Video Button --}}
                                 <div class="d-flex align-items-center flex-wrap gap-2">
-                                    <h4 class="mb-1">{{ $teacher->name ?? $teacher->teacherProfile->preferred_name ?? 'Teacher' }}</h4>
+                                    <h4 class="mb-1">{{ $teacher->name ?? $teacher?->teacherProfile?->preferred_name ?? 'Teacher' }}</h4>
                                     
                                     {{-- MOVED HERE: Video Button --}}
-                                    @if($teacher->teacherProfile->youtube_url)
+                                    @if($teacher?->teacherProfile?->youtube_url ?? false)
                                         <a href="javascript:void(0);" 
                                         class="d-inline-flex align-items-center fs-11 text-danger bg-danger-transparent px-2 py-1 rounded-pill fw-medium"
                                         style="text-decoration: none;"
@@ -291,10 +291,10 @@
                         </div>
 
                         {{-- Original Bio Section (Headline/Short Bio) --}}
-                        @if ($teacher->teacherProfile->short_bio ?? false)
+                        @if ($teacher?->teacherProfile?->short_bio ?? false)
                             <div class="mb-4">
                                 <h6 class="mb-2">About the Teacher</h6>
-                                <p class="text-muted mb-0">{{ $teacher->teacherProfile->short_bio }}</p>
+                                <p class="text-muted mb-0">{{ $teacher?->teacherProfile?->short_bio }}</p>
                             </div>
                             <hr class="my-3">
                         @endif
@@ -317,7 +317,7 @@
                             </div>
                             <div class="col-lg-3 col-sm-6">
                                 <h6 class="fs-14 fw-medium mb-1">Total Experience</h6>
-                                <p class="mb-0">{{ $teacher->teacherProfile->experience ?? 'N/A' }} years</p>
+                                <p class="mb-0">{{ $teacher?->teacherProfile?->experience ?? '-' }} years</p>
                             </div>
 
                             {{-- Row 2: NEW FIELDS (Japanese Level & Games only - Video moved up) --}}
@@ -325,7 +325,7 @@
                             {{-- Japanese Level (using english_level) --}}
                             <div class="col-lg-3 col-sm-6">
                                 <h6 class="fs-14 fw-medium mb-1">Japanese Level</h6>
-                                <p class="mb-0">{{ ucfirst($teacher->teacherProfile->english_level ?? '-') }}</p>
+                                <p class="mb-0">{{ ucfirst($teacher?->teacherProfile?->english_level ?? '-') }}</p>
                             </div>
                             {{-- Native Languages --}}
                             <div class="col-lg-3 col-sm-6">
@@ -336,17 +336,17 @@
                             {{-- Games --}}
                             <div class="col-lg-3 col-sm-6">
                                 <h6 class="fs-14 fw-medium mb-1">Games</h6>
-                                <p class="mb-0">{{ $teacher->teacherProfile->games ?? '-' }}</p>
+                                <p class="mb-0">{{ $teacher?->teacherProfile?->games ?? '-' }}</p>
                             </div>
                         </div>
                         
                         {{-- Row 3: Introduction (Full Width) --}}
-                        @if($teacher->teacherProfile->introduction)
+                        @if($teacher?->teacherProfile?->introduction)
                             <hr class="my-3">
                             <div class="row gx-2 gy-3">
                                 <div class="col-12">
                                     <h6 class="fs-14 fw-medium mb-1">Introduction</h6>
-                                    <p class="mb-0 text-muted" style="white-space: pre-wrap;">{{ $teacher->teacherProfile->introduction }}</p>
+                                    <p class="mb-0 text-muted" style="white-space: pre-wrap;">{{ $teacher?->teacherProfile?->introduction }}</p>
                                 </div>
                             </div>
                         @endif
