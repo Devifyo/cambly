@@ -24,7 +24,7 @@
                 <ul class="main-nav">
                     <li class="{{ request()->routeIs('student.tutors.*') ? 'active' : '' }}"><a href="{{ route('student.tutors.search') }}">Book a Lesson</a></li>
                     <li class="{{ request()->routeIs('cms.about') ? 'active' : '' }}"><a href="{{ route('cms.about') }}"> About us</a></li>
-                    <li class="{{ request()->routeIs('cms.contact') ? 'active' : '' }}"><a href="{{ route('cms.contact') }}"> Contact us</a></li>
+                    <li class="{{ request()->routeIs('cms.contact') ? 'active' : '' }}"><a href="{{ route('cms.contact') }}" target="_blank" rel="noopener noreferrer"> Contact us</a></li>
 
                 </ul>
             </div>

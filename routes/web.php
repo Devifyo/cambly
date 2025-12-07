@@ -5,7 +5,7 @@ use App\Http\Controllers\CmsController;
 use App\Http\Controllers\Admin\ImpersonationController;
 
 Route::get('/', function () {
-    return redirect()->route('auth.login');
+    return view('welcome');
 });
 
 
@@ -19,10 +19,10 @@ Route::controller(CmsController::class)->group(function () {
     Route::post('contact-us/send', 'storeContact')->name('cms.contact.store');
 
     // The "Terms" page (I've added this for you)
-    Route::get('terms-and-conditions', 'terms')->name('cms.terms');
+    Route::get('regulation', 'terms')->name('cms.terms');
     
     // The "Privacy" page (I've added this for you)
-    Route::get('privacy-policy', 'privacy')->name('cms.privacy');
+    Route::get('privacypolicy', 'privacy')->name('cms.privacy');
     // how-it-works
     Route::get('how-it-works','howItWorks')->name('cms.how.works');
 });

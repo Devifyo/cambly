@@ -27,8 +27,9 @@ class CmsController extends Controller
     /**
      * Display the "Contact Us" page.
      */
-    public function contact(): View
+    public function contact()
     {
+        return redirect()->away('https://forms.gle/KNwxeVYNVCjChY7v8');
         // You can create this view later
         return view('student.cms.contact');
     }

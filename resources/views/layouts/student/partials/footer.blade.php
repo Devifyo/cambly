@@ -41,7 +41,7 @@
                                 <h6 class="footer-title">Company & Legal</h6>
                                 <ul>
                                     <li><a href="{{ route('cms.about') }}">About Us</a></li>
-                                    <li><a href="{{ route('cms.contact') }}">Contact Us</a></li>
+                                    <li><a href="{{ route('cms.contact') }}" target="_blank" rel="noopener noreferrer">Contact Us</a></li>
                                     <li><a href="{{ route('cms.terms') }}">Terms & Conditions</a></li>
                                     <li><a href="{{ route('cms.privacy') }}">Privacy Policy</a></li>
                                 </ul>

@@ -179,7 +179,7 @@
 
             <h2>9. Contact Us</h2>
             <p>
-                If you have questions regarding these Terms, specifically regarding subscriptions or the cancellation policy, please <a href="{{ route('cms.contact') }}">contact us</a>.
+                If you have questions regarding these Terms, specifically regarding subscriptions or the cancellation policy, please <a href="{{ route('cms.contact') }}" target="_blank" rel="noopener noreferrer">contact us</a>.
             </p>
         </div>
     </div>
