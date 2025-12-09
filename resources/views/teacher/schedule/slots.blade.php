@@ -77,6 +77,20 @@
         }
     }
 
+    /* 1. Increase height of the actual time slots */
+    .fc .fc-timegrid-slot {
+        height: 3rem !important; /* Default is usually small ~1.5em. Try 3rem, 4rem, or 60px */
+    }
+
+    /* 2. Optional: Center the text in the time labels */
+    .fc .fc-timegrid-slot-label-frame {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
 </style>
 @endpush
 
@@ -235,10 +249,20 @@
         },
         getSlotStatus(ev) {
             const isPast = new Date(ev.start) <= CONFIG.now;
+            const isBooked = !!ev.extendedProps?.is_booked;
             if (isPast) {
-                return { status: 'Completed', bg: '#6c757d', border: '#5a6268', text: '#fff' };
+                if (isBooked) {
+                    // Case 1: It was booked and time has passed -> Completed
+                    return { status: 'Completed', bg: '#6c757d', border: '#5a6268', text: '#fff' };
+                } else {
+                    // Case 2: It was NOT booked and time has passed -> No Lesson (Expired)
+                    // Using a very light gray to show it's inactive/expired
+                    return { status: 'No Lesson', bg: '#e9ecef', border: '#dee2e6', text: '#6c757d' };
+                }
             }
-            if (ev.extendedProps?.is_booked) {
+
+            // Future Logic
+            if (isBooked) {
                 return { status: 'Booked', bg: '#dc3545', border: '#b02a37', text: '#fff' };
             }
             return { status: 'Available', bg: '#0d6efd', border: '#0b5ed7', text: '#fff' };

@@ -252,6 +252,19 @@
     }
 }
 
+    /* 1. Increase height of the actual time slots */
+    .fc .fc-timegrid-slot {
+        height: 3rem !important; /* Default is usually small ~1.5em. Try 3rem, 4rem, or 60px */
+    }
+
+    /* 2. Optional: Center the text in the time labels */
+    .fc .fc-timegrid-slot-label-frame {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
 </style>
 
 
