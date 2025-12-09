@@ -364,31 +364,46 @@
                         <div class="col-lg-9" style="min-width:75%;">
                             <div class="card">
                                 <div class="card-body p-2 pt-3">
-                                    <label class="form-label">Weekly Availability</label>
+                                    
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                                        <h5 class="card-title mb-0 fw-bold">Weekly Availability</h5>
+                                        
+                                        <div class="d-inline-flex align-items-center bg-light border rounded-pill px-3 py-1">
+                                          <i class="fa-solid fa-globe text-primary me-2 fs-14"></i>
+                                            <span class="text-muted fs-12 me-1">Timezone:</span>
+                                            <span id="userTimezone" class="text-dark fw-bold fs-12">
+                                                {{ auth()->user()->studentProfile->tz ?? 'UTC' }}
+                                            </span>
+                                        </div>
+                                    </div>
+
                                     <div class="calendar-scroll-wrap">
                                         <div id="weeklyCalendar"></div>
                                     </div>
 
-                                    <div class="slot-legend mt-2">
-                                        <div class="legend-item">
-                                            <span class="legend-swatch" style="background:#198754"></span> Your booking
-                                        </div>
-                                        <div class="legend-item">
-                                            <span class="legend-swatch" style="background:#0d6efd"></span> Available
-                                        </div>
-                                        <div class="legend-item">
-                                            <span class="legend-swatch" style="background:#6c757d"></span> Booked (other)
-                                        </div>
-                                        <div class="legend-item">
-                                            <span class="legend-swatch" style="background:#6f42c1"></span> Completed
-                                        </div>
-                                        <div class="legend-item">
-                                            <span class="legend-swatch" style="background:#dc3545"></span> Cancelled
+                                    <div class="slot-legend mt-3 pt-2 border-top">
+                                        <div class="d-flex flex-wrap gap-3">
+                                            <div class="d-flex align-items-center fs-12">
+                                                <span class="legend-swatch rounded-circle me-1" style="background:#198754; width:10px; height:10px;"></span> 
+                                                Your booking
+                                            </div>
+                                            <div class="d-flex align-items-center fs-12">
+                                                <span class="legend-swatch rounded-circle me-1" style="background:#0d6efd; width:10px; height:10px;"></span> 
+                                                Available
+                                            </div>
+                                            <div class="d-flex align-items-center fs-12">
+                                                <span class="legend-swatch rounded-circle me-1" style="background:#6c757d; width:10px; height:10px;"></span> 
+                                                Booked
+                                            </div>
+                                            <div class="d-flex align-items-center fs-12">
+                                                <span class="legend-swatch rounded-circle me-1" style="background:#dc3545; width:10px; height:10px;"></span> 
+                                                Cancelled
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="small text-muted mt-2">
-                                        Click any slot to view details. Calendar uses 24-hour format.
+                                    <div class="small text-muted mt-2 fst-italic">
+                                        <i class="bi bi-info-circle me-1"></i> Calendar uses 24-hour format.
                                     </div>
                                 </div>
                             </div>

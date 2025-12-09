@@ -48,6 +48,35 @@
         opacity: 1;
         cursor: not-allowed;
     }
+
+    /* --- ADD THIS NEW BLOCK FOR MOBILE TOOLBAR --- */
+    @media (max-width: 768px) {
+        .fc .fc-toolbar.fc-header-toolbar {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        /* Nav Buttons (< > Today) */
+        .fc .fc-toolbar-chunk:first-child {
+            order: 1; 
+        }
+
+        /* View Switcher (Week Day) - Move from right to Left under Nav */
+        .fc .fc-toolbar-chunk:last-child {
+            order: 2;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        /* Title - Move to bottom */
+        .fc .fc-toolbar-chunk:nth-child(2) {
+            order: 3;
+            padding-top: 5px;
+        }
+    }
+
 </style>
 @endpush
 
@@ -64,13 +93,26 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body p-2 pt-3">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <label class="form-label mb-0">Your Weekly Availability</label>
-                                    <button id="addSlotManualBtn" class="btn btn-primary btn-sm">
-                                        <i class="fa-solid fa-plus me-1"></i> Add Slot
-                                    </button>
-                                </div>
+                                <!--  -->
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
+        
+                                        <div class="d-flex flex-wrap align-items-center gap-2">
+                                            <label class="form-label mb-0 fs-16 fw-bold">Your Weekly Availability</label>
+                                            
+                                            <div class="d-inline-flex align-items-center bg-light border rounded-pill px-3 py-1">
+                                                <i class="fa-solid fa-globe text-primary me-2 fs-14"></i>
+                                                <span class="text-muted fs-12 me-1">Timezone:</span>
+                                                <span class="text-dark fw-bold fs-12">
+                                                    {{ auth()->user()?->teacherProfile->tz ?? 'UTC' }}
+                                                </span>
+                                            </div>
+                                        </div>
 
+                                        <button id="addSlotManualBtn" class="btn btn-primary btn-sm">
+                                            <i class="fa-solid fa-plus me-1"></i> Add Slot
+                                        </button>
+                                    </div>
+                                    <!--  -->
                                 <div class="calendar-scroll-wrap">
                                     <div id="weeklyCalendar"></div>
                                 </div>
@@ -493,7 +535,9 @@
             timeDiv.textContent = timeRange;
             timeDiv.style.cssText = 'font-size: 0.8rem; font-weight: 600; line-height: 1.2; color: inherit;';
             const statusDiv = document.createElement('div');
-            statusDiv.textContent = status;
+            if (status.toLowerCase() !== 'available') {
+                statusDiv.textContent = status;
+            }
             statusDiv.style.cssText = 'font-size: 0.7rem; font-weight: 400; line-height: 1; color: inherit; margin-top: 2px;';
             container.appendChild(timeDiv);
             container.appendChild(statusDiv);
