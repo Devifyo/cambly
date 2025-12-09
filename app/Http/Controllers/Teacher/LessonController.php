@@ -44,7 +44,7 @@ class LessonController extends Controller
      * Show the details for a specific lesson.
      */
     public function lessonDetails(Request $request, $id): View
-    {
+    {   
         $user = $request->user();
         // 1. Find the reservation with its relations
         $reservation = Reservation::query()
@@ -64,7 +64,6 @@ class LessonController extends Controller
 
         // 4. Transform the lesson data using the service
         $lesson = $this->lessonService->transformLesson($reservation, $viewerTimezone);
-
         // 5. Return the new view
         return view($this->view_path.'.details', [
             'lesson' => $lesson,

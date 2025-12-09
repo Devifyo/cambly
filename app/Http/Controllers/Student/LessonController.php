@@ -46,7 +46,7 @@ class LessonController extends Controller
         $reservation = Reservation::query()
             ->with([
                 'teacher:id,name',
-                'teacher.teacherProfile:user_id,preferred_name',
+                'teacher.teacherProfile:user_id,preferred_name,discord_id,tz',
                 'availability:id,start_utc,end_utc'
             ])
             ->find(decryptId($id));
@@ -60,7 +60,6 @@ class LessonController extends Controller
 
         // 4. Transform the lesson data using the service
         $lesson = $this->lessonService->transformLesson($reservation, $viewerTimezone);
-
         // 5. Return the new view
         return view('student.inner.lessons.details', [
             'lesson' => $lesson,

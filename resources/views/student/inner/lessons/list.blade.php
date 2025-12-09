@@ -370,8 +370,8 @@
                 </div>
             @endforeach
 
-            <div class="mt-4">
-                {{ $lessons->links() }}
+            <div class="col-md-12">
+                <x-pagination :paginator="$lessons" />
             </div>
         @endif
     </div>

@@ -122,13 +122,15 @@ class TeacherLessonService
         // Check if lesson is starting soon (e.g., within 15 mins) or in progress
         $canJoin = $startTime 
             && $displayStatus !== 'completed'
-            && $displayStatus !== 'cancelled'
+            && $displayStatus !== 'cancelled'   
             && $res->lesson_meeting_link
             && now()->between($startTime->copy()->subMinutes(15), $endTime);
 
         return (object) [
             'id' => $res->id,
             'student_name' => $student,
+            'teacher_discord_user_name' => $res->teacher?->teacherProfile?->discord_id ?? null,
+            'student_discord_user_name' => $res->student?->studentProfile?->discord_id ?? null,
             'teacher_name' => $teacher,
             'start_at_utc' => $startTime, // Keep UTC for internal logic
             'end_at_utc' => $endTime,     // Keep UTC for internal logic

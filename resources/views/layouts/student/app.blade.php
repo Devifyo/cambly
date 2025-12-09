@@ -129,6 +129,7 @@
 
     <!-- Custom JS -->
     <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
+    <script src="{{asset('assets/js/common.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{asset('assets/js/script.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.20.0/dist/jquery.validate.min.js"></script>

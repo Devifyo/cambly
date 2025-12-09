@@ -197,6 +197,27 @@
                         <label>Teacher</label>
                         <p>{{ $lesson->teacher_name }}</p>
                     </div>
+                    {{-- discord username of student --}}
+                    <div class="detail-item p-3 rounded border border-warning bg-warning bg-opacity-10 mb-3">
+                        <label class="text-warning fw-bold text-uppercase fs-11 mb-1">
+                            <i class="fa-brands fa-discord me-1"></i> Student Discord Username
+                        </label>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <p class="mb-0 fs-18 fw-bolder text-dark">
+                                {{ $lesson?->student_discord_user_name ?? 'Not Provided' }}
+                            </p>
+                            
+                            @if(!is_null($lesson?->student_discord_user_name))
+                                <button class="btn btn-sm btn-light border text-muted transition-all" 
+                                        onclick="copyDiscord(this, '{{ $lesson->student_discord_user_name }}')"
+                                        title="Copy to clipboard">
+                                    <i class="fa-regular fa-copy"></i>
+                                    <span class="ms-1 d-none copy-text">Copied!</span>
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                    {{-- End of discord username --}}
                     <div class="detail-item">
                         <label>Lesson ID</label>
                         <p>{{ $lesson->id }}</p>
@@ -206,20 +227,8 @@
                         <p class="text-capitalize">{{ $lesson->status }}</p>
                     </div>
                 </div>
-
-                {{-- @if($lesson->lesson_meeting_link && $lesson->display_status !== 'completed' && $lesson->display_status !== 'cancelled')
-                    <div class="details-grid mt-3">
-                        <div class="detail-item" style="grid-column: 1 / -1;">
-                            <label>Meeting Link</label>
-                            <p>
-                                <a href="{{ $lesson->lesson_meeting_link }}" target="_blank">
-                                    {{ $lesson->lesson_meeting_link }}
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                @endif --}}
-                <div class="details-grid mt-3">
+                {{-- meeting_link --}}
+                {{-- <div class="details-grid mt-3">
                     <div class="detail-item" style="grid-column: 1 / -1;">
                         <label>Meeting Link</label>
                         
@@ -248,17 +257,17 @@
                             </button>
                         @endif
                     </div>
-                </div>
-                {{--  --}}
+                </div> --}}
+                {{--end meeting link  --}}
             </div>
 
             <div class="card-footer d-flex flex-wrap gap-2" style="background: #f9fafb;">
-                @if ($lesson->can_join)
+                {{-- @if ($lesson->can_join)
                     <a href="{{ $lesson->lesson_meeting_link }}" target="_blank" class="btn-action btn-join">
                         <i data-feather="video" style="width:16px; height:16px;"></i>
                         Join Lesson Now
                     </a>
-                @endif
+                @endif --}}
 
                 <form class="d-inline cancel-form" 
                       method="POST" 

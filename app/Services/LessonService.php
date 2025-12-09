@@ -14,7 +14,7 @@ class LessonService
      */
     public function getPaginatedLessons(User $user, array $filters = []): LengthAwarePaginator
     {
-        $perPage = $filters['per_page'] ?? 15;
+        $perPage = $filters['per_page'] ?? 10;
         // Get the user's timezone once
         $viewerTimezone = $this->getViewerTimezone($user);
 
@@ -69,7 +69,7 @@ class LessonService
             // Pass the timezone to the transformer
             fn(Reservation $res) => $this->transformLesson($res, $viewerTimezone)
         );
-
+ 
         return $reservations;
     }
 
@@ -107,13 +107,10 @@ class LessonService
      * Transform a single Reservation model into the desired object for the view.
      */
     public function transformLesson(Reservation $res, ?string $viewerTimezone = null): object
-    {
+    {   
         $viewerTimezone = $viewerTimezone ?? config('app.timezone', 'UTC');
-
-        $teacher = $res->teacher?->teacherProfile?->preferred_name
-            ?? $res->teacher?->name
+        $teacher = $res->teacher?->name ?? $res->teacher?->teacherProfile?->preferred_name
             ?? 'Unknown Teacher';
-        
         $startTime = $res->availability?->start_utc;
         $endTime = $res->availability?->end_utc;
         
@@ -139,6 +136,8 @@ class LessonService
         return (object) [
             'id' => $res->id,
             'teacher_name' => $teacher,
+            'teacher_discord_user_name' => $res->teacher?->teacherProfile?->discord_id ?? null,
+            'student_discord_user_name' => $res->student?->studentProfile?->discord_id ?? null,
             'start_at_utc' => $startTime, // Keep UTC for internal logic
             'end_at_utc' => $endTime,     // Keep UTC for internal logic
             'start_at_local' => $startTime ? $startTime->copy()->setTimezone($viewerTimezone) : null,

@@ -122,6 +122,8 @@
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <!-- Circle Progress JS -->
     <script src="{{asset('assets/js/circle-progress.min.js')}}"></script>
+    <script src="{{asset('assets/js/common.js')}}"></script>
+
 
     <!-- Custom JS -->
     <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
