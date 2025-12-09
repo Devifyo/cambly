@@ -74,6 +74,17 @@
                 </div>
 
                 <div class="mb-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="discord_id" name="discord_id" placeholder="Discord Username" value="{{ old('discord_id') }}" required>
+                        <label for="discord_id">Discord Username</label>
+                        <i class="fa-brands fa-discord input-icon" style="top: 20px;"></i>
+                    </div>
+                    {{-- <div class="form-text text-muted small ms-1">
+                        <i class="feather-info me-1"></i> We use this for lesson communication.
+                    </div> --}}
+                </div>
+
+                <div class="mb-3">
                     <div class="form-floating position-relative">
                         <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                         <label for="password">Password</label>
@@ -122,7 +133,12 @@
 @push('scripts')
 <script>
 $(document).ready(function () {
-    
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    $('<input>').attr({
+            type: 'hidden',
+            name: 'timezone',
+            value: userTimezone
+        }).appendTo('#registerForm');
     // jQuery Validation
     $("#registerForm").validate({
         errorElement: 'div',
@@ -139,12 +155,14 @@ $(document).ready(function () {
             email: { required: true, email: true },
             password: { required: true, minlength: 8 },
             password_confirmation: { required: true, equalTo: "#password" },
-            terms: { required: true }
+            terms: { required: true },
+            discord_id: { required: true },
         },
         messages: {
             role: "Please select a role.",
             name: "Please enter your full name.",
             email: "Please enter a valid email.",
+            discord_id: "Please enter a valid Discord username.",
             password: {
                 required: "Please provide a password.",
                 minlength: "Password must be at least 8 characters."

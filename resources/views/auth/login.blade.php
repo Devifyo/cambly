@@ -32,7 +32,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('auth.login.request') }}">
+            <form id="loginForm" method="POST" action="{{ route('auth.login.request') }}">
                 @csrf
                 <input name="tz" value="{{ getTimeZone() }}" hidden />
 
@@ -99,7 +99,12 @@
 @push('scripts')
 <script>
 $(document).ready(function () {
-    
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    $('<input>').attr({
+            type: 'hidden',
+            name: 'timezone',
+            value: userTimezone
+        }).appendTo('#loginForm');
     // Validation
     $("form").validate({
         errorElement: 'div',

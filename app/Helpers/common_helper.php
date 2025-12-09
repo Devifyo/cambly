@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Services\UseCreditService;
+use Illuminate\Support\Facades\Http;
 
 if (!function_exists('encryptId')) {
     function encryptId(int $id): string
@@ -86,20 +87,35 @@ if (!function_exists('formatDate')) {
 
 if (!function_exists('getTimeZone')) {
     function getTimeZone()
-    {
-        if (request()->hasHeader('X-Timezone')) {
-            $timezone = request()->header('X-Timezone');
-        } else {         
-            $ip = request()->ip();
-            $url = "http://ip-api.com/json/$ip";
-
-            $tz = file_get_contents($url);
-            $timezone = json_decode($tz, true)['timezone'];
-            return $timezone;
+    {   
+        // 1. Check for hidden input from the form (The best way)
+        if (request()->has('timezone')) {
+            return request()->input('timezone');
         }
+
+        // 2. Check for Header (In case you use AJAX later)
+        if (request()->hasHeader('X-Timezone')) {
+            return request()->header('X-Timezone');
+        }
+
+        // 3. Fallback: API (Must be wrapped to prevent crashes)
+        try {
+            $ip = request()->ip();
+
+            $response = Http::timeout(5)->get("http://ip-api.com/json/$ip");
+
+            if ($response->successful()) {
+                $data = $response->json();
+                return $data['timezone'] ?? config('app.timezone');
+            }
+
+        } catch (\Exception $e) {
+            // Silently fail if API is down, don't stop the user registration
+        }
+
+        // 4. Ultimate Fallback
+        return config('app.timezone', 'UTC');
     }
-
-
 }
 
 if (! function_exists('toAppTimezone')) {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\{User, StudentProfile, TeacherProfile};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -99,7 +99,7 @@ class AuthController extends Controller
      * Show the registration form.
      */
     public function showRegisterForm()
-    {
+    {  
         return view('auth.register');
     }
 
@@ -112,11 +112,11 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name'      => 'required|string|max:255',
             'email'     => 'required|string|email|max:255|unique:users',
+            'discord_id' => 'required|string|max:50',
             'password'  => 'required|string|min:8|confirmed',
             'role'      => 'required|string|exists:roles,name', // ensure role exists in roles table
             'terms'     => 'accepted',
         ]);
-
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
@@ -130,6 +130,24 @@ class AuthController extends Controller
 
         // Assign role using Spatie
         $user->assignRole($request->role);
+        $timezone = getTimeZone();
+        if($user->isStudent()){
+            StudentProfile::updateOrCreate(
+                ['user_id' => $user->id],
+                [   
+                    'preferred_name' => $user->name,
+                    'discord_id' => $request->discord_id,
+                    'tz' => $timezone
+                ]);
+        }elseif($user->isTeacher()){
+          TeacherProfile::updateOrCreate(
+            ['user_id' => $user->id],
+            [   
+                'preferred_name' => $user->name,
+                'discord_id' => $request->discord_id,
+                'tz' => $timezone
+            ]);
+        }
 
         // Auto-login the user
         // Auth::login($user);

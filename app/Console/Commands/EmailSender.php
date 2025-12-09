@@ -107,7 +107,7 @@ class EmailSender extends Command
                     if ($shouldSend) {
                         $this->info("Sending {$tier}m reminder for Reservation ID: {$reservation->id}");
                         if(is_null($reservation->link)){
-                            $this->sendPendingLessonLinkReminderTeacher($reservation);
+                            // $this->sendPendingLessonLinkReminderTeacher($reservation);
                         }
                         $this->sendBookingStartingSoonEmail($reservation);
                         // Update the timestamp to prevent duplicates
