@@ -14,7 +14,7 @@ class ProfileUpdateRequest extends FormRequest
     }
 
     public function rules(): array
-    {   
+    {  
         $minAge = 13;
         
         // Calculate the maximum allowed date of birth (Today minus 13 years)
@@ -39,7 +39,7 @@ class ProfileUpdateRequest extends FormRequest
                 'date',
                 'before_or_equal:' . now()->toDateString(), // Cannot be in the future
                 // Checks if the date of birth is at least 13 years ago
-                'before_or_equal:' . $minDate, 
+                // 'before_or_equal:' . $minDate, 
             ],
             'native_language' => ['nullable', 'string', 'max:100'],
             'english_level' => [

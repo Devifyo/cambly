@@ -121,7 +121,7 @@
                                     value="{{ old('date_of_birth', auth()->user()->studentProfile?->date_of_birth ? auth()->user()->studentProfile->date_of_birth->format('Y-m-d') : null) }}"
                                     max="{{ now()->format('Y-m-d') }}"
                                     required>
-                            <small class="form-text text-muted">You must be at least 13 years old.</small> <br>
+                            {{-- <small class="form-text text-muted">You must be at least 13 years old.</small> <br> --}}
                         </div>
                     </div>
 
@@ -181,7 +181,7 @@
                             <select id="english_level" name="english_level" class="form-control" required>
                                 <option value="" disabled selected>Please select your level</option>
                                 @php
-                                    $levels = ['beginner', 'intermediate', 'advanced', 'native'];
+                                    $levels = ['native-like','fluent', 'conversational', 'basic', 'none'];
                                     $currentLevel = old('english_level', auth()->user()->studentProfile?->english_level);
                                 @endphp
                                 @foreach ($levels as $level)
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 rules: {
                     name: { required: true, minlength: 2 },
                     email: { required: true, email: true },
-                    date_of_birth: { required: true, dateISO: true, futureDate: true, minAge: 13 },
+                    date_of_birth: { required: true, dateISO: true, futureDate: true},
                     english_level: { required: true },
                     country_residence: { 
                         required: true,
