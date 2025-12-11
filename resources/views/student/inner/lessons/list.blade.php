@@ -334,21 +334,21 @@
 
                     <div class="lesson-meta">
                         <div class="lesson-meta-item">
-                            <i data-feather="calendar" style="width: 16px; height: 16px;"></i>
+                            <i class="far fa-calendar-alt" style="font-size: 16px; color: #6c757d;"></i>
                             {{ $startDisplay }} {{-- This now shows local time --}}
                         </div>
                         <div class="lesson-meta-item">
-                            <i data-feather="clock" style="width: 16px; height: 16px;"></i>
+                            <i class="far fa-clock" style="font-size: 16px; color: #6c757d;"></i>
                             {{ $durationText }}
                         </div>
                         <div class="lesson-meta-item">
-                            <i data-feather="hash" style="width: 16px; height: 16px;"></i>
+                            <i class="fas fa-hashtag" style="font-size: 16px; color: #6c757d;"></i>
                             ID: {{ encryptId($item->id) }}
                         </div>
                         {{-- 💡 NEW ITEM ADDED HERE 💡 --}}
                         <div class="lesson-meta-item">
                             {{-- Using an icon that represents chat/social media/person --}}
-                            <i data-feather="message-square" style="width: 16px; height: 16px;"></i>
+                             <i class="fab fa-discord"></i>
                             Discord: {{ $item?->teacher_discord_user_name ?? '-' }}
                         </div>
                         {{-- -------------------------- --}}

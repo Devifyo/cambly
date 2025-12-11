@@ -274,93 +274,195 @@
 <fieldset id="bookingFieldset">
     <div class="card booking-card mb-0">
         {{-- teacher info --}}
-        <div class="card-header">
+        <div class="card-header bg-white border-bottom-0">
             <div class="booking-header pb-0">
-                <div class="card mb-0">
-                    <div class="card-body">
-                        {{-- 1. Header with Name + Video Link --}}
-                        <div class="d-flex align-items-center flex-wrap row-gap-2 mb-4">
-                            <span class="avatar avatar-xxxl avatar-rounded me-2 flex-shrink-0">
-                                <img src="{{ $teacher->profile_link }}" alt="{{ $teacher->name ?? 'Teacher' }} Profile">
-                            </span>
-                            <div>
-                                {{-- Flex container to align Name and Video Button --}}
-                                <div class="d-flex align-items-center flex-wrap gap-2">
-                                    <h4 class="mb-1">{{ $teacher->name ?? $teacher?->teacherProfile?->preferred_name ?? 'Teacher' }}</h4>
-                                    
-                                    {{-- MOVED HERE: Video Button --}}
-                                    @if($teacher?->teacherProfile?->youtube_url ?? false)
-                                        <a href="javascript:void(0);" 
-                                        class="d-inline-flex align-items-center fs-11 text-danger bg-danger-transparent px-2 py-1 rounded-pill fw-medium"
-                                        style="text-decoration: none;"
-                                        onclick="openVideoPreview('{{ $teacher->teacherProfile->youtube_url }}')">
-                                            <i class="fa-solid fa-play me-1"></i> Watch Intro
-                                        </a>
-                                    @endif
-                                </div>
-
-                                <p class="mb-0 text-muted small">Teacher ID: {{ encryptId($teacher->id) }}</p>
-                            </div>
-                        </div>
-
-                        {{-- Original Bio Section (Headline/Short Bio) --}}
-                        @if ($teacher?->teacherProfile?->short_bio ?? false)
-                            <div class="mb-4">
-                                <h6 class="mb-2">About the Teacher</h6>
-                                <p class="text-muted mb-0">{{ $teacher?->teacherProfile?->short_bio }}</p>
-                            </div>
-                            <hr class="my-3">
-                        @endif
-
-                        <h6 class="mb-2">Booking Info</h6>
+                <div class="card border-0 shadow-none mb-0">
+                    <div class="card-body p-0">
                         
-                        {{-- Row 1: Existing Stats --}}
-                        <div class="row gx-2 gy-3">
-                            <div class="col-lg-3 col-sm-6">
-                                <h6 class="fs-14 fw-medium mb-1">Service</h6>
-                                <p class="mb-0">1-1 Lesson (25 Mins)</p>
-                            </div>
-                            <div class="col-lg-3 col-sm-6">
-                                <h6 class="fs-14 fw-medium mb-1">Total Lessons</h6>
-                                <p class="mb-0">{{ $teacher->reservationsAsTeacher()->where('status', 'completed')->count() }}</p>
-                            </div>
-                            <div class="col-lg-3 col-sm-6">
-                                <h6 class="fs-14 fw-medium mb-1">Joined at</h6>
-                                <p class="mb-0">{{ $teacher->created_at ? $teacher->created_at->format('d M, Y') : 'N/A' }}</p>
-                            </div>
-                            <div class="col-lg-3 col-sm-6">
-                                <h6 class="fs-14 fw-medium mb-1">Total Experience</h6>
-                                <p class="mb-0">{{ $teacher?->teacherProfile?->experience ?? '-' }} years</p>
-                            </div>
-
-                            {{-- Row 2: NEW FIELDS (Japanese Level & Games only - Video moved up) --}}
-
-                            {{-- Japanese Level (using english_level) --}}
-                            <div class="col-lg-3 col-sm-6">
-                                <h6 class="fs-14 fw-medium mb-1">Japanese Level</h6>
-                                <p class="mb-0">{{ ucfirst($teacher?->teacherProfile?->english_level ?? '-') }}</p>
-                            </div>
-                            {{-- Native Languages --}}
-                            <div class="col-lg-3 col-sm-6">
-                                <h6 class="fs-14 fw-medium mb-1">Native Languages</h6>
-                                <p class="mb-0">{{ format_user_languages($teacher, 'native-language')?? '-' }}</p>
-                            </div>
+                        {{-- ========================================================= --}}
+                        {{-- TOP SECTION: Profile & Video --}}
+                        {{-- ========================================================= --}}
+                        <div class="row g-4">
                             
-                            {{-- Games --}}
-                            <div class="col-lg-3 col-sm-6">
-                                <h6 class="fs-14 fw-medium mb-1">Games</h6>
-                                <p class="mb-0">{{ $teacher?->teacherProfile?->games ?? '-' }}</p>
+                            {{-- LEFT COLUMN: Identity & Bio --}}
+                            <div class="col-lg-7 col-xl-8">
+                                {{-- 1. Identity --}}
+                                <div class="d-flex align-items-start mb-4">
+                                    {{-- Avatar --}}
+                                    <div class="me-4 flex-shrink-0">
+                                        <span class="avatar avatar-xxxl avatar-rounded shadow-sm border border-2 border-white">
+                                            <img src="{{ $teacher->profile_link }}" alt="{{ $teacher->name }} Profile">
+                                        </span>
+                                    </div>
+
+                                    <div class="flex-grow-1">
+                                        <h3 class="mb-1 fw-bold text-dark">{{ $teacher->name ?? $teacher?->teacherProfile?->preferred_name ?? 'Teacher' }}</h3>
+                                        {{-- Badges Container: Added 'flex-wrap' and 'row-gap-2' --}}
+                                        <div class="d-flex align-items-center flex-wrap gap-2 mb-1">
+                                            
+                                            {{-- Teacher ID Badge --}}
+                                            <span class="badge bg-light text-muted border fw-normal px-2 py-1">
+                                                <i class="fa-solid fa-id-card me-1"></i> ID: {{ encryptId($teacher->id) }}
+                                            </span>
+                                            
+                                            {{-- Discord Badge (Fixed) --}}
+                                            @if($teacher->teacherProfile?->discord_id)
+                                                <span class="badge px-2 py-1 text-break text-wrap text-start" 
+                                                    style="background-color: #eef0fd; color: #5865F2; border: 1px solid #dae0fc; max-width: 100%;">
+                                                    <i class="fab fa-discord me-1"></i> {{ $teacher->teacherProfile->discord_id }}
+                                                </span>
+                                            @endif
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- 2. Short Bio --}}
+                                @if ($teacher?->teacherProfile?->short_bio)
+                                    <div class="mb-3">
+                                        <h6 class="text-uppercase text-muted fs-11 fw-bold mb-2">
+                                            <i class="fa-solid fa-quote-left me-2 text-primary opacity-50"></i> ABOUT THE TEACHER
+                                        </h6>
+                                        <div class="border-start border-3 border-primary ps-3">
+                                            <p class="mb-0 text-dark fst-italic fs-16 lh-base">
+                                                "{{ $teacher->teacherProfile->short_bio }}"
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+
+                            {{-- RIGHT COLUMN: Video --}}
+                            <div class="col-lg-5 col-xl-4">
+                                @if($teacher?->teacherProfile?->youtube_url)
+                                    @php
+                                        $url = $teacher->teacherProfile->youtube_url;
+                                        parse_str( parse_url( $url, PHP_URL_QUERY ), $vars );
+                                        $videoId = $vars['v'] ?? null;
+                                        if(!$videoId && strpos($url, 'youtu.be') !== false) {
+                                            $path = parse_url($url, PHP_URL_PATH);
+                                            $videoId = ltrim($path, '/');
+                                        }
+                                    @endphp
+
+                                    @if($videoId)
+                                        <div class="card border-0 shadow-sm overflow-hidden rounded-3 bg-dark">
+                                            <div class="ratio ratio-16x9">
+                                                <iframe 
+                                                    src="https://www.youtube.com/embed/{{ $videoId }}?rel=0" 
+                                                    title="Teacher Intro" 
+                                                    allowfullscreen 
+                                                    class="rounded-3">
+                                                </iframe>
+                                            </div>
+                                        </div>
+                                        
+                                        {{-- 🔥 FIXED: Label with Background --}}
+                                        <div class="text-center mt-3">
+                                            <span class="d-inline-block py-1 px-3 rounded-pill bg-light border text-muted fs-11 fw-bold text-uppercase letter-spacing">
+                                                <i class="fa-solid fa-video me-2 text-danger"></i> Introduction Video
+                                            </span>
+                                        </div>
+                                    @endif
+                                @endif
                             </div>
                         </div>
-                        
-                        {{-- Row 3: Introduction (Full Width) --}}
-                        @if($teacher?->teacherProfile?->introduction)
-                            <hr class="my-3">
-                            <div class="row gx-2 gy-3">
-                                <div class="col-12">
-                                    <h6 class="fs-14 fw-medium mb-1">Introduction</h6>
-                                    <p class="mb-0 text-muted" style="white-space: pre-wrap;">{{ $teacher?->teacherProfile?->introduction }}</p>
+
+                        <hr class="my-4 border-light">
+
+                        {{-- ========================================================= --}}
+                        {{-- MIDDLE SECTION: Modern Stats Grid --}}
+                        {{-- ========================================================= --}}
+                        <div class="row g-3">
+                            {{-- 1. Service --}}
+                            <div class="col-lg-3 col-md-6">
+                                <div class="d-flex align-items-center p-3 border rounded-3 h-100">
+                                    <i class="fa-solid fa-chalkboard-user fs-22 text-primary me-3"></i>
+                                    <div>
+                                        <small class="d-block text-muted text-uppercase fs-10 fw-bold">Service</small>
+                                        <span class="fw-semibold text-dark fs-14">1-1 Lesson (25m)</span>
+                                    </div>
                                 </div>
+                            </div>
+
+                            {{-- 2. Total Lessons --}}
+                            <div class="col-lg-3 col-md-6">
+                                <div class="d-flex align-items-center p-3 border rounded-3 h-100">
+                                    <i class="fa-solid fa-check-circle fs-22 text-success me-3"></i>
+                                    <div>
+                                        <small class="d-block text-muted text-uppercase fs-10 fw-bold">Completed Lessons</small>
+                                        <span class="fw-semibold text-dark fs-14">{{ $teacher->reservationsAsTeacher()->where('status', 'completed')->count() }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- 3. Experience --}}
+                            <div class="col-lg-3 col-md-6">
+                                <div class="d-flex align-items-center p-3 border rounded-3 h-100">
+                                    <i class="fa-solid fa-briefcase fs-22 text-warning me-3"></i>
+                                    <div>
+                                        <small class="d-block text-muted text-uppercase fs-10 fw-bold">Experience</small>
+                                        <span class="fw-semibold text-dark fs-14">{{ $teacher?->teacherProfile?->experience ?? '0' }} Years</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- 4. Joined --}}
+                            <div class="col-lg-3 col-md-6">
+                                <div class="d-flex align-items-center p-3 border rounded-3 h-100">
+                                    <i class="fa-regular fa-calendar-days fs-22 text-info me-3"></i>
+                                    <div>
+                                        <small class="d-block text-muted text-uppercase fs-10 fw-bold">Joined</small>
+                                        <span class="fw-semibold text-dark fs-14">{{ $teacher->created_at ? $teacher->created_at->format('M Y') : 'N/A' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- 5. Japanese Level --}}
+                            <div class="col-lg-3 col-md-6">
+                                <div class="d-flex align-items-center p-3 border rounded-3 h-100">
+                                    <i class="fa-solid fa-language fs-22 text-danger me-3"></i>
+                                    <div>
+                                        <small class="d-block text-muted text-uppercase fs-10 fw-bold">Japanese Level</small>
+                                        <span class="fw-semibold text-dark fs-14">{{ ucfirst($teacher?->teacherProfile?->english_level ?? 'N/A') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- 6. Native Lang --}}
+                            <div class="col-lg-3 col-md-6">
+                                <div class="d-flex align-items-center p-3 border rounded-3 h-100">
+                                    <i class="fa-solid fa-flag fs-22 text-secondary me-3"></i>
+                                    <div>
+                                        <small class="d-block text-muted text-uppercase fs-10 fw-bold">Native Language</small>
+                                        <span class="fw-semibold text-dark fs-14 text-truncate" style="max-width: 120px;">
+                                            {{ format_user_languages($teacher, 'native-language')?? '-' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- 7. Games (FIXED: Full Expansion) --}}
+                            <div class="col-lg-6 col-md-12">
+                                <div class="d-flex align-items-center p-3 border rounded-3 h-100">
+                                    <i class="fa-solid fa-gamepad fs-22 me-3" style="color: #6f42c1;"></i>
+                                    <div class="w-100">
+                                        <small class="d-block text-muted text-uppercase fs-10 fw-bold">Games</small>
+                                        <span class="fw-semibold text-dark fs-14 text-break d-block lh-sm">
+                                            {{ $teacher?->teacherProfile?->games ?? 'No games listed' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- ========================================================= --}}
+                        {{-- BOTTOM SECTION: Full Introduction --}}
+                        {{-- ========================================================= --}}
+                        @if($teacher?->teacherProfile?->introduction)
+                            <div class="mt-4">
+                                <h5 class="fw-bold text-dark mb-2">Introduction</h5>
+                                <div class="p-4 bg-light rounded-3 text-dark fs-15 lh-base" style="white-space: pre-wrap;">{{ $teacher->teacherProfile->introduction }}</div>
                             </div>
                         @endif
 
