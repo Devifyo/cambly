@@ -230,7 +230,8 @@ class TeacherListing extends Component
             ->when($this->sortField !== 'completed_lessons_count', function($query) {
                  $query->orderBy($this->sortField, $this->sortDirection);
             })
-            ->paginate(10);
+            ->paginate(10)
+            ->withPath(url()->current());
             
         $allTeachers = User::teachers()->select('id', 'name')->get();
 

@@ -3876,3 +3876,8 @@ table.table-inbox tbody tr.checked {
 }
 
 /*# sourceMappingURL=custom.css.map */
+
+img.rounded-circle {
+    object-fit: cover;       /* Prevents squashing/stretching */
+    aspect-ratio: 1 / 1;     /* Forces the image to be a perfect square */
+}

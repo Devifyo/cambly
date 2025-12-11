@@ -103,7 +103,6 @@ if (!function_exists('getTimeZone')) {
             $ip = request()->ip();
 
             $response = Http::timeout(5)->get("http://ip-api.com/json/$ip");
-
             if ($response->successful()) {
                 $data = $response->json();
                 return $data['timezone'] ?? config('app.timezone');

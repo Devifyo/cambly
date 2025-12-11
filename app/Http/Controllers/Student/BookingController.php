@@ -26,7 +26,8 @@ class BookingController extends Controller
        public function showDateTime(Request $request, $teacherId)
     {     
           $teacher = User::find(decryptId($teacherId));
-         return view('student.inner.teacher.book-tutor',compact('teacher'));
+             $timeZone = auth()->user()?->studentProfile?->tz ?? getTimeZone();
+         return view('student.inner.teacher.book-tutor',compact('teacher', 'timeZone'));
     }
 
     public function slots(Request $request, $teacherId)
@@ -67,7 +68,6 @@ class BookingController extends Controller
 
         try {
             $events = $this->slotService->getWeekSlotsForTeacher($user, $teacherRawId, $start, $end);
-            // dd($events);
             return response()->json(['events' => $events], 200);
         } catch (\Throwables $e) {
             Log::error('slotService error: '.$e->getMessage());

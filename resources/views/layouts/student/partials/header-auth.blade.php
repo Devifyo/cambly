@@ -29,7 +29,7 @@
                     <li class="{{ request()->routeIs('student.lessons.*') ? 'active' : '' }}">
                         <a href="{{ route('student.lessons.list') }}">{{ is_impersonating() ? 'Student Lessons' : 'My Lessons' }} </a>
                     </li>
-                    @if(!is_impersonating())
+                    {{-- @if(!is_impersonating()) --}}
                         <li class="{{ request()->routeIs('student.dashboard') ? 'active' : '' }}">
                             <a href="{{ route('student.dashboard') }}">Dashboard</a>
                         </li>
@@ -54,7 +54,7 @@
                                 </li>
                             </ul>
                         </li>
-                    @endif
+                    {{-- @endif --}}
                 </ul>
             </div>
             

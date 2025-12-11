@@ -296,6 +296,7 @@
             </div>
         @else
             @foreach ($lessons as $item)
+            {{-- @dd($item) --}}
                 @php
                     // *** UPDATED LINE ***
                     // Use the pre-formatted, localized date from the service
@@ -331,7 +332,6 @@
                         </span>
                     </div>
 
-
                     <div class="lesson-meta">
                         <div class="lesson-meta-item">
                             <i data-feather="calendar" style="width: 16px; height: 16px;"></i>
@@ -345,6 +345,14 @@
                             <i data-feather="hash" style="width: 16px; height: 16px;"></i>
                             ID: {{ encryptId($item->id) }}
                         </div>
+                        {{-- 💡 NEW ITEM ADDED HERE 💡 --}}
+                        <div class="lesson-meta-item">
+                            {{-- Using an icon that represents chat/social media/person --}}
+                            <i data-feather="message-square" style="width: 16px; height: 16px;"></i>
+                            Discord: {{ $item?->teacher_discord_user_name ?? '-' }}
+                        </div>
+                        {{-- -------------------------- --}}
+
                     </div>
 
                     <div class="lesson-actions">

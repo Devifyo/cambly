@@ -380,12 +380,11 @@
                                     
                                     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
                                         <h5 class="card-title mb-0 fw-bold">Weekly Availability</h5>
-                                        
                                         <div class="d-inline-flex align-items-center bg-light border rounded-pill px-3 py-1">
                                           <i class="fa-solid fa-globe text-primary me-2 fs-14"></i>
                                             <span class="text-muted fs-12 me-1">Timezone:</span>
                                             <span id="userTimezone" class="text-dark fw-bold fs-12">
-                                                {{ auth()->user()->studentProfile->tz ?? 'UTC' }}
+                                                {{ $timeZone ?? 'UTC' }}
                                             </span>
                                         </div>
                                     </div>

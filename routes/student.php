@@ -25,15 +25,15 @@ Route::middleware(['auth.custom','isStudent'])->group(function () {
         
     /********* END ACCOUNT SETTING ROUTES *******/
     // Controller route
-    Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard')->middleware('impersonate.protect');
+    Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/calendar-events', 
             [StudentDashboardController::class, 'getCalendarEvents'])
             ->name('dashboard.calendar.events');
 
-    Route::get('/account/subscription', [SubscriptionController::class, 'index'])->name('account.subscription')->middleware('impersonate.protect');
-    Route::get('subscription/checkout/{slug}', [SubscriptionController::class, 'checkout'])->name('subscription.checkout')->middleware('impersonate.protect');
-    Route::get('subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success')->middleware('impersonate.protect');
-    Route::any('subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel')->middleware('impersonate.protect');
+    Route::get('/account/subscription', [SubscriptionController::class, 'index'])->name('account.subscription');
+    Route::get('subscription/checkout/{slug}', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
+    Route::get('subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+    Route::any('subscription/cancel', [SubscriptionController::class, 'cancel'])->name('subscription.cancel');
     /****   route for student *****/
 
     Route::get('search/tutors', [TeacherController::class, 'searchTeachers'])->name('tutors.search');

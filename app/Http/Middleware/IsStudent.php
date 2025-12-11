@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class IsStudent
 {
     public function handle(Request $request, Closure $next)
-    {
+    {   
         if (!Auth::check()) {
             return redirect()->route('auth.login');
         }
@@ -26,7 +26,6 @@ class IsStudent
 
             abort(403, 'Unauthorized');
         }
-        
         $this->updateUserTimezone(Auth::user());
 
         return $next($request);

@@ -22,7 +22,7 @@ class LessonService
             ->forStudent($user)
             ->with([
                 'teacher:id,name',
-                'teacher.teacherProfile:user_id,preferred_name',
+                'teacher.teacherProfile:user_id,preferred_name,discord_id,tz',
                 'availability:id,start_utc,end_utc,is_booked'
             ])
             ->select([ // Ensure we select all necessary fields from reservations
@@ -132,7 +132,6 @@ class LessonService
             && $displayStatus !== 'cancelled'
             && $res->lesson_meeting_link
             && now()->between($startTime->copy()->subMinutes(15), $endTime);
-
         return (object) [
             'id' => $res->id,
             'teacher_name' => $teacher,

@@ -347,21 +347,39 @@
                             @endif
                         </span> --}}
                     </div>
-
-
+                    {{-- lesson metadata --}}
                     <div class="lesson-meta">
+                        {{-- Calendar Icon --}}
                         <div class="lesson-meta-item">
-                            <i data-feather="calendar" style="width: 16px; height: 16px;"></i>
-                            {{ $startDisplay }} {{-- This now shows local time --}}
+                            <i class="far fa-calendar-alt" style="font-size: 16px; color: #6c757d;"></i>
+                            <span class="ms-1">
+                                {{ $startDisplay }}
+                            </span>
                         </div>
+
+                        {{-- Clock Icon --}}
                         <div class="lesson-meta-item">
-                            <i data-feather="clock" style="width: 16px; height: 16px;"></i>
-                            {{ $durationText }}
+                            <i class="far fa-clock" style="font-size: 16px; color: #6c757d;"></i>
+                            <span class="ms-1">
+                                {{ $durationText }}
+                            </span>
                         </div>
+
+                        {{-- Hash/ID Icon --}}
                         <div class="lesson-meta-item">
-                            <i data-feather="hash" style="width: 16px; height: 16px;"></i>
-                            ID: {{ encryptId($item->id) }}
+                            <i class="fas fa-hashtag" style="font-size: 16px; color: #6c757d;"></i>
+                            <span class="ms-1">
+                                ID: {{ encryptId($item->id) }}
+                            </span>
                         </div>
+
+                        {{-- Discord Icon --}}
+                            <div class="lesson-meta-item">
+                                <i class="fab fa-discord"></i>
+                                <span class="ms-1">
+                                    Discord: {{ $item?->student_discord_user_name ?? '-' }}
+                                </span>
+                            </div>
                     </div>
 
                     <div class="lesson-actions">
