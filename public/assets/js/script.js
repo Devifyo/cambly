@@ -2282,15 +2282,15 @@
 
 	// Datepicker
 	var maxDate = $('#maxDate').val();
-	if ($('#dob').length > 0) {
-		$('#dob').datepicker({
-			startView: 2,
-			format: 'dd/mm/yyyy',
-			autoclose: true,
-			todayHighlight: true,
-			endDate: maxDate
-		});
-	}
+	// if ($('#dob').length > 0) {
+	// 	$('#dob').datepicker({
+	// 		startView: 2,
+	// 		format: 'dd/mm/yyyy',
+	// 		autoclose: true,
+	// 		todayHighlight: true,
+	// 		endDate: maxDate
+	// 	});
+	// }
 	if ($('#editdob').length > 0) {
 		$('#editdob').datepicker({
 			startView: 2,

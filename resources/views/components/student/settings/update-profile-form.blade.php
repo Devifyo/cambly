@@ -177,7 +177,7 @@
                     {{-- English Level --}}
                     <div class="col-lg-6 col-md-6">
                         <div class="form-group">
-                            <label class="form-label" for="english_level">English Level <span class="text-danger">*</span></label>
+                            <label class="form-label" for="english_level">Japanese Level<span class="text-danger">*</span></label>
                             <select id="english_level" name="english_level" class="form-control" required>
                                 <option value="" disabled selected>Please select your level</option>
                                 @php
