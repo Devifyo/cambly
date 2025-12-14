@@ -16,16 +16,15 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
     <link rel="manifest" href="{{ asset('site.webmanifest') }}">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
-
     <link rel="stylesheet" href="{{ asset('admin/assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/assets/plugins/fontawesome/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/assets/plugins/fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/assets/css/feathericon.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/assets/plugins/morris/morris.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/assets/css/custom.css') }}">
-
+    
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-
+    
     <style>
         .logo-text {
             background: linear-gradient(90deg, #0E82FD 0%, #06AED4 70%);
@@ -35,29 +34,30 @@
             font-size: 24px;
             display: inline-block;
         }
-
+        
         .sidebar ul li a i[class*="fa"] {
             font-size: 20px !important;
             vertical-align: middle;
             width: 20px;
             line-height: 24px;
         }
-
+        
         .user-img img {
             height: 50px;
             width: 50px;
             object-fit: cover;
         }
-
+        
         .table-user-img {
             height: 52px;
             width: 52px;
             object-fit: cover;
         }
-    </style>
+        </style>
 
-    {{-- Page-specific CSS --}}
-    @stack('css')
+{{-- Page-specific CSS --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+@stack('css')
     @livewireStyles
 </head>
 
@@ -161,6 +161,6 @@
 
 @stack('js')
 @livewireScripts
-
+@stack('livewire-js')
 </body>
 </html>

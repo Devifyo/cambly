@@ -78,6 +78,7 @@
 
         <!-- Page Content -->
         <div class="content d-flex justify-content-center align-items-center">
+             <x-impersonation-banner />
             <div class="container mt-4">
                 @yield('content')
             </div>

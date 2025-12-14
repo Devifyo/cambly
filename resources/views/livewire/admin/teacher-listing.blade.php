@@ -1,5 +1,4 @@
 <div class="content container-fluid">
-    {{-- Alert Handler Component (Assumed to exist) --}}
     <livewire:admin.components.alert-handler />
 
     <div class="page-header">
@@ -13,10 +12,9 @@
                     </ul>
                 </div>
                 <div>
-                    {{-- CREATE BUTTON --}}
                     <button wire:click="create" wire:loading.attr="disabled" class="btn btn-primary">
                         <i class="fe fe-plus" wire:loading.remove wire:target="create"></i>
-                        <span wire:loading wire:target="create" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        <span wire:loading wire:target="create" class="spinner-border spinner-border-sm me-1"></span>
                         <span wire:loading.remove wire:target="create">Add New Teacher</span>
                         <span wire:loading wire:target="create">Loading...</span>
                     </button>
@@ -28,11 +26,9 @@
     <div class="card">
         <div class="card-header">
             <div class="row align-items-center">
-                {{-- Search --}}
                 <div class="col-md-4">
                     <input type="text" wire:model.live.debounce.300ms="search" class="form-control" placeholder="Search by name or email...">
                 </div>
-                {{-- Status Filter --}}
                 <div class="col-md-2">
                     <select wire:model.live="statusFilter" class="form-control">
                         <option value="">All Statuses</option>
@@ -40,7 +36,6 @@
                         <option value="0">Inactive</option>
                     </select>
                 </div>
-                {{-- Gender Filter --}}
                 <div class="col-md-2">
                     <select wire:model.live="genderFilter" class="form-control">
                         <option value="">All Genders</option>
@@ -49,11 +44,9 @@
                         <option value="other">Other</option>
                     </select>
                 </div>
-
                 <div class="col-md-4 text-end d-flex justify-content-end align-items-center">
                     <button class="btn btn-outline-secondary me-2" wire:click="resetFilters">Clear Filters</button>
-                    
-                    {{-- EXPORT BUTTON (Opens Modal for All Teachers) --}}
+                    {{-- EXPORT BUTTON --}}
                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#export_modal" wire:click="$set('exportTeacherId', 'all')">
                         <i class="fe fe-download"></i> Export Lessons
                     </button>
@@ -67,38 +60,16 @@
                     <thead>
                         <tr>
                             <th>Profile</th>
-                            
-                            {{-- Name Column --}}
                             <th wire:click="sortBy('name')" role="button">
-                                Name
-                                @if ($sortField === 'name')
-                                    <i class="fe fe-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>
-                                @else
-                                    <i class="fe fe-arrow-up" style="opacity: 0.3;"></i> 
-                                @endif
+                                Name @if ($sortField === 'name') <i class="fe fe-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i> @else <i class="fe fe-arrow-up" style="opacity: 0.3;"></i> @endif
                             </th>
-                            
                             <th>Email</th>
                             <th>Gender</th>
-                            
-                            {{-- Sortable Completed Lessons Column --}}
                             <th wire:click="sortBy('completed_lessons_count')" role="button">
-                                Completed Lessons
-                                @if ($sortField === 'completed_lessons_count')
-                                    <i class="fe fe-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>
-                                @else
-                                     <i class="fe fe-arrow-up" style="opacity: 0.3;"></i> 
-                                @endif
+                                Completed Lessons @if ($sortField === 'completed_lessons_count') <i class="fe fe-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i> @else <i class="fe fe-arrow-up" style="opacity: 0.3;"></i> @endif
                             </th>
-                            
-                            {{-- Status Column --}}
                             <th wire:click="sortBy('status')" role="button">
-                                Status
-                                @if ($sortField === 'status')
-                                    <i class="fe fe-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>
-                                @else
-                                     <i class="fe fe-arrow-up" style="opacity: 0.3;"></i>  
-                                @endif
+                                Status @if ($sortField === 'status') <i class="fe fe-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i> @else <i class="fe fe-arrow-up" style="opacity: 0.3;"></i> @endif
                             </th>
                             <th>Actions</th>
                         </tr>
@@ -112,11 +83,7 @@
                                 <td>{{ $teacher->name }}</td>
                                 <td>{{ $teacher->email }}</td>
                                 <td>{{ ucfirst($teacher->gender ?? 'N/A') }}</td>
-                                <td>
-                                    <span class="badge bg-info">
-                                        {{ $teacher->reservations_as_teacher_count }}
-                                    </span>
-                                </td>
+                                <td><span class="badge bg-info">{{ $teacher->reservations_as_teacher_count }}</span></td>
                                 <td>
                                     @if ((int) $teacher->status === 1)
                                         <span class="badge rounded-pill bg-success">Active</span>
@@ -126,75 +93,35 @@
                                 </td>
                                 <td>
                                     <div class="actions">
-                                        
-                                        {{-- PER-TEACHER DOWNLOAD BUTTON --}}
-                                        <button wire:click="openExportModalForTeacher({{ $teacher->id }})" 
-                                                wire:loading.attr="disabled" 
-                                                class="btn btn-sm bg-warning-light me-2"
-                                                title="Download Report">
-                                            
-                                            <i class="fas fa-file-download" 
-                                               wire:loading.remove.delay 
-                                               wire:target="openExportModalForTeacher({{ $teacher->id }})">
-                                            </i>
-                                            <span wire:loading 
-                                                  wire:target="openExportModalForTeacher({{ $teacher->id }})" 
-                                                  class="spinner-border spinner-border-sm" 
-                                                  role="status" 
-                                                  aria-hidden="true">
-                                            </span>
+                                        @if($teacher->id !== auth()->id() && $teacher->canBeImpersonated())
+                                            <a href="{{ role_route('admin.impersonate', ['id' => encryptId($teacher->id)]) }}" class="btn btn-sm bg-primary-light me-2" data-bs-toggle="tooltip" title="Impersonate Teacher">
+                                                <i class="fa-solid fa-user-secret"></i>
+                                            </a>
+                                        @endif
+                                        <button wire:click="edit({{ $teacher->id }})" wire:loading.attr="disabled" class="btn btn-sm bg-success-light me-2">
+                                            <i class="fe fe-pencil"></i>
                                         </button>
-                                        
-                                        {{-- EDIT BUTTON LOADER (FIXED TARGETING) --}}
-                                        <button wire:click="edit({{ $teacher->id }})" 
-                                                wire:loading.attr="disabled" 
-                                                class="btn btn-sm bg-success-light me-2">
-                                            <i class="fe fe-pencil" 
-                                               wire:loading.remove.delay 
-                                               wire:target="edit({{ $teacher->id }})">
-                                            </i>
-                                            <span wire:loading 
-                                                  wire:target="edit({{ $teacher->id }})" 
-                                                  class="spinner-border spinner-border-sm" 
-                                                  role="status" 
-                                                  aria-hidden="true">
-                                            </span>
+                                        <button wire:click="deleteConfirmation({{ $teacher->id }})" wire:loading.attr="disabled" class="btn btn-sm bg-danger-light">
+                                            <i class="fe fe-trash"></i>
                                         </button>
-
-                                        {{-- DELETE BUTTON LOADER (FIXED TARGETING) --}}
-                                        <button wire:click="deleteConfirmation({{ $teacher->id }})" 
-                                                wire:loading.attr="disabled" 
-                                                class="btn btn-sm bg-danger-light">
-                                            <i class="fe fe-trash" 
-                                               wire:loading.remove.delay 
-                                               wire:target="deleteConfirmation({{ $teacher->id }})">
-                                            </i>
-                                            <span wire:loading 
-                                                  wire:target="deleteConfirmation({{ $teacher->id }})" 
-                                                  class="spinner-border spinner-border-sm" 
-                                                  role="status" 
-                                                  aria-hidden="true">
-                                            </span>
+                                        <button wire:click="openExportModalForTeacher({{ $teacher->id }})" wire:loading.attr="disabled" class="btn btn-sm bg-warning-light me-2" title="Download Report">
+                                            <i class="fas fa-file-download"></i>
                                         </button>
                                     </div>
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="7" class="text-center">No teachers found.</td>
-                            </tr>
+                            <tr><td colspan="7" class="text-center">No teachers found.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-            <div class="mt-3">
-                {{ $teachers->links('components.admin-pagination') }}
-            </div>
+            <div class="mt-3">{{ $teachers->links('components.admin-pagination') }}</div>
         </div>
     </div>
 
-    {{-- ADD MODAL (Create) --}}
-    <div wire:ignore.self class="modal fade" id="add_teacher_modal" tabindex="-1" aria-hidden="true">
+    {{-- MODALS (Add/Edit/Delete) --}}
+    <div wire:ignore.self class="modal fade" id="add_teacher_modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -206,10 +133,7 @@
                         @include('livewire.admin.partials.teacher-form')
                         <button type="submit" class="btn btn-primary w-100" wire:loading.attr="disabled" wire:target="store">
                             <span wire:loading.remove wire:target="store">Save</span>
-                            <span wire:loading wire:target="store">
-                                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                                Saving...
-                            </span>
+                            <span wire:loading wire:target="store">Saving...</span>
                         </button>
                     </form>
                 </div>
@@ -217,8 +141,7 @@
         </div>
     </div>
 
-    {{-- EDIT MODAL (Update) --}}
-    <div wire:ignore.self class="modal fade" id="edit_teacher_modal" tabindex="-1" aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="edit_teacher_modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -230,10 +153,7 @@
                         @include('livewire.admin.partials.teacher-form')
                         <button type="submit" class="btn btn-primary w-100" wire:loading.attr="disabled" wire:target="update">
                             <span wire:loading.remove wire:target="update">Update Changes</span>
-                            <span wire:loading wire:target="update">
-                                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                                Updating...
-                            </span>
+                            <span wire:loading wire:target="update">Updating...</span>
                         </button>
                     </form>
                 </div>
@@ -241,30 +161,23 @@
         </div>
     </div>
 
-    {{-- DELETE MODAL --}}
-    <div wire:ignore.self class="modal fade" id="delete_modal" tabindex="-1" aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="delete_modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="form-content p-2">
                         <h4 class="modal-title">Delete Teacher</h4>
                         <p class="mb-4">Are you sure you want to delete this teacher?</p>
-                        <button type="button" wire:click="destroy" wire:loading.attr="disabled" wire:target="destroy" class="btn btn-primary">
-                            <span wire:loading.remove wire:target="destroy">Delete</span>
-                            <span wire:loading wire:target="destroy">
-                                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                                Deleting...
-                            </span>
-                        </button>
+                        <button type="button" wire:click="destroy" class="btn btn-primary">Delete</button>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" wire:click="resetForm">Close</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
     {{-- EXPORT LESSONS MODAL --}}
-    <div wire:ignore.self class="modal fade" id="export_modal" tabindex="-1" aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="export_modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -275,11 +188,26 @@
                     <form wire:submit.prevent="exportCompletedLessons">
                         <div class="mb-3">
                             <label class="form-label">Time Period</label>
-                            <select wire:model="exportPeriod" class="form-control">
+                            <select wire:model.live="exportPeriod" class="form-control">
                                 <option value="last_month">Last Month</option>
                                 <option value="last_6_months">Last 6 Months</option>
+                                <option value="custom">Custom Date Range</option>
                             </select>
                         </div>
+
+                        {{-- CUSTOM DATE RANGE INPUTS --}}
+                        @if($exportPeriod === 'custom')
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label class="form-label small">From</label>
+                                    <input type="date" wire:model="exportCustomStart" class="form-control" required>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small">To</label>
+                                    <input type="date" wire:model="exportCustomEnd" class="form-control" required>
+                                </div>
+                            </div>
+                        @endif
 
                         <div class="mb-3">
                             <label class="form-label">Filter by Teacher</label>
@@ -290,46 +218,93 @@
                                 @endforeach
                             </select>
                         </div>
-
-                        <button type="submit" class="btn btn-success w-100" wire:loading.attr="disabled" wire:target="exportCompletedLessons">
-                            <i class="fe fe-download" wire:loading.remove wire:target="exportCompletedLessons"></i>
-                            <span wire:loading.remove wire:target="exportCompletedLessons">Generate & Download CSV</span>
-                            <span wire:loading wire:target="exportCompletedLessons">
-                                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                                Generating...
-                            </span>
+                        <button type="submit" class="btn btn-success w-100">
+                            Generate & Download CSV
                         </button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 @push('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const addModal = new bootstrap.Modal(document.getElementById('add_teacher_modal'));
-            const editModal = new bootstrap.Modal(document.getElementById('edit_teacher_modal'));
-            const deleteModal = new bootstrap.Modal(document.getElementById('delete_modal'));
-            const exportModal = new bootstrap.Modal(document.getElementById('export_modal')); 
-            
-            Livewire.on('showAddModal', () => { addModal.show(); });
-            Livewire.on('hideAddModal', () => { addModal.hide(); });
-            
-            Livewire.on('showEditModal', () => { editModal.show(); });
-            Livewire.on('hideEditModal', () => { editModal.hide(); });
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
-            Livewire.on('showDeleteModal', () => { deleteModal.show(); });
-            Livewire.on('hideDeleteModal', () => { deleteModal.hide(); });
-            
-            Livewire.on('showExportModal', () => { exportModal.show(); });
-            
-            // Focus Fixes 
-            Livewire.on('hideEditModal', () => { editModal.hide(); document.body.focus(); });
-            Livewire.on('hideDeleteModal', () => { deleteModal.hide(); document.body.focus(); });
-            Livewire.on('hideAddModal', () => { addModal.hide(); document.body.focus(); });
+<script>
+    function initChoices(modalId) {
+        const $modal = document.querySelector(modalId);
+        if (!$modal) return;
+
+        const countryEl = $modal.querySelector('.choices-country');
+        const countryHidden = $modal.querySelector('.country-hidden');
+
+        if (countryEl) {
+            // Destroy OLD instance to allow re-creation
+            if (countryEl.choicesInstance) {
+                countryEl.choicesInstance.destroy();
+            }
+
+            // Create NEW Instance
+            const countryChoices = new Choices(countryEl, {
+                searchEnabled: true,
+                itemSelectText: '',
+                placeholder: true,
+                placeholderValue: 'Select Country',
+                shouldSort: false, 
+            });
+            countryEl.choicesInstance = countryChoices; 
+
+            // Load Data
+            fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
+                .then(res => res.json())
+                .then(data => {
+                    data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+                    const items = data.map(c => ({ value: c.name.common, label: c.name.common }));
+                    
+                    countryChoices.setChoices(items, 'value', 'label', true);
+
+                    // If Edit Mode has existing value
+                    if (countryHidden.value) {
+                        countryChoices.setChoiceByValue(countryHidden.value);
+                    }
+                });
+
+            // Listen for changes
+            countryEl.addEventListener('change', function(e) {
+                countryHidden.value = e.target.value;
+                countryHidden.dispatchEvent(new Event('input'));
+            });
+        }
+    }
+
+    function toggleModal(modalId, action) {
+        const el = document.getElementById(modalId);
+        if (el) {
+            const modal = bootstrap.Modal.getOrCreateInstance(el);
+            if (action === 'show') modal.show();
+            else modal.hide();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        Livewire.on('showAddModal', () => toggleModal('add_teacher_modal', 'show'));
+        Livewire.on('hideAddModal', () => toggleModal('add_teacher_modal', 'hide'));
+        Livewire.on('showEditModal', () => toggleModal('edit_teacher_modal', 'show'));
+        Livewire.on('hideEditModal', () => toggleModal('edit_teacher_modal', 'hide'));
+        Livewire.on('showDeleteModal', () => toggleModal('delete_modal', 'show'));
+        Livewire.on('hideDeleteModal', () => toggleModal('delete_modal', 'hide'));
+        Livewire.on('showExportModal', () => toggleModal('export_modal', 'show'));
+
+        // Initialize Choices.js ONLY when modal is shown
+        document.body.addEventListener('shown.bs.modal', function (event) {
+            if (event.target.id === 'add_teacher_modal') initChoices('#add_teacher_modal');
+            if (event.target.id === 'edit_teacher_modal') initChoices('#edit_teacher_modal');
         });
-    </script>
+
+        Livewire.on('hideAddModal', () => document.body.focus());
+        Livewire.on('hideEditModal', () => document.body.focus());
+        Livewire.on('hideDeleteModal', () => document.body.focus());
+    });
+</script>
 @endpush

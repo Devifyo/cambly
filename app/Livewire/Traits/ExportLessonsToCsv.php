@@ -9,25 +9,43 @@ use Illuminate\Support\Facades\Response;
 
 trait ExportLessonsToCsv
 {
-    // These properties must be declared in the main Livewire component
+    // Properties required in the main component:
     // public $exportPeriod = 'last_month';
     // public $exportTeacherId = 'all';
+    // public $exportCustomStart = '';
+    // public $exportCustomEnd = '';
 
     public function exportCompletedLessons()
     {
-        // 1. Determine the date range
         $endDate = Carbon::now();
-        $startDate = match ($this->exportPeriod) {
-            'last_6_months' => $endDate->copy()->subMonths(6)->startOfMonth(),
-            default => $endDate->copy()->subMonth()->startOfMonth(), // 'last_month'
-        };
+        $startDate = Carbon::now();
+        $rangeLabel = $this->exportPeriod;
+
+        // 1. Determine Date Range Logic
+        if ($this->exportPeriod === 'custom') {
+            // Validate custom dates
+            $this->validate([
+                'exportCustomStart' => 'required|date',
+                'exportCustomEnd' => 'required|date|after_or_equal:exportCustomStart',
+            ]);
+            
+            $startDate = Carbon::parse($this->exportCustomStart)->startOfDay();
+            $endDate = Carbon::parse($this->exportCustomEnd)->endOfDay();
+            $rangeLabel = $startDate->format('Ymd') . '-to-' . $endDate->format('Ymd');
+        } else {
+            // Handle Predefined Ranges
+            $startDate = match ($this->exportPeriod) {
+                'last_6_months' => $endDate->copy()->subMonths(6)->startOfMonth(),
+                default => $endDate->copy()->subMonth()->startOfMonth(), // 'last_month'
+            };
+        }
 
         // 2. Query Completed Reservations
         $query = Reservation::query()
-            ->completed()
+            ->completed() // Scope: status = 'completed'
             ->with(['teacher', 'student', 'availability'])
             ->whereHas('availability', function ($q) use ($startDate, $endDate) {
-                // Ensure the completed lesson fell within the requested time frame
+                // Filter by Lesson Start Time within the range
                 $q->whereBetween('start_utc', [$startDate, $endDate]);
             });
 
@@ -35,14 +53,15 @@ trait ExportLessonsToCsv
         if ($this->exportTeacherId !== 'all') {
             $query->where('teacher_id', $this->exportTeacherId);
             $teacher = User::find($this->exportTeacherId);
-            $fileName = 'lessons_completed_by_' . ($teacher->name ?? 'unknown') . '_' . $this->exportPeriod . '.csv';
+            $teacherName = $teacher ? str_replace(' ', '_', strtolower($teacher->name)) : 'unknown';
+            $fileName = "lessons_{$teacherName}_{$rangeLabel}.csv";
         } else {
-            $fileName = 'all_lessons_completed_' . $this->exportPeriod . '.csv';
+            $fileName = "all_teachers_lessons_{$rangeLabel}.csv";
         }
 
         $reservations = $query->get();
 
-        // 4. Generate CSV Headers and Data
+        // 4. Generate CSV
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
@@ -51,32 +70,31 @@ trait ExportLessonsToCsv
         $callback = function() use ($reservations) {
             $file = fopen('php://output', 'w');
             
-            // CSV Header Row
+            // CSV Headers
             fputcsv($file, [
-                'Reservation ID', 
+                'Lesson ID', 
+                'Completion Date', 
                 'Teacher Name', 
                 'Student Name', 
-                'Lesson Time (UTC)', 
-                'Lesson Status', 
-                'Teacher Email'
+                'Teacher Email',
+                'Status'
             ]);
 
-            // Data Rows
+            // CSV Data Rows
             foreach ($reservations as $res) {
                 fputcsv($file, [
                     $res->id,
+                    // Format Date: YYYY-MM-DD HH:MM
+                    $res->availability ? $res->availability->start_utc->format('Y-m-d H:i') : 'N/A',
                     $res->teacher->name ?? 'N/A',
                     $res->student->name ?? 'N/A',
-                    $res->availability->start_utc->format('Y-m-d H:i') ?? 'N/A',
-                    ucfirst($res->status),
                     $res->teacher->email ?? 'N/A',
+                    ucfirst($res->status),
                 ]);
             }
-
             fclose($file);
         };
 
-        // 5. Stream the download response
         return Response::stream($callback, 200, $headers);
     }
 }

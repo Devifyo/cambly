@@ -104,7 +104,7 @@ class StudentAccountController extends Controller
         return Redirect::route('student.account.show')->with('success', 'Profile picture removed.');
     }
 
-        private function syncUserLanguages($user, $request)
+    private function syncUserLanguages($user, $request)
     {
         // A. Mother Tongue
         $mtCode = $request->input('mother_tongue'); // 'en'

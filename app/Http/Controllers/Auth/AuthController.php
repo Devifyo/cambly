@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\{User, StudentProfile, TeacherProfile};
+use App\Models\{User, StudentProfile, TeacherProfile, Language};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -107,50 +107,71 @@ class AuthController extends Controller
      * Handle student registration.
      */
     public function register(Request $request)
-    {
-        // Validation
+    {   
+        // 1. Validation
         $validator = Validator::make($request->all(), [
-            'name'      => 'required|string|max:255',
-            'email'     => 'required|string|email|max:255|unique:users',
-            'discord_id' => 'required|string|max:50',
-            'password'  => 'required|string|min:8|confirmed',
-            'role'      => 'required|string|exists:roles,name', // ensure role exists in roles table
-            'terms'     => 'accepted',
+            'name'            => 'required|string|max:255',
+            'email'           => 'required|string|email|max:255|unique:users',
+            'discord_id'      => 'required|string|max:50',
+            'password'        => 'required|string|min:8|confirmed',
+            'role'            => 'required|string|exists:roles,name',
+            'terms'           => 'accepted',
+            'japanese_level'  => 'required|string|in:none,basic,conversational,fluent,native-like',
+            'country_residence' => 'required|string|max:100',
+            // Updated: Expect a comma-separated string (e.g. "en,fr,jp")
+            'native_languages' => 'required|string', 
+            'dob'               => 'required_if:role,student|nullable|date|before_or_equal:today',
+            'teaching_experience' => 'required_if:role,teacher|nullable|string|max:1000',
+            'headline'        => 'nullable|string|max:255',
         ]);
+        
         if ($validator->fails()) {
+            // dd($request->all(),$validator->errors()->toArray());
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Create user
+        // 2. Create User
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        // Assign role using Spatie
+        // 3. Assign Role
         $user->assignRole($request->role);
-        $timezone = getTimeZone();
-        if($user->isStudent()){
+
+        // 4. Sync Languages (Handle the comma-separated string)
+        $this->syncUserLanguages($user, $request);
+
+        // 5. Create Profile (Student/Teacher)
+        $timezone = getTimeZone(); // Helper function assumed to exist
+
+        if ($user->isStudent()) {
             StudentProfile::updateOrCreate(
                 ['user_id' => $user->id],
                 [   
-                    'preferred_name' => $user->name,
-                    'discord_id' => $request->discord_id,
-                    'tz' => $timezone
-                ]);
-        }elseif($user->isTeacher()){
-          TeacherProfile::updateOrCreate(
-            ['user_id' => $user->id],
-            [   
-                'preferred_name' => $user->name,
-                'discord_id' => $request->discord_id,
-                'tz' => $timezone
-            ]);
+                    'preferred_name'    => $user->name,
+                    'discord_id'        => $request->discord_id,
+                    'tz'                => $timezone,
+                    'english_level'     => $request->japanese_level,
+                    'country_residence' => $request->country_residence,
+                    'date_of_birth'     => $request->dob,
+                ]
+            );
+        } elseif ($user->isTeacher()) {
+            TeacherProfile::updateOrCreate(
+                ['user_id' => $user->id],
+                [   
+                    'preferred_name'    => $user->name,
+                    'discord_id'        => $request->discord_id,
+                    'tz'                => $timezone,
+                    'english_level'     => $request->japanese_level,
+                    'country_residence' => $request->country_residence,
+                    'experience'        => $request->teaching_experience,
+                    'short_bio'         => $request->headline,
+                ]
+            );
         }
-
-        // Auto-login the user
-        // Auth::login($user);
 
         return redirect()->route('auth.login')->with('success', 'Registration successful! Welcome aboard 🎉');
     }
@@ -193,5 +214,57 @@ class AuthController extends Controller
 
             session(['current_timezone' => $timezone]);
         }
+    }
+
+    /**
+     * Helper: Sync Native Languages from comma-separated string
+     */
+    private function syncUserLanguages($user, $request)
+    {
+        // 1. Get string from hidden input (e.g., "en,fr,es")
+        $rawString = $request->input('native_languages');
+
+        if (!$rawString) {
+            return;
+        }
+
+        // 2. Convert to array
+        $nativeCodes = explode(',', $rawString);
+
+        // 3. Detach old native languages (clean slate)
+        $user->languages()->wherePivot('type', 'native')->detach();
+
+        // 4. Loop and Attach
+        foreach ($nativeCodes as $code) {
+            $code = trim($code); // Clean whitespace
+            if (empty($code)) continue;
+
+            $lang = $this->getOrCreateLanguage($code);
+            
+            // Attach as 'native' type
+            $user->languages()->attach($lang->id, ['type' => 'native']);
+        }
+    }
+
+    /**
+     * Helper: Get or Create Language by Code
+     */
+    private function getOrCreateLanguage($code)
+    {
+        // Try to find by CODE first
+        $language = Language::where('code', $code)->first();
+
+        // If not found, create it dynamically
+        if (!$language) {
+            // Use PHP 'intl' extension to get display name if available, else use code
+            $name = class_exists('Locale') ? \Locale::getDisplayLanguage($code, 'en') : ucfirst($code);
+            
+            $language = Language::create([
+                'code' => $code,
+                'name' => $name
+            ]);
+        }
+
+        return $language;
     }
 }
