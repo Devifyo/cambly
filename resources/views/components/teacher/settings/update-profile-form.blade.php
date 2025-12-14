@@ -319,7 +319,7 @@
                 english_level: { required: true },
                 country_residence: { required: true, notDefaultSelect: true },
                 experience: { required: true, digits: true, min: 0, max: 60 },
-                short_bio: { required: true, minlength: 10, maxlength: 50 },
+                short_bio: { required: true, minlength: 5, maxlength: 50 },
                 introduction: { maxlength: 2000 },
                 games: { maxlength: 100 },
                 youtube_url: { url: true, youtubeUrl: true }
