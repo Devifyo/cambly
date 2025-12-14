@@ -12,6 +12,7 @@
                     </ul>
                 </div>
                 <div>
+                    {{-- CREATE BUTTON --}}
                     <button wire:click="create" wire:loading.attr="disabled" class="btn btn-primary">
                         <i class="fe fe-plus" wire:loading.remove wire:target="create"></i>
                         <span wire:loading wire:target="create" class="spinner-border spinner-border-sm me-1"></span>
@@ -26,9 +27,11 @@
     <div class="card">
         <div class="card-header">
             <div class="row align-items-center">
+                {{-- Search --}}
                 <div class="col-md-4">
                     <input type="text" wire:model.live.debounce.300ms="search" class="form-control" placeholder="Search by name or email...">
                 </div>
+                {{-- Status Filter --}}
                 <div class="col-md-2">
                     <select wire:model.live="statusFilter" class="form-control">
                         <option value="">All Statuses</option>
@@ -36,6 +39,7 @@
                         <option value="0">Inactive</option>
                     </select>
                 </div>
+                {{-- Gender Filter --}}
                 <div class="col-md-2">
                     <select wire:model.live="genderFilter" class="form-control">
                         <option value="">All Genders</option>
@@ -120,7 +124,7 @@
         </div>
     </div>
 
-    {{-- MODALS (Add/Edit/Delete) --}}
+    {{-- ADD MODAL --}}
     <div wire:ignore.self class="modal fade" id="add_teacher_modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -141,6 +145,7 @@
         </div>
     </div>
 
+    {{-- EDIT MODAL --}}
     <div wire:ignore.self class="modal fade" id="edit_teacher_modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -161,6 +166,7 @@
         </div>
     </div>
 
+    {{-- DELETE MODAL --}}
     <div wire:ignore.self class="modal fade" id="delete_modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -229,65 +235,71 @@
 </div>
 
 @push('js')
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
 <script>
-    function initChoices(modalId) {
+    // --- Initialize Standard HTML Select for Country ---
+    function initCountrySelect(modalId) {
+        // 1. Find elements specific to the opened modal
         const $modal = document.querySelector(modalId);
         if (!$modal) return;
 
-        const countryEl = $modal.querySelector('.choices-country');
-        const countryHidden = $modal.querySelector('.country-hidden');
+        const selectEl = $modal.querySelector('.country-select');
+        const hiddenEl = $modal.querySelector('.country-hidden');
+        
+        if (!selectEl || !hiddenEl) return;
 
-        if (countryEl) {
-            // Destroy OLD instance to allow re-creation
-            if (countryEl.choicesInstance) {
-                countryEl.choicesInstance.destroy();
-            }
-
-            // Create NEW Instance
-            const countryChoices = new Choices(countryEl, {
-                searchEnabled: true,
-                itemSelectText: '',
-                placeholder: true,
-                placeholderValue: 'Select Country',
-                shouldSort: false, 
-            });
-            countryEl.choicesInstance = countryChoices; 
-
-            // Load Data
+        // 2. Fetch Data (Only if empty)
+        if (selectEl.options.length <= 1) {
             fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
                 .then(res => res.json())
                 .then(data => {
+                    // Sort Alphabetically
                     data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-                    const items = data.map(c => ({ value: c.name.common, label: c.name.common }));
                     
-                    countryChoices.setChoices(items, 'value', 'label', true);
+                    // Create Options
+                    data.forEach(c => {
+                        const option = document.createElement('option');
+                        option.value = c.name.common;
+                        option.textContent = c.name.common;
+                        selectEl.appendChild(option);
+                    });
 
-                    // If Edit Mode has existing value
-                    if (countryHidden.value) {
-                        countryChoices.setChoiceByValue(countryHidden.value);
+                    // Set Value (If Editing) - Check hidden input from Livewire
+                    if (hiddenEl.value) {
+                        selectEl.value = hiddenEl.value;
                     }
-                });
-
-            // Listen for changes
-            countryEl.addEventListener('change', function(e) {
-                countryHidden.value = e.target.value;
-                countryHidden.dispatchEvent(new Event('input'));
-            });
+                })
+                .catch(err => console.error('Country API Error:', err));
+        } else {
+            // Data already loaded, simply set the value based on Livewire data
+            if (hiddenEl.value) {
+                selectEl.value = hiddenEl.value;
+            } else {
+                selectEl.value = ""; // Reset if add mode
+            }
         }
+
+        // 3. Listen for changes -> Update hidden input -> Notify Livewire
+        selectEl.onchange = function() {
+            hiddenEl.value = this.value;
+            hiddenEl.dispatchEvent(new Event('input'));
+        };
     }
 
+    // --- Modal Toggle Helper (Safe Version) ---
     function toggleModal(modalId, action) {
-        const el = document.getElementById(modalId);
-        if (el) {
-            const modal = bootstrap.Modal.getOrCreateInstance(el);
-            if (action === 'show') modal.show();
-            else modal.hide();
-        }
+        // Small delay ensures Livewire HTML updates are done
+        setTimeout(() => {
+            const el = document.getElementById(modalId);
+            if (el) {
+                const modal = bootstrap.Modal.getOrCreateInstance(el);
+                if (action === 'show') modal.show();
+                else modal.hide();
+            }
+        }, 50);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+        // Livewire Handlers
         Livewire.on('showAddModal', () => toggleModal('add_teacher_modal', 'show'));
         Livewire.on('hideAddModal', () => toggleModal('add_teacher_modal', 'hide'));
         Livewire.on('showEditModal', () => toggleModal('edit_teacher_modal', 'show'));
@@ -296,12 +308,18 @@
         Livewire.on('hideDeleteModal', () => toggleModal('delete_modal', 'hide'));
         Livewire.on('showExportModal', () => toggleModal('export_modal', 'show'));
 
-        // Initialize Choices.js ONLY when modal is shown
+        // Init Country Select when modal is fully visible
         document.body.addEventListener('shown.bs.modal', function (event) {
-            if (event.target.id === 'add_teacher_modal') initChoices('#add_teacher_modal');
-            if (event.target.id === 'edit_teacher_modal') initChoices('#edit_teacher_modal');
+            if (event.target.id === 'add_teacher_modal') {
+                initCountrySelect('#add_teacher_modal');
+            }
+            if (event.target.id === 'edit_teacher_modal') {
+                // Wait slightly for Livewire hydration in Edit mode
+                setTimeout(() => initCountrySelect('#edit_teacher_modal'), 100);
+            }
         });
 
+        // Focus fixes
         Livewire.on('hideAddModal', () => document.body.focus());
         Livewire.on('hideEditModal', () => document.body.focus());
         Livewire.on('hideDeleteModal', () => document.body.focus());

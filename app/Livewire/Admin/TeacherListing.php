@@ -166,7 +166,6 @@ class TeacherListing extends Component
             $this->country_residence = $user->teacherProfile->country_residence;
             $this->japanese_level = $user->teacherProfile->english_level;
         }
-
         $this->dispatch('showEditModal');
     }
 

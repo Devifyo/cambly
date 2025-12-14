@@ -1,47 +1,3 @@
-@push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
-<style>
-    /* Choices.js Bootstrap 5 Integration Fixes */
-    .choices__inner {
-        min-height: 38px;
-        background-color: #fff;
-        border: 1px solid #dee2e6; /* Bootstrap border color */
-        border-radius: 0.375rem;   /* Bootstrap border radius */
-        padding: 0.375rem 0.75rem; /* Bootstrap padding */
-        display: flex;
-        align-items: center;
-    }
-    
-    .choices__list--single {
-        padding: 0;
-    }
-
-    .choices__item {
-        font-size: 1rem; /* Match Bootstrap font size */
-        color: #212529;  /* Match Bootstrap text color */
-    }
-
-    /* Focus state */
-    .is-focused .choices__inner {
-        border-color: #86b7fe;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
-
-    /* Dropdown list styling */
-    .choices__list--dropdown .choices__item--selectable.is-highlighted {
-        background-color: #e9ecef; /* Light gray hover */
-        color: #1e2125;
-    }
-    
-    /* Hide the original select input search field style override */
-    .choices[data-type*="select-one"] .choices__input {
-        background-color: #f8f9fa;
-        border-bottom: 1px solid #dee2e6;
-        margin-bottom: 5px;
-    }
-</style>
-@endpush
-
 <div class="row">
     <div class="col-12 mb-3">
         <label class="form-label">Name <span class="text-danger">*</span></label>
@@ -76,12 +32,12 @@
         <label class="form-label">Country of Residence <span class="text-danger">*</span></label>
         
         <div wire:ignore>
-            <select class="form-control choices-country">
-                <option value="" placeholder>Select Country</option>
-            </select>
+            <select class="form-control country-select">
+                <option value="">Select Country</option>
+                </select>
         </div>
-        
-        <input type="hidden" wire:model="country_residence" class="country-hidden">
+
+        <input type="hidden" wire:model="country_residence" value="{{$this->country_residence}}" class="country-hidden">
         
         @error('country_residence') <span class="invalid-feedback d-block">{{ $message }}</span> @enderror
     </div>
@@ -115,7 +71,7 @@
         <label class="form-label">Password <span class="text-danger">*</span></label>
         <input type="password" wire:model.blur="password" class="form-control @error('password') is-invalid @enderror" autocomplete="new-password">
         @error('password') <span class="invalid-feedback">{{ $message }}</span> @enderror
-        @if ($editMode)
+        @if (isset($editMode) && $editMode)
             <small class="form-text text-muted">Leave blank to keep current password.</small>
         @endif
     </div>
