@@ -1,7 +1,9 @@
 @props(['paginator'])
 
-@php 
-    $elements = $paginator->links()->elements[0] ?? []; 
+@php
+    // In Livewire, we usually rely on the paginator object directly.
+    // However, if you are extracting elements manually, ensure $page is the number.
+    $elements = $paginator->links()->elements[0] ?? [];
 @endphp
 
 @if ($paginator->hasPages())
@@ -11,13 +13,14 @@
             {{-- Previous Page --}}
             @if ($paginator->onFirstPage())
                 <li class="page-item disabled">
-                    <span class="page-link">&laquo;</span>
+                    <span class="page-link" aria-hidden="true">&laquo;</span>
                 </li>
             @else
                 <li class="page-item">
-                    <a class="page-link" href="{{ $paginator->previousPageUrl() }}">
+                    {{-- CHANGE: Use wire:click="previousPage" and remove href --}}
+                    <button type="button" class="page-link" wire:click="previousPage" wire:loading.attr="disabled" rel="prev">
                         &laquo;
-                    </a>
+                    </button>
                 </li>
             @endif
 
@@ -29,7 +32,10 @@
                     </li>
                 @else
                     <li class="page-item">
-                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                        {{-- CHANGE: Use wire:click="gotoPage({{ $page }})" and remove href --}}
+                        <button type="button" class="page-link" wire:click="gotoPage({{ $page }})">
+                            {{ $page }}
+                        </button>
                     </li>
                 @endif
             @endforeach
@@ -37,13 +43,14 @@
             {{-- Next Page --}}
             @if ($paginator->hasMorePages())
                 <li class="page-item">
-                    <a class="page-link" href="{{ $paginator->nextPageUrl() }}">
+                    {{-- CHANGE: Use wire:click="nextPage" and remove href --}}
+                    <button type="button" class="page-link" wire:click="nextPage" wire:loading.attr="disabled" rel="next">
                         &raquo;
-                    </a>
+                    </button>
                 </li>
             @else
                 <li class="page-item disabled">
-                    <span class="page-link">&raquo;</span>
+                    <span class="page-link" aria-hidden="true">&raquo;</span>
                 </li>
             @endif
 
