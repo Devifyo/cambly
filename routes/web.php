@@ -5,6 +5,7 @@ use App\Http\Controllers\CmsController;
 use App\Http\Controllers\Admin\ImpersonationController;
 
 Route::get('/', function () {
+    return redirect()->route('auth.login');
     return view('welcome');
 });
 
