@@ -1,13 +1,17 @@
-2025-12-07T08:01:10.518473 Project directory: /root/projects/laravel/cambly
-2025-12-07T08:01:10.518724 Deploying project
-2025-12-07T08:01:10.519268 ------------------------------
-2025-12-07T08:01:10.710933  Container cambly-db-1  Recreate
-2025-12-07T08:01:12.194137  Container cambly-db-1  Recreated
-2025-12-07T08:01:12.194205  Container cambly-app-1  Recreate
-2025-12-07T08:01:12.566963  Container cambly-app-1  Recreated
-2025-12-07T08:01:12.589876  Container cambly-db-1  Starting
-2025-12-07T08:01:12.776028  Container cambly-db-1  Started
-2025-12-07T08:01:12.776086  Container cambly-app-1  Starting
-2025-12-07T08:01:12.978452  Container cambly-app-1  Started
-2025-12-07T08:01:12.985580 ------------------------------
-2025-12-07T08:01:12.985631 Project deployed successfully
+2025-12-16T07:06:48.697127 Project directory: /root/projects/laravel/cambly
+2025-12-16T07:06:48.697522 Deploying project
+2025-12-16T07:06:48.698787 ------------------------------
+2025-12-16T07:06:48.922343  Container cambly-db-1  Recreate
+2025-12-16T07:06:59.763343  Container cambly-db-1  Recreated
+2025-12-16T07:06:59.763415  Container cambly-app-1  Recreate
+2025-12-16T07:06:59.763481  Container cambly-phpmyadmin-1  Recreate
+2025-12-16T07:07:19.747288  Container cambly-app-1  Recreated
+2025-12-16T07:07:41.613877  Container cambly-phpmyadmin-1  Recreated
+2025-12-16T07:07:41.640279  Container cambly-db-1  Starting
+2025-12-16T07:07:42.002334  Container cambly-db-1  Started
+2025-12-16T07:07:42.002403  Container cambly-phpmyadmin-1  Starting
+2025-12-16T07:07:42.002414  Container cambly-app-1  Starting
+2025-12-16T07:07:42.791468  Container cambly-phpmyadmin-1  Started
+2025-12-16T07:07:42.820127  Container cambly-app-1  Started
+2025-12-16T07:07:42.832996 ------------------------------
+2025-12-16T07:07:42.833064 Project deployed successfully

@@ -1,11 +1,17 @@
 services:
   app:
-    image: bitnami/laravel:latest
-    entrypoint: []
-    command: sh -c "php artisan serve --host=0.0.0.0 --port=8000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cambly_octane
+    restart: unless-stopped
     ports:
       - "127.0.0.1:8000:8000"
     environment:
+      - APP_KEY=${APP_KEY}       # Ensure this is in your .env
+      - APP_ENV=${APP_ENV}       # Ensure this is in your .env
+      - APP_DEBUG=${APP_DEBUG}
+      - DB_CONNECTION=mysql
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=cambly
@@ -13,8 +19,11 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
     volumes:
       - ./:/app
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     depends_on:
       - db
+    # Fix for permission issues since Bitnami uses user 1001
+    user: "root" 
 
   db:
     image: mysql:8.0
@@ -25,10 +34,10 @@ services:
       --default-storage-engine=InnoDB
       --innodb-file-per-table=1
     environment:
-      # Use the password from .env so it's not visible in Git
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=cambly
-      - MYSQL_ROOT_HOST=%
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
 
@@ -40,7 +49,6 @@ services:
     ports:
       - "127.0.0.1:8080:80"
     volumes:
-      # Mount your custom ini file to the PHP conf.d directory
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     depends_on:
       - db

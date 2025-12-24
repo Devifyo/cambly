@@ -10,6 +10,7 @@
         "lab404/laravel-impersonate": "^1.7",
         "laravel/cashier": "^15.6",
         "laravel/framework": "^10.10",
+        "laravel/octane": "^2.13",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.7",
