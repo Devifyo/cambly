@@ -38,7 +38,8 @@ class TeacherListing extends Component
 
     // --- Profile Data ---
     public $gender;
-    public $discord_id;
+    // public $discord_id;
+    public $zoom_link;
     public $headline;
     public $teaching_experience;
     public $country_residence;
@@ -54,7 +55,8 @@ class TeacherListing extends Component
             'password' => $this->editMode ? 'nullable|min:8|confirmed' : 'required|min:8|confirmed',
             'status' => 'required|integer|in:0,1',
             'gender' => 'required|string|in:male,female,other',
-            'discord_id' => 'required|string|max:50',
+            // 'discord_id' => 'required|string|max:50',
+            'zoom_link' => 'required|url',
             'country_residence' => 'required|string|max:100',
             'japanese_level' => 'required|string',
             'headline' => 'nullable|string|max:255',
@@ -66,7 +68,10 @@ class TeacherListing extends Component
     {
         $this->reset([
             'userId', 'name', 'email', 'password', 'password_confirmation', 'status', 'editMode',
-            'gender', 'discord_id', 'headline', 'teaching_experience',
+            'gender', 
+            // 'discord_id', 
+            'zoom_link',
+            'headline', 'teaching_experience',
             'country_residence', 'japanese_level'
         ]);
         $this->resetValidation();
@@ -130,7 +135,8 @@ class TeacherListing extends Component
                     'preferred_name' => $this->name,
                     'tz' => 'UTC', 
                     'gender' => $this->gender,
-                    'discord_id' => $this->discord_id,
+                    // 'discord_id' => $this->discord_id ?? null,
+                    'zoom_link' => $this->zoom_link,
                     'short_bio' => $this->headline,
                     'experience' => $this->teaching_experience,
                     'country_residence' => $this->country_residence,
@@ -160,7 +166,8 @@ class TeacherListing extends Component
         $this->editMode = true;
 
         if ($user->teacherProfile) {
-            $this->discord_id = $user->teacherProfile->discord_id;
+            // $this->discord_id = $user->teacherProfile->discord_id;
+            $this->zoom_link = $user->teacherProfile->zoom_link;
             $this->headline = $user->teacherProfile->short_bio;
             $this->teaching_experience = $user->teacherProfile->experience;
             $this->country_residence = $user->teacherProfile->country_residence;
@@ -192,7 +199,8 @@ class TeacherListing extends Component
                     [
                         'preferred_name' => $this->name,
                         'gender' => $this->gender,
-                        'discord_id' => $this->discord_id,
+                        // 'discord_id' => $this->discord_id,
+                        'zoom_link' => $this->zoom_link,
                         'short_bio' => $this->headline,
                         'experience' => $this->teaching_experience,
                         'country_residence' => $this->country_residence,

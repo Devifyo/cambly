@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-  public function run(): void
+    public function run(): void
     {
         // Admin
         $admin = User::firstOrCreate(
@@ -25,23 +25,27 @@ class UserSeeder extends Seeder
         );
         $ops->assignRole('ops');
 
-        // Teachers
+        // Teachers (Fixed using firstOrCreate)
         for ($i = 0; $i < 1; $i++) {
-            $t = User::create([
-                'name' => "Teacher $i",
-                'email' => "teacher$i@mahobook.com",
-                'password' => Hash::make('Note@123'),
-            ]);
+            $t = User::firstOrCreate(
+                ['email' => "teacher$i@mahobook.com"], // Check for this email first
+                [
+                    'name' => "Teacher $i",
+                    'password' => Hash::make('Note@123'),
+                ]
+            );
             $t->assignRole('teacher');
         }
 
-        // Students
+        // Students (Fixed using firstOrCreate)
         for ($i = 0; $i < 1; $i++) {
-            $s = User::create([
-                'name' => "Student $i",
-                'email' => "student$i@mahobook.com",
-                'password' => Hash::make('Note@123'),
-            ]);
+            $s = User::firstOrCreate(
+                ['email' => "student$i@mahobook.com"], // Check for this email first
+                [
+                    'name' => "Student $i",
+                    'password' => Hash::make('Note@123'),
+                ]
+            );
             $s->assignRole('student');
         }
     }

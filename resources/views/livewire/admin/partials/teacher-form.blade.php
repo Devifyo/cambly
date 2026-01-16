@@ -11,10 +11,12 @@
         @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
     </div>
 
+
+
     <div class="col-md-6 mb-3">
-        <label class="form-label">Discord Username <span class="text-danger">*</span></label>
-        <input type="text" wire:model.blur="discord_id" class="form-control @error('discord_id') is-invalid @enderror" placeholder="username#1234" required>
-        @error('discord_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
+        <label class="form-label">Zoom Personal Meeting Link <span class="text-danger">*</span></label>
+        <input type="url" wire:model.blur="zoom_link" class="form-control @error('zoom_link') is-invalid @enderror" placeholder="https://zoom.us/j/1234567890" required>
+        @error('zoom_link') <span class="invalid-feedback">{{ $message }}</span> @enderror
     </div>
 
     <div class="col-md-6 mb-3">

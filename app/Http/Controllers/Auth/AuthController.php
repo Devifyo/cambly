@@ -112,7 +112,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name'            => 'required|string|max:255',
             'email'           => 'required|string|email|max:255|unique:users',
-            'discord_id'      => 'required|string|max:50',
+            // 'discord_id'      => 'required|string|max:50',
+            'zoom_link'           => 'required_if:role,teacher|nullable|url|max:255',
             'password'        => 'required|string|min:8|confirmed',
             'role'            => 'required|string|exists:roles,name',
             'terms'           => 'accepted',
@@ -151,7 +152,7 @@ class AuthController extends Controller
                 ['user_id' => $user->id],
                 [   
                     'preferred_name'    => $user->name,
-                    'discord_id'        => $request->discord_id,
+                    'discord_id'        => $request->discord_id ?? null,
                     'tz'                => $timezone,
                     'english_level'     => $request->japanese_level,
                     'country_residence' => $request->country_residence,
@@ -163,7 +164,8 @@ class AuthController extends Controller
                 ['user_id' => $user->id],
                 [   
                     'preferred_name'    => $user->name,
-                    'discord_id'        => $request->discord_id,
+                    'discord_id'        => $request->discord_id ?? null,
+                    'zoom_link'         => $request->zoom_link ?? null,
                     'tz'                => $timezone,
                     'english_level'     => $request->japanese_level,
                     'country_residence' => $request->country_residence,

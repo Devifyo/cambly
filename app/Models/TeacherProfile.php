@@ -16,6 +16,7 @@ class TeacherProfile extends Model
         'date_of_birth',
         'tz',
         'discord_id',
+        'zoom_link',
         'bio',
         'started_at',
         'gender',

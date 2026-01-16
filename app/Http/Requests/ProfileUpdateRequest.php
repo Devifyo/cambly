@@ -31,7 +31,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique('users')->ignore($this->user()->id),
             ],
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
-
+            'zoom_link' => ['required', 'url'],
             //  Profile attributes (optional)
             // 'age' => ['nullable', 'integer', 'min:1', 'max:120'],
             'date_of_birth' => [
@@ -47,7 +47,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::in(['native-like', 'fluent', 'conversational', 'basic', 'none']),
             ],
             'country_residence' => ['required', 'string', 'max:100'],
-            'discord_id' => ['nullable', 'string', 'max:100'],
+            // 'discord_id' => ['nullable', 'string', 'max:100'],
         ];
     }
 
@@ -59,6 +59,8 @@ class ProfileUpdateRequest extends FormRequest
             'date_of_birth.date' => 'The date of birth must be a valid date format (YYYY-MM-DD).',
             'english_level.in' => 'The selected English level is invalid.',
             'avatar.max' => 'The profile photo cannot exceed 5MB.',
+            'zoom_link.required' => 'Please provide your Zoom Personal Meeting Link.',
+            'zoom_link.url' => 'Please enter a valid URL for your Zoom Personal Meeting Link.',
         ];
     }
 

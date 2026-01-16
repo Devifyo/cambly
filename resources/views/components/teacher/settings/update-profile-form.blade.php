@@ -158,11 +158,20 @@
                         </div>
                     </div>
                     
-                    <div class="col-lg-6 col-md-6">
+                    {{-- <div class="col-lg-6 col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="discord_id">Discord username <span class="text-danger">*</span></label>
                             <input id="discord_id" name="discord_id" type="text" class="form-control"
                                    value="{{ old('discord_id', auth()->user()->teacherProfile?->discord_id) }}" placeholder="myusername#1234">
+                        </div>
+                    </div> --}}
+
+                    <div class="col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" for="zoom_link">Zoom Personal Meeting Link <span class="text-danger">*</span></label>
+                            <input id="zoom_link" name="zoom_link" type="url" class="form-control"
+                                value="{{ old('zoom_link', auth()->user()->teacherProfile?->zoom_link) }}" 
+                                placeholder="https://zoom.us/j/1234567890">
                         </div>
                     </div>
                     
@@ -314,7 +323,8 @@
                 // date_of_birth: { required: true, futureDate: true, minAge: 13 },
                 // These rules still work because your components output inputs with these names
                 // mother_tongue: { required: true },
-                discord_id: {required:true},
+                // discord_id: {required:true},
+                zoom_link: { required: true, url: true },
                 "native_languages[]": { required: true, maxlength: 3 },
                 english_level: { required: true },
                 country_residence: { required: true, notDefaultSelect: true },
@@ -331,7 +341,11 @@
                     maxlength: "You cannot select more than 3."
                 },
                 english_level: {required: "Please select your Japanese level."},
-                discord_id: {  required: "Please provide a discord username."},
+                // discord_id: {  required: "Please provide a discord username."},
+                zoom_link: { 
+                    required: "Please provide your Zoom Personal Meeting Link.",
+                    url: "Please enter a valid URL (starting with http:// or https://)."
+                },
                 date_of_birth: { required: "Please enter your date of birth", futureDate: "The date of birth cannot be in the future.", minAge: "You must be at least 13 years old." },
                 experience: {
                     required: "Please enter your years of experience",

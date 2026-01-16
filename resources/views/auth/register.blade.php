@@ -119,20 +119,11 @@
                     </div>
                 </div>
 
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
-                            <label for="name">Full Name</label>
-                            <span class="input-group-text-icon"><i class="fa-regular fa-user"></i></span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="discord_id" name="discord_id" placeholder="Discord" required>
-                            <label for="discord_id">Discord Username</label>
-                            <span class="input-group-text-icon"><i class="fa-brands fa-discord"></i></span>
-                        </div>
+                <div class="mb-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                        <label for="name">Full Name</label>
+                        <span class="input-group-text-icon"><i class="fa-regular fa-user"></i></span>
                     </div>
                 </div>
 
@@ -155,6 +146,15 @@
 
                     <div class="col-12" id="teacher-specific-fields" style="display: none;">
                         <div class="row g-3">
+                            
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="url" class="form-control" id="zoom_link" name="zoom_link" placeholder="Zoom Link">
+                                    <label for="zoom_link">Zoom Personal Link</label>
+                                    <span class="input-group-text-icon"><i class="fa-solid fa-video"></i></span>
+                                </div>
+                            </div>
+
                             <div class="col-md-8">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="headline" name="headline" placeholder="Headline">
@@ -269,10 +269,17 @@ $(document).ready(function () {
             $('#teacher-specific-fields').slideDown();
             $('#student-specific-fields').slideUp();
             $('#dob').prop('disabled', true); 
+            
+            // ✅ ENABLE Zoom link for teachers
+            $('#zoom_link').prop('disabled', false);
         } else {
             $('#teacher-specific-fields').slideUp();
             $('#student-specific-fields').slideDown();
             $('#dob').prop('disabled', false);
+
+            // ✅ DISABLE Zoom link for students
+            // This prevents validation errors and stops it from being sent to the backend
+            $('#zoom_link').prop('disabled', true);
         }
     }
     $('input[name="role"]').change(toggleRoleFields);
@@ -282,12 +289,19 @@ $(document).ready(function () {
     $("#registerForm").validate({
         errorElement: 'div',
         errorClass: 'text-danger small mt-1 fw-bold',
-        ignore: [], // Don't ignore hidden fields (needed for native_languages)
+        ignore: [],
         rules: {
             role: "required",
             name: "required",
             email: { required: true, email: true },
-            discord_id: "required",
+            
+            // 👇 Only required if role is teacher. 
+            // Since we disable the field for students above, this naturally works.
+            zoom_link: { 
+                required: function() { return $('#role_teacher').is(':checked'); },
+                url: true 
+            },
+
             dob: "required",
             country: "required",
             native_languages: { required: true },
@@ -305,7 +319,13 @@ $(document).ready(function () {
                 required: "Please enter your email address.",
                 email: "Please enter a valid email address."
             },
-            discord_id: "Your Discord username is required.",
+            
+            // 👇 Custom messages for Zoom
+            zoom_link: {
+                required: "Please enter your Zoom Personal Meeting Link.",
+                url: "Please enter a valid URL (starting with http:// or https://)."
+            },
+
             dob: "Please select your date of birth.",
             country: "Please select your country.",
             native_languages: "Please select at least one native language.",

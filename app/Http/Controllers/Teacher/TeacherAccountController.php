@@ -63,7 +63,8 @@ class TeacherAccountController extends Controller
                 'date_of_birth',
                 'native_language',
                 'english_level',
-                'discord_id',
+                // 'discord_id',
+                'zoom_link',
                 'experience',
                 'short_bio',
                 'country_residence',
@@ -71,6 +72,7 @@ class TeacherAccountController extends Controller
                 'games',
                 'youtube_url'
         ]);
+        
         $this->syncUserLanguages($user, $request);
         $user->teacherProfile()->updateOrCreate(
             ['user_id' => $user->id], // Find profile by user_id
