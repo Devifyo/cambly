@@ -40,8 +40,8 @@ trait BookingLessonEmailTrait
             // Note: We calculate time based on the specific recipient's timezone later in the helper
             // But for the specific logic you requested, we define base variables here.
 
-            $lessonLinkText = $reservation->lesson_meeting_link
-                ? '<a href="' . $reservation->lesson_meeting_link . '" target="_blank" style="background-color:#0E82FD; color:#fff; padding:10px 15px; text-decoration:none; border-radius:5px;">Join Lesson</a>'
+            $lessonLinkText = $teacher?->teacherProfile?->zoom_link
+                ? '<a href="' . $teacher?->teacherProfile?->zoom_link . '" target="_blank" style="background-color:#0E82FD; color:#fff; padding:10px 15px; text-decoration:none; border-radius:5px;">Join Lesson</a>'
                 : 'Not added yet';
 
             $bookingId = function_exists('encryptId') ? encryptId($reservation->id) : $reservation->id;
@@ -52,7 +52,7 @@ trait BookingLessonEmailTrait
                 'tutor_name'       => $teacher->name ?? 'Tutor',
                 'teacher_name'     => $teacher->name ?? 'Tutor', // Alias
                 'lesson_duration'  => $reservation->duration ?? '60 Minutes',
-                'lesson_link'      => $reservation->lesson_meeting_link ?? '',
+                'lesson_link'      => $teacher?->teacherProfile?->zoom_link ?? '',
                 'lesson_link_text' => $lessonLinkText,
                 'booking_id'       => $bookingId,
                 'dashboard_link'   => url('/dashboard'),
@@ -144,8 +144,8 @@ trait BookingLessonEmailTrait
     private function sendEmailNotification(Reservation $reservation, User $recipient, string $slug, $is_refund = false): void
     {   
         // Calculate basic placeholders
-        $lessonLinkText = $reservation->lesson_meeting_link
-            ? '<a href="' . $reservation->lesson_meeting_link . '" target="_blank" style="background-color:#0E82FD; color:#fff; padding:10px 15px; text-decoration:none; border-radius:5px;">Join Lesson</a>'
+        $lessonLinkText = $reservation?->teacher?->teacherProfile?->zoom_link
+            ? '<a href="' . $reservation?->teacher?->teacherProfile?->zoom_link . '" target="_blank" style="background-color:#0E82FD; color:#fff; padding:10px 15px; text-decoration:none; border-radius:5px;">Join Lesson</a>'
             : 'Link not available yet';
 
         $bookingId = function_exists('encryptId') ? encryptId($reservation->id) : $reservation->id;
@@ -154,7 +154,7 @@ trait BookingLessonEmailTrait
             'tutor_name'       => $reservation->teacher->name ?? 'Tutor',
             'teacher_name'     => $reservation->teacher->name ?? 'Tutor',
             'lesson_duration'  => '25 minutes',
-            'lesson_link'      => $reservation->lesson_meeting_link ?? '',
+            'lesson_link'      => $reservation?->teacher?->teacherProfile?->zoom_link ?? '',
             'lesson_update_url' => route('teacher.lessons.details',['id' => encryptId($reservation->id)]),
             'lesson_link_text' => $lessonLinkText,
             'booking_id'       => $bookingId,

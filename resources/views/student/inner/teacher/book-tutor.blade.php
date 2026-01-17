@@ -306,12 +306,12 @@
                                             </span>
                                             
                                             {{-- Discord Badge (Fixed) --}}
-                                            @if($teacher->teacherProfile?->discord_id)
+                                            {{-- @if($teacher->teacherProfile?->discord_id)
                                                 <span class="badge px-2 py-1 text-break text-wrap text-start" 
                                                     style="background-color: #eef0fd; color: #5865F2; border: 1px solid #dae0fc; max-width: 100%;">
                                                     <i class="fab fa-discord me-1"></i> {{ $teacher->teacherProfile->discord_id }}
                                                 </span>
-                                            @endif
+                                            @endif --}}
 
                                         </div>
                                     </div>

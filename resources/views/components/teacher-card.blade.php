@@ -180,10 +180,10 @@
                                    <i class="fas fa-user-edit me-2"></i>
                                     {{$teacher->teacherProfile?->short_bio ?? '-' }}
                                 </p>
-                                <p class="d-flex align-items-center mb-0 fs-12 text-muted">
+                                {{-- <p class="d-flex align-items-center mb-0 fs-12 text-muted">
                                      <i class="fab fa-discord me-2"></i>
                                      {{$teacher->teacherProfile?->discord_id ?? '-' }}
-                                </p>
+                                </p> --}}
                             </div>
 
                             <div class="col-md-6 text-md-end">

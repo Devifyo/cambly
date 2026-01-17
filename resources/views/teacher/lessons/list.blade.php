@@ -374,12 +374,12 @@
                         </div>
 
                         {{-- Discord Icon --}}
-                            <div class="lesson-meta-item">
+                            {{-- <div class="lesson-meta-item">
                                 <i class="fab fa-discord"></i>
                                 <span class="ms-1">
                                     Discord: {{ $item?->student_discord_user_name ?? '-' }}
                                 </span>
-                            </div>
+                            </div> --}}
                     </div>
 
                     <div class="lesson-actions">

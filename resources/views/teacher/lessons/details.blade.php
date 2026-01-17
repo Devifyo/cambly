@@ -198,7 +198,7 @@
                         <p>{{ $lesson->teacher_name }}</p>
                     </div>
                     {{-- discord username of student --}}
-                    <div class="detail-item p-3 rounded border border-warning bg-warning bg-opacity-10 mb-3">
+                    {{-- <div class="detail-item p-3 rounded border border-warning bg-warning bg-opacity-10 mb-3">
                         <label class="text-warning fw-bold text-uppercase fs-11 mb-1">
                             <i class="fa-brands fa-discord me-1"></i> Student Discord Username
                         </label>
@@ -216,8 +216,45 @@
                                 </button>
                             @endif
                         </div>
-                    </div>
+                    </div> --}}
                     {{-- End of discord username --}}
+                    {{-- Zoom meeting link --}}
+                    <div class="detail-item p-3 rounded border mb-3" style="background-color: #f7f9fa; border-color: #e1e4e8;">                      
+                        <label class="fw-bold text-uppercase fs-11 mb-2 d-flex align-items-center" style="color: #2D8CFF; letter-spacing: 0.5px;">
+                            <i class="fa-solid fa-video me-2"></i> Zoom Meeting Link
+                        </label>
+
+                        <div class="d-flex align-items-center justify-content-between bg-white p-2 rounded border" style="border-color: #eff2f5;">
+                            
+                            <div class="overflow-hidden me-3">
+                                @if(!empty($lesson?->teacher_zoom_link))
+                                    <a href="{{ $lesson->teacher_zoom_link }}" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    class="mb-0 fs-16 fw-bold text-dark text-decoration-none text-truncate d-block"
+                                    title="{{ $lesson->teacher_zoom_link }}">
+                                        {{ $lesson->teacher_zoom_link }}
+                                    </a>
+                                @else
+                                    <span class="mb-0 fs-16 fw-bold text-muted fst-italic">
+                                        <i class="fa-regular fa-circle-xmark me-1 small"></i> Not Provided
+                                    </span>
+                                @endif
+                            </div>
+                            
+                            @if(!empty($lesson?->teacher_zoom_link))
+                                <a href="{{ $lesson->teacher_zoom_link }}" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                class="btn btn-sm text-white shadow-sm d-flex align-items-center px-3" 
+                                style="background-color: #2D8CFF; border: none; font-weight: 600;"
+                                title="Launch Zoom Meeting">
+                                    Join <i class="fa-solid fa-arrow-up-right-from-square ms-2 fs-12"></i>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                    {{-- End of Zoom meeting link --}}
                     <div class="detail-item">
                         <label>Lesson ID</label>
                         <p>{{ $lesson->id }}</p>

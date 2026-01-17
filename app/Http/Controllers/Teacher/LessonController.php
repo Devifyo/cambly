@@ -50,7 +50,7 @@ class LessonController extends Controller
         $reservation = Reservation::query()
             ->with([
                 'teacher:id,name',
-                'teacher.teacherProfile:user_id,preferred_name',
+                'teacher.teacherProfile:user_id,preferred_name,zoom_link',
                 'availability:id,start_utc,end_utc'
             ])
             ->find(decryptId($id));

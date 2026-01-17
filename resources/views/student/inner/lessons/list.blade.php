@@ -346,11 +346,10 @@
                             ID: {{ encryptId($item->id) }}
                         </div>
                         {{-- 💡 NEW ITEM ADDED HERE 💡 --}}
-                        <div class="lesson-meta-item">
-                            {{-- Using an icon that represents chat/social media/person --}}
+                        {{-- <div class="lesson-meta-item">
                              <i class="fab fa-discord"></i>
                             Discord: {{ $item?->teacher_discord_user_name ?? '-' }}
-                        </div>
+                        </div> --}}
                         {{-- -------------------------- --}}
 
                     </div>

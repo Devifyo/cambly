@@ -135,6 +135,7 @@ class LessonService
         return (object) [
             'id' => $res->id,
             'teacher_name' => $teacher,
+            'teacher_zoom_link' => $res->teacher?->teacherProfile?->zoom_link ?? null,
             'teacher_discord_user_name' => $res->teacher?->teacherProfile?->discord_id ?? null,
             'student_discord_user_name' => $res->student?->studentProfile?->discord_id ?? null,
             'start_at_utc' => $startTime, // Keep UTC for internal logic
