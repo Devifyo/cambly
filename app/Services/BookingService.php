@@ -377,7 +377,8 @@ public function confirm(int $availabilityId, User $student, ?int $teacherId = nu
                 }elseif(!$isImpersonating && $actor->isTeacher()){
                     $this->sendBookingCancelledByTutorEmail($reservation, $is_refund);
                 }elseif($isImpersonating){
-
+                    $this->sendBookingCancelledByStudentEmail($reservation);
+                    $this->sendBookingCancelledByTutorEmail($reservation, $is_refund);
                 }
                 return $response;
             }, 5); // retry up to 5 times for deadlock safety

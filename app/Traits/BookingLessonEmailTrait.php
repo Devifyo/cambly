@@ -29,7 +29,7 @@ trait BookingLessonEmailTrait
     {
         try {
             $teacher = User::find($reservation->teacher_id);
-            if (!$teacher) return; 
+            // 1. Log the main User object
 
             $creator = User::find($reservation->created_by);
 
@@ -39,10 +39,18 @@ trait BookingLessonEmailTrait
             // Format lesson time
             // Note: We calculate time based on the specific recipient's timezone later in the helper
             // But for the specific logic you requested, we define base variables here.
+            $rawLink = $teacher?->teacherProfile?->zoom_link;
 
-            $lessonLinkText = $teacher?->teacherProfile?->zoom_link
-                ? '<a href="' . $teacher?->teacherProfile?->zoom_link . '" target="_blank" style="background-color:#0E82FD; color:#fff; padding:10px 15px; text-decoration:none; border-radius:5px;">Join Lesson</a>'
-                : 'Not added yet';
+            // 2. Logic check
+            if (!empty($rawLink) && strlen(trim($rawLink)) > 0) {
+                
+                // CHANGED: Simple anchor tag (shows the URL as the text)
+                $lessonLinkText = '<a href="' . trim($rawLink) . '" target="_blank">' . trim($rawLink) . '</a>';               
+
+            } else {
+                $lessonLinkText = 'Not added yet';
+                Log::info('Debug - Result: "Not added yet" triggered');
+            }
 
             $bookingId = function_exists('encryptId') ? encryptId($reservation->id) : $reservation->id;
 
@@ -52,7 +60,7 @@ trait BookingLessonEmailTrait
                 'tutor_name'       => $teacher->name ?? 'Tutor',
                 'teacher_name'     => $teacher->name ?? 'Tutor', // Alias
                 'lesson_duration'  => $reservation->duration ?? '60 Minutes',
-                'lesson_link'      => $teacher?->teacherProfile?->zoom_link ?? '',
+                'lesson_link'      => $rawLink ?? '',
                 'lesson_link_text' => $lessonLinkText,
                 'booking_id'       => $bookingId,
                 'dashboard_link'   => url('/dashboard'),
