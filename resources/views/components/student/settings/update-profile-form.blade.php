@@ -140,7 +140,7 @@
                     </div>
 
                     {{-- Country of residence --}}
-                    <div class="col-lg-6 col-md-6">
+                    <div class="col-lg-12 col-md-6">
                         <div class="form-group" data-toggle-group="location">
                             <label class="form-label" for="country_residence">Country of residence <span class="text-danger">*</span></label>
                             <select
@@ -159,13 +159,13 @@
                     </div>
 
                     {{-- Discord ID --}}
-                    <div class="col-lg-6 col-md-6">
+                    {{-- <div class="col-lg-6 col-md-6">
                         <div class="form-group">
                             <label class="form-label" for="discord_id">Discord Username <span class="text-danger">*</span></label>
                             <input id="discord_id" name="discord_id" type="text" class="form-control"
                                     value="{{ old('discord_id', auth()->user()->studentProfile?->discord_id) }}" placeholder="myusername#1234">
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             {{-- Additional Details --}}
@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         required: true,
                         notDefaultSelect: true // <-- NEW RULE APPLICATION
                     },
-                    discord_id: {required:true},
+                    // discord_id: {required:true},
                     "native_languages[]": { required: true, maxlength: 3 },
                     avatar: { accept: "image/jpeg,image/png,image/jpg", filesize: MAX_FILE_SIZE }
                 },

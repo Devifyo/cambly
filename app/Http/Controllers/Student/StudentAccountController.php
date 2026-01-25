@@ -65,7 +65,7 @@ class StudentAccountController extends Controller
                 'country_residence',
                 'native_language',
                 'english_level',
-                'discord_id'
+                // 'discord_id'
         ]);
         $this->syncUserLanguages($user, $request);
         $user->studentProfile()->updateOrCreate(
