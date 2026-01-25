@@ -16,38 +16,30 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {  
         $minAge = 13;
-        
-        // Calculate the maximum allowed date of birth (Today minus 13 years)
-        $minDate = now()->subYears($minAge)->format('Y-m-d');
+        $minDate = now()->subYears($minAge)->toDateString();
+        $isStudent = $this->routeIs('student.profile.update');
         return [
             'name' => 'required|string|max:255',
-            // 'gender' => 'required',
             'email' => [
                 'required',
                 'string',
                 'email',
                 'max:255',
-                // This rule checks if the email is unique, BUT ignores the current user's ID
                 Rule::unique('users')->ignore($this->user()->id),
             ],
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
-            'zoom_link' => ['required', 'url'],
-            //  Profile attributes (optional)
-            // 'age' => ['nullable', 'integer', 'min:1', 'max:120'],
-            'date_of_birth' => [
-                // 'required',
-                'date',
-                'before_or_equal:' . now()->toDateString(), // Cannot be in the future
-                // Checks if the date of birth is at least 13 years ago
-                // 'before_or_equal:' . $minDate, 
-            ],
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            
+            // Logical fix: If route is student.profile.update, it's nullable. 
+            // Otherwise (like for teachers), it's required.
+            'date_of_birth' => $isStudent
+            ? ['required', 'date']
+            : ['nullable', 'date'],
             'native_language' => ['nullable', 'string', 'max:100'],
             'english_level' => [
                 'required', 
                 Rule::in(['native-like', 'fluent', 'conversational', 'basic', 'none']),
             ],
             'country_residence' => ['required', 'string', 'max:100'],
-            // 'discord_id' => ['nullable', 'string', 'max:100'],
         ];
     }
 
@@ -64,8 +56,8 @@ class ProfileUpdateRequest extends FormRequest
         ];
     }
 
-    // protected function failedValidation(Validator $validator)
-    // {
-    //     dd(request()->all(), $validator->errors()->toArray());
-    // }
+    protected function failedValidation(Validator $validator)
+    {
+        dd(request()->all(), $validator->errors()->toArray());
+    }
 }

@@ -55,7 +55,7 @@ class User extends Authenticatable
 
     protected $appends = ['profile_link'];
 
-
+    
     public function canImpersonate(): bool
     {
         return $this->isAdmin() || $this->isSubadmin() || $this->isOps();

@@ -22,7 +22,7 @@ public function searchTeachers(Request $request)
 
     $filters = $request->only(['name', 'start_utc','gender','languages','japanese_level']);
 
-    $teachers = User::teachers()
+    $teachers = User::active()->teachers()
         ->filterByName($request->name)
         ->filterByJapaneseLevel($request->japanese_level)
         ->filterByGender($request->gender)
