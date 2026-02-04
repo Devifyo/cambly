@@ -1,32 +1,28 @@
-# Use the official FrankenPHP image
-FROM dunglas/frankenphp:latest-php8.2
+FROM php:8.3-fpm
 
-# 1. Install system tools (FIX FOR YOUR ERROR)
-# We add git and unzip so Composer doesn't fail when downloading packages
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# 2. Install PHP extensions required for Laravel
-RUN install-php-extensions \
-    pcntl \
-    bcmath \
-    gd \
-    intl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
     zip \
-    opcache \
-    pdo_mysql \
-    redis
+    unzip \
+    git \
+    curl
 
-# 3. Install Composer
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 4. Set working directory
-WORKDIR /app
+# Set working directory
+WORKDIR /var/www
 
-# 5. Copy your custom php settings
-COPY uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+USER root
 
-# 6. Start Octane
-CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000", "--workers=auto"]
+# Expose port 9000 and start php-fpm server
+EXPOSE 9000
+CMD ["php-fpm"]
