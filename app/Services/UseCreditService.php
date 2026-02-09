@@ -20,61 +20,91 @@ class UseCreditService
      */
     public function getCurrentMonthCredits($user, $rule = 'only_has_subscription')
     {
-        // 1️⃣ Find active subscription
- 
         $subscription = $user->activeSubscription;
         if (!$subscription && $rule != 'show_all') {
             return null;
         }
 
         $now = Carbon::now();
-        $startOfMonth = $now->copy()->startOfMonth()->startOfDay();
-        $endOfMonth   = $now->copy()->endOfMonth()->endOfDay();
-        // 2️⃣ Get cycle number from subscription
-        $cycleNumber = $subscription->cycle_number ?? null;
-        // dd($cycleNumber);
-        // fetch current ledger
-            $CurrentCycleledger = TicketLedger::where('student_id', $user->id)
-            ->when($rule == 'only_has_subscription' || !is_null($cycleNumber) , function ($query) use ($cycleNumber) {
-                    $query->where('cycle_number', $cycleNumber);
-                })
-            ->latest()
-            ->first();
-            // if(!$CurrentCycleledger){
-            //     dd($CurrentCycleledger,$user);
-            //     return null;
-            // }
-        // 3️⃣ Fetch matching ledger entry
+
+        // 1️⃣ Database-level filter: Pull only records from the last 32 days 
         $ledgers = TicketLedger::where('student_id', $user->id)
-        ->where(function ($query) use ($cycleNumber, $startOfMonth, $endOfMonth) {
+            ->where('created_at', '>=', $now->copy()->subDays(32))
+            ->get()
+            ->filter(function ($ledger) {
+                if ($ledger->issued_credits > 0) {
+                    return $ledger->created_at->copy()->addMonth()->isFuture();
+                }
+                return true; 
+            });
 
-            // OR logic grouped properly
-            $query->where('cycle_number', $cycleNumber)
-                  ->orWhereBetween('created_at', [$startOfMonth, $endOfMonth]);
+        // 2️⃣ Calculate lifetime totals for Usage/Hold 
+        $totalUsed = (int) TicketLedger::where('student_id', $user->id)->sum('used_credits');
+        $totalHold = (int) TicketLedger::where('student_id', $user->id)->sum('hold_credits');
 
-        })
-        ->orderBy('created_at', 'asc')
-        ->get();
+        // Admin Tickets
+        $tickets_added_by_admin = $ledgers->filter(function($l) {
+            return is_null($l->stripe_subscription_id) && is_null($l->stripe_invoice_id) && $l->issued_credits > 0;
+        })->map(fn($l) => $this->formatTicketBatch($l, $now, $user))->values()->toArray(); 
 
-        if (!$ledgers) {
-            return null;
-        }
-
+        // Subscription Tickets
+        $tickets_added_by_subscription = $ledgers->filter(function($l) {
+            return (!is_null($l->stripe_subscription_id) || !is_null($l->stripe_invoice_id)) && $l->issued_credits > 0;
+        })->map(fn($l) => $this->formatTicketBatch($l, $now, $user))->values()->toArray();
+        // 4️⃣ Sum the totals
         $issued = (int) $ledgers->sum('issued_credits');
-        $used   = (int) $ledgers->sum('used_credits');
-        $hold   = (int) $ledgers->sum('hold_credits');
         
+        // Pick the most recent valid issuance for the ledger_id
+        $latestLedger = $ledgers->where('issued_credits', '>', 0)->last();
         return [
-            'ledger_id' => $CurrentCycleledger->id ?? null,
-            'subscription_id' => $subscription->id ?? null,
-            'cycle_number'    => $cycleNumber,
-            'issued'          => $issued,
-            'used'            => $used,
-            'hold'            => $hold,
-            'available'       => $issued - $used - $hold,
-            'ledgers'         => $ledgers,
+            'ledger_id'                     => $latestLedger->id ?? null,
+            'subscription_id'               => $subscription->id ?? null,
+            'cycle_number'                  => $subscription->cycle_number ?? 0,
+            'issued'                        => $issued,
+            'used'                          => $totalUsed,
+            'hold'                          => $totalHold,
+            'available'                     => max(0, $issued - $totalUsed - $totalHold),
+            'tickets_added_by_admin'        => $tickets_added_by_admin,
+            'tickets_added_by_subscription' => $tickets_added_by_subscription,
+            'ledgers'                       => $ledgers->values(),
         ];
     }
+    // public function getCurrentMonthCredits($user)
+    // {
+    //     $now = Carbon::now();
+
+    //     // 1 Database-level filtering (Performance)
+    //     // We only pull records from the last 32 days. 
+    //     // This is safe because no "1 month" period is longer than 31 days.
+    //     $activeIssuances = TicketLedger::where('student_id', $user->id)
+    //         ->where('issued_credits', '>', 0)
+    //         ->where('created_at', '>=', $now->copy()->subDays(32)) 
+    //         ->get()
+    //         ->filter(function ($ledger) {
+    //             // Precise Carbon calendar month check
+    //             return $ledger->created_at->addMonth()->isFuture();
+    //         });
+    //     // 2️ Optimized Aggregate Queries
+    //     // Don't pull all records, just get the sum directly from SQL
+    //     $totalUsed = (int) TicketLedger::where('student_id', $user->id)->sum('used_credits');
+    //     $totalHold = (int) TicketLedger::where('student_id', $user->id)->sum('hold_credits');
+
+    //     $validIssuedSum = (int) $activeIssuances->sum('issued_credits');
+
+    //     // 3️ Calculation
+    //     $available = $validIssuedSum - $totalUsed - $totalHold;
+
+    //     return [
+    //         'available'        => max(0, $available),
+    //         'issued_this_month'=> $validIssuedSum,
+    //         'lifetime_used'    => $totalUsed,
+    //         'details'          => $activeIssuances->map(fn($item) => [
+    //             'amount'     => $item->issued_credits,
+    //             'expires_at' => $item->created_at->addMonth()->toDateTimeString(),
+    //             'days_left'  => $now->diffInDays($item->created_at->addMonth(), false),
+    //         ])->values(),
+    //     ];
+    // }
 
     /**
      * Get user's previous credit history (by all cycles).
@@ -229,5 +259,34 @@ class UseCreditService
             ]);
             return ['error' => 'Failed to refund credits', 'status' => 500];
         }
+    }
+
+    /**
+    * Helper to format ticket batch with Timezone support
+    */
+    private function formatTicketBatch($ledger, $now, $user)
+    {
+        // 1. Calculate Expiry (Always do math on UTC first for accuracy)
+        $expiryDate = $ledger->created_at->copy()->addMonth();
+        
+        $issued = (int) $ledger->issued_credits;
+        $used   = (int) $ledger->used_credits;
+        $hold   = (int) $ledger->hold_credits;
+
+        return [
+            'id'                => $ledger->id,
+            'total_tickets'     => $issued,
+            'used_tickets'      => $used,
+            'hold_tickets'      => $hold,
+            'available_tickets' => max(0, $issued - $used - $hold),
+            
+            // 2. Use the User model helper to convert to their Timezone
+            'expiring_on'       => $user->asUserTime($expiryDate)->toDateTimeString(),
+            'created_at'        => $user->asUserTime($ledger->created_at)->toDateTimeString(),
+            
+            // Days left is just a number, so timezone doesn't matter
+            'days_left'         => (int) $now->diffInDays($expiryDate, false),
+            'reason'            => $ledger->reason,
+        ];
     }
 }

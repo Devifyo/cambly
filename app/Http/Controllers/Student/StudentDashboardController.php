@@ -36,6 +36,7 @@ class StudentDashboardController extends Controller
         } else {
             $currentCredits['consume_percentage'] = '0';
         }
+        
         $dashbordDetails = $this->dashboardService->getStudentDashboardData(auth()->user());
         $activeSubscription =  $this->subs->getActiveSubscriptionDetails($user);
         return view('student.dashboard', [

@@ -292,6 +292,9 @@
                                     @else
                                     <span class="health-percentage d-block mb-2">You have {{$currentCredits['available'] ?? 0}} tickets </span>
                                 @endif
+                                <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#creditDetailsModal" class="text-decoration-none small fw-bold mb-3 d-inline-block text-primary">
+    <i class="fa-solid fa-circle-info me-1"></i> View Expiration Details
+</a>
                                 <a href="{{ route('student.account.subscription') }}" class="btn btn-dark w-100 rounded-pill">Manage Subscriptions<i
                                         class="fa-solid fa-chevron-right ms-2"></i></a>
                             </div>
@@ -366,6 +369,7 @@
 
     </div>
 </div>
+@include('student.partials.credit-details-modal')
 @endsection
 
 @push('scripts')

@@ -298,6 +298,54 @@ class User extends Authenticatable
         }
     }
 
+    /**
+     * Get the appropriate timezone for the current viewer or user.
+     * Uses the Null Safe Operator (?->) to prevent crashes if profiles are missing.
+     */
+    public function getViewerTimezone(): string
+    {
+        // 1. Admin Impersonation Override (Presentation Layer Logic)
+        // If an admin is impersonating, we likely want to see the dates in THEIR timezone, 
+        // or the specific timezone set in the session.
+        if (function_exists('is_impersonating') && is_impersonating()) {
+            return getTimeZone(); 
+        }
+
+        // 2. Teacher Logic
+        if ($this->isTeacher()) {
+            // Lazy Eager Loading: Only run the query if we haven't already
+            if (!$this->relationLoaded('teacherProfile')) {
+                $this->load('teacherProfile');
+            }
+            // ?-> ensures if teacherProfile is deleted/missing, it falls back to UTC safely
+            return $this->teacherProfile?->tz ?? 'UTC';
+        }
+
+        // 3. Student / Default Logic
+        if (!$this->relationLoaded('studentProfile')) {
+            $this->load('studentProfile');
+        }
+        
+        // ?-> is CRITICAL here. If an Admin (who has no student profile) calls this, 
+        // the original code would have crashed. This version safely returns 'UTC'.
+        return $this->studentProfile?->tz ?? 'UTC';
+    }
+
+    /**
+     * Helper to convert any UTC date to the user's localized Carbon instance.
+     * * Usage: $user->asUserTime($reservation->created_at)->format('H:i');
+     */
+    public function asUserTime($date): Carbon
+    {
+        // Ensure we are working with a Carbon instance
+        if (!$date) {
+            return Carbon::now($this->getViewerTimezone());
+        }
+        
+        // Parse ensures strings are converted to Carbon, then we shift the timezone
+        return Carbon::parse($date)->setTimezone($this->getViewerTimezone());
+    }
+
 
 
 /********************* Teacher filter scopes *******************************/
@@ -428,6 +476,8 @@ class User extends Authenticatable
         // 3. Sort: NULLs last, then ascending time
         ->orderByRaw('ISNULL(closest_slot), closest_slot ASC');
     }
+
+
 
 
 
